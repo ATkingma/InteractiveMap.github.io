@@ -1,0 +1,497 @@
+{
+  "name": "Farm",
+  "image": "farm-overview.png",
+  "description": "Rural farming complex with multiple buildings and open fields",
+  "mapDimensions": {
+    "width": 4078,
+    "height": 2158
+  },
+  "categoryMarkers": [
+    {
+      "id": "farm-spawn-1",
+      "type": "spawn-points",
+      "name": "Main Gate Entry",
+      "x": 400,
+      "y": 200,
+      "floor": "ground",
+      "description": "Primary spawn point at the farm entrance"
+    },
+    {
+      "id": "farm-spawn-2",
+      "type": "spawn-points",
+      "name": "Back Field Spawn",
+      "x": 3200,
+      "y": 1800,
+      "floor": "ground",
+      "description": "Secondary spawn in the rear fields"
+    },
+    {
+      "id": "farm-spawn-3",
+      "type": "spawn-points",
+      "name": "Barn Side Entry",
+      "x": 1800,
+      "y": 300,
+      "floor": "ground",
+      "description": "Spawn point near the main barn"
+    },
+    {
+      "id": "farm-extract-1",
+      "type": "extraction-points",
+      "name": "Main Road Exit",
+      "x": 300,
+      "y": 100,
+      "floor": "ground",
+      "description": "Primary extraction via main road"
+    },
+    {
+      "id": "farm-extract-2",
+      "type": "extraction-points",
+      "name": "Field Bridge",
+      "x": 3600,
+      "y": 1200,
+      "floor": "ground",
+      "description": "Extraction point across the field bridge"
+    },
+    {
+      "id": "farm-extract-3",
+      "type": "extraction-points",
+      "name": "Helicopter Landing",
+      "x": 2000,
+      "y": 2000,
+      "floor": "ground",
+      "description": "Emergency helicopter extraction zone"
+    },
+    {
+      "id": "farm-loot-1",
+      "type": "loot-areas",
+      "name": "Main Farmhouse",
+      "x": 1200,
+      "y": 800,
+      "floor": "ground",
+      "description": "High-value loot concentration in farmhouse"
+    },
+    {
+      "id": "farm-loot-2",
+      "type": "loot-areas",
+      "name": "Barn Complex",
+      "x": 2000,
+      "y": 600,
+      "floor": "ground",
+      "description": "Equipment and supplies in barn area"
+    },
+    {
+      "id": "farm-loot-3",
+      "type": "loot-areas",
+      "name": "Storage Silos",
+      "x": 2800,
+      "y": 800,
+      "floor": "ground",
+      "description": "Industrial loot in storage silos"
+    },
+    {
+      "id": "farm-sniper-1",
+      "type": "sniper-spots",
+      "name": "Silo Overlook",
+      "x": 2800,
+      "y": 600,
+      "floor": "upper",
+      "description": "Elevated sniper position on silo"
+    },
+    {
+      "id": "farm-sniper-2",
+      "type": "sniper-spots",
+      "name": "Farmhouse Roof",
+      "x": 1200,
+      "y": 700,
+      "floor": "upper",
+      "description": "Roof position with field overview"
+    },
+    {
+      "id": "farm-sniper-3",
+      "type": "sniper-spots",
+      "name": "Water Tower",
+      "x": 3400,
+      "y": 400,
+      "floor": "upper",
+      "description": "High vantage point from water tower"
+    },
+    {
+      "id": "farm-danger-1",
+      "type": "danger-zones",
+      "name": "Open Fields",
+      "x": 2400,
+      "y": 1400,
+      "floor": "ground",
+      "description": "Exposed area with high sniper risk"
+    },
+    {
+      "id": "farm-danger-2",
+      "type": "danger-zones",
+      "name": "Barn Courtyard",
+      "x": 2000,
+      "y": 800,
+      "floor": "ground",
+      "description": "High-traffic area with multiple angles"
+    }
+  ],
+  "floors": {
+    "basement": {
+      "name": "Basement/Cellar",
+      "level": -1,
+      "image": "farm-basement.png",
+      "lootContainers": [
+        {
+          "id": 3001,
+          "type": "weapon-crate",
+          "name": "Hidden Weapons Cache",
+          "x": 1200,
+          "y": 900,
+          "contents": ["Hunting Rifles", "Shotguns", "Ammunition"],
+          "rarity": "epic",
+          "respawnTime": 1800
+        },
+        {
+          "id": 3002,
+          "type": "rare-container",
+          "name": "Emergency Supplies",
+          "x": 1300,
+          "y": 800,
+          "contents": ["Medical Supplies", "Emergency Food", "Tools"],
+          "rarity": "rare",
+          "respawnTime": 1200
+        },
+        {
+          "id": 3003,
+          "type": "food-storage",
+          "name": "Root Cellar",
+          "x": 1100,
+          "y": 850,
+          "contents": ["Preserved Food", "Water Bottles", "Vitamins"],
+          "rarity": "common",
+          "respawnTime": 600
+        }
+      ]
+    },
+    "ground": {
+      "name": "Ground Floor",
+      "level": 0,
+      "image": "farm-ground.png",
+      "lootContainers": [
+        {
+          "id": 3101,
+          "type": "weapon-crate",
+          "name": "Farmhouse Gun Rack",
+          "x": 1150,
+          "y": 750,
+          "contents": ["Hunting Rifles", "Shotguns", "Pistols"],
+          "rarity": "rare",
+          "respawnTime": 1200
+        },
+        {
+          "id": 3102,
+          "type": "medical-box",
+          "name": "First Aid Station",
+          "x": 1250,
+          "y": 800,
+          "contents": ["Bandages", "Pain Killers", "Antiseptic"],
+          "rarity": "uncommon",
+          "respawnTime": 900
+        },
+        {
+          "id": 3103,
+          "type": "toolbox",
+          "name": "Farm Tool Shed",
+          "x": 1800,
+          "y": 900,
+          "contents": ["Hand Tools", "Repair Parts", "Wire"],
+          "rarity": "common",
+          "respawnTime": 600
+        },
+        {
+          "id": 3104,
+          "type": "electronics-box",
+          "name": "Communications Equipment",
+          "x": 1300,
+          "y": 700,
+          "contents": ["Radio", "Batteries", "Cables"],
+          "rarity": "rare",
+          "respawnTime": 1500
+        },
+        {
+          "id": 3105,
+          "type": "ammo-box",
+          "name": "Hunting Supplies",
+          "x": 1100,
+          "y": 800,
+          "contents": ["12 Gauge Shells", ".308 Rounds", ".22 LR"],
+          "rarity": "uncommon",
+          "respawnTime": 800
+        },
+        {
+          "id": 3106,
+          "type": "armor-box",
+          "name": "Hunting Gear Locker",
+          "x": 1200,
+          "y": 850,
+          "contents": ["Hunting Vest", "Camouflage Clothing", "Boots"],
+          "rarity": "common",
+          "respawnTime": 900
+        },
+        {
+          "id": 3107,
+          "type": "cash-register",
+          "name": "Farm Store Register",
+          "x": 1400,
+          "y": 600,
+          "contents": ["Cash", "Receipts", "Keys"],
+          "rarity": "common",
+          "respawnTime": 600
+        },
+        {
+          "id": 3108,
+          "type": "computer",
+          "name": "Farm Management System",
+          "x": 1350,
+          "y": 750,
+          "contents": ["Farm Records", "GPS Data", "Inventory Lists"],
+          "rarity": "uncommon",
+          "respawnTime": 1200
+        },
+        {
+          "id": 3109,
+          "type": "large-weapon-crate",
+          "name": "Barn Equipment Cache",
+          "x": 2000,
+          "y": 650,
+          "contents": ["Heavy Equipment", "Industrial Tools", "Vehicle Parts"],
+          "rarity": "epic",
+          "respawnTime": 2400
+        },
+        {
+          "id": 3110,
+          "type": "fuel-container",
+          "name": "Diesel Storage Tank",
+          "x": 2100,
+          "y": 700,
+          "contents": ["Diesel Fuel", "Engine Oil", "Hydraulic Fluid"],
+          "rarity": "rare",
+          "respawnTime": 1800
+        },
+        {
+          "id": 3111,
+          "type": "seed-storage",
+          "name": "Seed Vault",
+          "x": 2200,
+          "y": 600,
+          "contents": ["Seeds", "Fertilizer", "Growing Supplies"],
+          "rarity": "common",
+          "respawnTime": 600
+        },
+        {
+          "id": 3112,
+          "type": "mechanical-box",
+          "name": "Tractor Parts",
+          "x": 1900,
+          "y": 750,
+          "contents": ["Engine Parts", "Hydraulic Components", "Belts"],
+          "rarity": "uncommon",
+          "respawnTime": 900
+        },
+        {
+          "id": 3113,
+          "type": "electronics-box",
+          "name": "Silo Control Panel",
+          "x": 2800,
+          "y": 850,
+          "contents": ["Control Circuits", "Sensors", "Processors"],
+          "rarity": "rare",
+          "respawnTime": 1500
+        },
+        {
+          "id": 3114,
+          "type": "industrial-container",
+          "name": "Grain Processing Unit",
+          "x": 2750,
+          "y": 800,
+          "contents": ["Processing Equipment", "Filters", "Industrial Parts"],
+          "rarity": "epic",
+          "respawnTime": 2100
+        },
+        {
+          "id": 3115,
+          "type": "chemical-storage",
+          "name": "Pesticide Cabinet",
+          "x": 2850,
+          "y": 750,
+          "contents": ["Chemicals", "Protective Gear", "Spray Equipment"],
+          "rarity": "rare",
+          "respawnTime": 1800
+        },
+        {
+          "id": 3116,
+          "type": "food-storage",
+          "name": "Grain Silo Storage",
+          "x": 2900,
+          "y": 800,
+          "contents": ["Grain", "Animal Feed", "Preserved Goods"],
+          "rarity": "common",
+          "respawnTime": 600
+        },
+        {
+          "id": 3117,
+          "type": "vehicle-parts",
+          "name": "Farm Vehicle Garage",
+          "x": 2000,
+          "y": 500,
+          "contents": ["Vehicle Parts", "Tires", "Mechanical Tools"],
+          "rarity": "uncommon",
+          "respawnTime": 1200
+        },
+        {
+          "id": 3118,
+          "type": "water-system",
+          "name": "Irrigation Control",
+          "x": 3400,
+          "y": 450,
+          "contents": ["Pumps", "Valves", "Piping"],
+          "rarity": "rare",
+          "respawnTime": 1500
+        },
+        {
+          "id": 3119,
+          "type": "generator-room",
+          "name": "Backup Generator",
+          "x": 2500,
+          "y": 900,
+          "contents": ["Generator Parts", "Fuel", "Electrical Components"],
+          "rarity": "epic",
+          "respawnTime": 2400
+        },
+        {
+          "id": 3120,
+          "type": "greenhouse-supplies",
+          "name": "Greenhouse Storage",
+          "x": 1600,
+          "y": 1200,
+          "contents": ["Plant Supplies", "Growing Equipment", "Nutrients"],
+          "rarity": "uncommon",
+          "respawnTime": 900
+        }
+      ]
+    },
+    "upper": {
+      "name": "Upper Floor/Loft",
+      "level": 1,
+      "image": "farm-upper.png",
+      "lootContainers": [
+        {
+          "id": 3201,
+          "type": "rare-container",
+          "name": "Farmhouse Attic Safe",
+          "x": 1200,
+          "y": 750,
+          "contents": ["Family Valuables", "Important Documents", "Rare Items"],
+          "rarity": "legendary",
+          "respawnTime": 3600
+        },
+        {
+          "id": 3202,
+          "type": "weapon-crate",
+          "name": "Hunting Trophy Room",
+          "x": 1300,
+          "y": 700,
+          "contents": ["Collector Weapons", "Scopes", "Rare Ammunition"],
+          "rarity": "epic",
+          "respawnTime": 2400
+        },
+        {
+          "id": 3203,
+          "type": "electronics-box",
+          "name": "Weather Station",
+          "x": 1150,
+          "y": 650,
+          "contents": ["Weather Equipment", "GPS Systems", "Communication Gear"],
+          "rarity": "rare",
+          "respawnTime": 1800
+        },
+        {
+          "id": 3204,
+          "type": "storage-container",
+          "name": "Barn Hay Loft",
+          "x": 2000,
+          "y": 600,
+          "contents": ["Stored Goods", "Seasonal Equipment", "Tools"],
+          "rarity": "uncommon",
+          "respawnTime": 1200
+        },
+        {
+          "id": 3205,
+          "type": "surveillance-equipment",
+          "name": "Security Monitoring",
+          "x": 2800,
+          "y": 600,
+          "contents": ["Cameras", "Recording Equipment", "Security Devices"],
+          "rarity": "epic",
+          "respawnTime": 2100
+        },
+        {
+          "id": 3206,
+          "type": "maintenance-kit",
+          "name": "Silo Maintenance Access",
+          "x": 2750,
+          "y": 650,
+          "contents": ["Specialized Tools", "Safety Equipment", "Repair Parts"],
+          "rarity": "rare",
+          "respawnTime": 1500
+        },
+        {
+          "id": 3207,
+          "type": "observation-equipment",
+          "name": "Water Tower Equipment",
+          "x": 3400,
+          "y": 400,
+          "contents": ["Binoculars", "Range Finders", "Communication Relay"],
+          "rarity": "rare",
+          "respawnTime": 1800
+        }
+      ]
+    },
+    "rooftop": {
+      "name": "Rooftops",
+      "level": 2,
+      "image": "farm-rooftop.png",
+      "lootContainers": [
+        {
+          "id": 3301,
+          "type": "solar-equipment",
+          "name": "Solar Panel Array",
+          "x": 1200,
+          "y": 700,
+          "contents": ["Solar Components", "Batteries", "Electrical Parts"],
+          "rarity": "rare",
+          "respawnTime": 2400
+        },
+        {
+          "id": 3302,
+          "type": "antenna-equipment",
+          "name": "Communication Array",
+          "x": 2800,
+          "y": 600,
+          "contents": ["Radio Equipment", "Amplifiers", "Transmission Gear"],
+          "rarity": "epic",
+          "respawnTime": 2700
+        },
+        {
+          "id": 3303,
+          "type": "airdrop",
+          "name": "Emergency Supply Drop",
+          "x": 2000,
+          "y": 2000,
+          "contents": ["Emergency Rations", "Medical Supplies", "Survival Gear"],
+          "rarity": "legendary",
+          "respawnTime": 3600
+        }
+      ]
+    }
+  }
+}

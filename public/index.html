@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arena Breakout - Interactive Maps</title>
+    <link rel="stylesheet" href="../src/landing.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta name="description" content="Interactive maps for Arena Breakout - Explore all locations, loot spots, and tactical positions">
+</head>
+<body>
+    <div class="hero-section">
+        <div class="hero-background">
+            <div class="hero-overlay"></div>
+            <video autoplay muted loop class="hero-video">
+                <source src="hero-bg.mp4" type="video/mp4">
+            </video>
+        </div>
+        
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-brand">
+                    <span class="brand-icon">🎯</span>
+                    <span class="brand-text">Arena Breakout Maps</span>
+                </div>
+                <div class="nav-links">
+                    <a href="#maps" class="nav-link">Maps</a>
+                    <a href="#features" class="nav-link">Features</a>
+                    <a href="#community" class="nav-link">Community</a>
+                    <button class="nav-cta">Get Started</button>
+                </div>
+                <button class="mobile-menu-btn">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </nav>
+
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">
+                    Master Every 
+                    <span class="highlight">Arena</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Professional interactive maps for Arena Breakout with real-time markers, 
+                    tactical overlays, and community-driven intel.
+                </p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">5</span>
+                        <span class="stat-label">Maps</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">200+</span>
+                        <span class="stat-label">Markers</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">5k+</span>
+                        <span class="stat-label">Users</span>
+                    </div>
+                </div>
+                <div class="hero-actions">
+                    <button class="btn-primary" onclick="scrollToMaps()">
+                        <span>Explore Maps</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M8 0L16 8L8 16L6.59 14.59L12.17 9H0V7H12.17L6.59 1.41L8 0Z" fill="currentColor"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section id="maps" class="maps-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Choose Your Battlefield</h2>
+                <p class="section-subtitle">Select from our collection of detailed interactive maps</p>
+            </div>
+            
+            <div class="maps-grid">
+                <div class="map-card featured" data-map="armory">
+                    <div class="map-preview">
+                        <img src="images/maps/armory-ground.png" alt="Armory Map" class="map-image">
+                        <div class="map-overlay">
+                            <div class="map-info">
+                                <h3>Armory</h3>
+                                <p>High-tier loot facility with multiple extraction points</p>
+                                <div class="map-stats">
+                                    <span class="stat">🎯 45 Markers</span>
+                                    <span class="stat">⚡ Updated</span>
+                                </div>
+                            </div>
+                            <button class="play-btn">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path d="M8 5V19L19 12L8 5Z" fill="currentColor"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="map-details">
+                        <div class="map-header">
+                            <h3>Armory</h3>
+                            <span class="map-difficulty hard">Hard</span>
+                        </div>
+                        <p class="map-description">Industrial weapons facility with dense CQB areas</p>
+                        <div class="map-features">
+                            <span class="feature">🔥 Hot Zone</span>
+                            <span class="feature">💎 High Loot</span>
+                            <span class="feature">🏢 Multi-Level</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="map-card" data-map="valley">
+                    <div class="map-preview">
+                        <img src="images/maps/map.png" alt="Valley Map" class="map-image">
+                        <div class="map-overlay">
+                            <div class="map-info">
+                                <h3>Valley</h3>
+                                <p>Open terrain with long-range engagement opportunities</p>
+                                <div class="map-stats">
+                                    <span class="stat">🎯 32 Markers</span>
+                                    <span class="stat">⚡ Updated</span>
+                                </div>
+                            </div>
+                            <button class="play-btn">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path d="M8 5V19L19 12L8 5Z" fill="currentColor"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="map-details">
+                        <div class="map-header">
+                            <h3>Valley</h3>
+                            <span class="map-difficulty medium">Medium</span>
+                        </div>
+                        <p class="map-description">Mountainous region with strategic vantage points</p>
+                        <div class="map-features">
+                            <span class="feature">🏔️ Open Terrain</span>
+                            <span class="feature">🔭 Sniper Spots</span>
+                            <span class="feature">🌿 Natural Cover</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="map-card" data-map="northridge">
+                    <div class="map-preview">
+                        <img src="images/maps/map.png" alt="Northridge Map" class="map-image">
+                        <div class="map-overlay">
+                            <div class="map-info">
+                                <h3>Northridge</h3>
+                                <p>Mountainous terrain with elevated positions and strategic vantage points</p>
+                                <div class="map-stats">
+                                    <span class="stat">🎯 35 Markers</span>
+                                    <span class="stat">⚡ Updated</span>
+                                </div>
+                            </div>
+                            <button class="play-btn">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path d="M8 5V19L19 12L8 5Z" fill="currentColor"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="map-details">
+                        <div class="map-header">
+                            <h3>Northridge</h3>
+                            <span class="map-difficulty hard">Hard</span>
+                        </div>
+                        <p class="map-description">Multi-level mountain complex with caves and peaks</p>
+                        <div class="map-features">
+                            <span class="feature">🏔️ Mountains</span>
+                            <span class="feature">�️ Cave System</span>
+                            <span class="feature">� High Ground</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="map-card" data-map="tvstation">
+                    <div class="map-preview">
+                        <img src="images/maps/map.png" alt="TV Station Map" class="map-image">
+                        <div class="map-overlay">
+                            <div class="map-info">
+                                <h3>TV Station</h3>
+                                <p>Urban broadcasting facility with multiple levels and communication equipment</p>
+                                <div class="map-stats">
+                                    <span class="stat">🎯 28 Markers</span>
+                                    <span class="stat">⚡ Updated</span>
+                                </div>
+                            </div>
+                            <button class="play-btn">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path d="M8 5V19L19 12L8 5Z" fill="currentColor"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="map-details">
+                        <div class="map-header">
+                            <h3>TV Station</h3>
+                            <span class="map-difficulty medium">Medium</span>
+                        </div>
+                        <p class="map-description">Multi-story broadcasting facility with rooftop access</p>
+                        <div class="map-features">
+                            <span class="feature">📺 Broadcasting</span>
+                            <span class="feature">🏢 Multi-Level</span>
+                            <span class="feature">📡 Rooftop</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="features-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Advanced Features</h2>
+                <p class="section-subtitle">Professional tools for tactical superiority</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Precision Markers</h3>
+                    <p>Pinpoint locations with pixel-perfect accuracy. Add custom markers with detailed descriptions and categories.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3>Advanced Filtering</h3>
+                    <p>Filter by loot quality, marker type, or custom tags. Find exactly what you need instantly.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Mobile Optimized</h3>
+                    <p>Seamless experience across all devices. Touch controls and responsive design for on-the-go tactical planning.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Real-time Updates</h3>
+                    <p>Community-driven markers with live updates. Stay ahead with the latest intel and discoveries.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Custom Overlays</h3>
+                    <p>Create tactical overlays, route planning, and team coordination tools directly on the map.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Save & Share</h3>
+                    <p>Save your custom markers and share tactical plans with your team. Export and import functionality.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <span class="brand-icon">🎯</span>
+                    <span class="brand-text">Arena Breakout Maps</span>
+                </div>
+                <div class="footer-links">
+                    <a href="#maps">Maps</a>
+                    <a href="#features">Features</a>
+                    <a href="#community">Community</a>
+                    <a href="#support">Support</a>
+                </div>
+                <div class="footer-social">
+                    <a href="#" class="social-link">Discord</a>
+                    <a href="#" class="social-link">Reddit</a>
+                    <a href="#" class="social-link">GitHub</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Arena Breakout Maps. Community-driven tactical resources.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../src/landing.js"></script>
+</body>
+</html>

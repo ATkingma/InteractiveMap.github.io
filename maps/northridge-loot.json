@@ -1,0 +1,165 @@
+{
+  "name": "Northridge",
+  "image": "northridge-ground.png",
+  "description": "Mountainous terrain with elevated positions and strategic vantage points",
+  "floors": {
+    "caves": {
+      "name": "Underground Caves",
+      "level": -1,
+      "image": "northridge-caves.png",
+      "lootContainers": [
+        {
+          "id": 7101,
+          "type": "weapon-crate",
+          "name": "Hidden Cache",
+          "x": 25,
+          "y": 70,
+          "contents": ["Military Weapons", "Explosives", "Tactical Equipment"],
+          "rarity": "legendary",
+          "respawnTime": 3600
+        },
+        {
+          "id": 7102,
+          "type": "supply-box",
+          "name": "Emergency Supplies",
+          "x": 60,
+          "y": 45,
+          "contents": ["Medical Supplies", "Food Rations", "Water"],
+          "rarity": "rare",
+          "respawnTime": 1800
+        },
+        {
+          "id": 7103,
+          "type": "rare-loot",
+          "name": "Mineral Deposit",
+          "x": 80,
+          "y": 30,
+          "contents": ["Rare Minerals", "Precious Metals", "Gems"],
+          "rarity": "legendary",
+          "respawnTime": 4800
+        }
+      ]
+    },
+    "ground": {
+      "name": "Mountain Base",
+      "level": 0,
+      "image": "northridge-ground.png",
+      "lootContainers": [
+        {
+          "id": 7001,
+          "type": "weapon-crate",
+          "name": "Ranger Station Armory",
+          "x": 35,
+          "y": 40,
+          "contents": ["Hunting Rifles", "Sniper Rifles", "Scopes"],
+          "rarity": "epic",
+          "respawnTime": 2400
+        },
+        {
+          "id": 7002,
+          "type": "vehicle-parts",
+          "name": "ATV Garage",
+          "x": 50,
+          "y": 60,
+          "contents": ["Vehicle Parts", "Fuel", "Repair Tools"],
+          "rarity": "rare",
+          "respawnTime": 1200
+        },
+        {
+          "id": 7003,
+          "type": "electronics-box",
+          "name": "Communication Tower",
+          "x": 70,
+          "y": 25,
+          "contents": ["Radio Equipment", "Satellite Devices", "Batteries"],
+          "rarity": "rare",
+          "respawnTime": 1800
+        },
+        {
+          "id": 7004,
+          "type": "medical-kit",
+          "name": "First Aid Station",
+          "x": 30,
+          "y": 65,
+          "contents": ["Advanced Medical Supplies", "Trauma Kits", "Painkillers"],
+          "rarity": "uncommon",
+          "respawnTime": 900
+        },
+        {
+          "id": 7005,
+          "type": "supply-box",
+          "name": "Hiking Supply Cache",
+          "x": 65,
+          "y": 50,
+          "contents": ["Outdoor Gear", "Climbing Equipment", "Survival Tools"],
+          "rarity": "common",
+          "respawnTime": 600
+        }
+      ]
+    },
+    "ridge": {
+      "name": "Mountain Ridge",
+      "level": 1,
+      "image": "northridge-ridge.png",
+      "lootContainers": [
+        {
+          "id": 7201,
+          "type": "weapon-crate",
+          "name": "Sniper Nest",
+          "x": 40,
+          "y": 20,
+          "contents": ["High-Power Sniper Rifles", "Advanced Scopes", "Bipods"],
+          "rarity": "legendary",
+          "respawnTime": 3600
+        },
+        {
+          "id": 7202,
+          "type": "electronics-box",
+          "name": "Weather Station",
+          "x": 75,
+          "y": 35,
+          "contents": ["Weather Equipment", "Solar Panels", "Monitoring Devices"],
+          "rarity": "epic",
+          "respawnTime": 2400
+        },
+        {
+          "id": 7203,
+          "type": "supply-drop",
+          "name": "Mountain Rescue Cache",
+          "x": 55,
+          "y": 60,
+          "contents": ["Rescue Equipment", "Emergency Flares", "Satellite Phone"],
+          "rarity": "rare",
+          "respawnTime": 1800
+        }
+      ]
+    },
+    "peak": {
+      "name": "Mountain Peak",
+      "level": 2,
+      "image": "northridge-peak.png",
+      "lootContainers": [
+        {
+          "id": 7301,
+          "type": "rare-loot",
+          "name": "Summit Cache",
+          "x": 50,
+          "y": 30,
+          "contents": ["Elite Equipment", "Rare Artifacts", "Military Documents"],
+          "rarity": "legendary",
+          "respawnTime": 7200
+        },
+        {
+          "id": 7302,
+          "type": "electronics-box",
+          "name": "Radar Installation",
+          "x": 30,
+          "y": 50,
+          "contents": ["Advanced Electronics", "Radar Components", "Military Tech"],
+          "rarity": "epic",
+          "respawnTime": 3600
+        }
+      ]
+    }
+  }
+}

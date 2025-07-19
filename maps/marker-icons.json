@@ -1,0 +1,419 @@
+{
+  "markerIcons": {
+    "spawn": {
+      "size": 24,
+      "color": "#4CAF50",
+      "icon": "test.png",
+      "description": "Player spawn locations"
+    },
+    "extraction": {
+      "size": 28,
+      "color": "#FF9800",
+      "icon": "test.png",
+      "description": "Extraction/exit points"
+    },
+    "spawn-points": {
+      "size": 24,
+      "color": "#4CAF50",
+      "icon": "test.png",
+      "description": "Player spawn locations"
+    },
+    "extraction-points": {
+      "size": 28,
+      "color": "#FF9800",
+      "icon": "test.png",
+      "description": "Extraction/exit points"
+    },
+    "loot-areas": {
+      "size": 22,
+      "color": "#2196F3",
+      "icon": "test.png",
+      "description": "High-value loot areas"
+    },
+    "sniper-spots": {
+      "size": 26,
+      "color": "#9C27B0",
+      "icon": "test.png",
+      "description": "Strategic sniper positions"
+    },
+    "danger-zones": {
+      "size": 30,
+      "color": "#F44336",
+      "icon": "test.png",
+      "description": "High-risk danger areas"
+    },
+    "loot-container": {
+      "timed-safe": {
+        "size": 22,
+        "color": "#FF5722",
+        "icon": "test.png",
+        "description": "Timed security safes"
+      },
+      "normal-safe": {
+        "size": 20,
+        "color": "#795548",
+        "icon": "test.png",
+        "description": "Standard safes"
+      },
+      "weapon-crate": {
+        "size": 24,
+        "color": "#F44336",
+        "icon": "test.png",
+        "description": "Weapon storage crates"
+      },
+      "armor-box": {
+        "size": 22,
+        "color": "#3F51B5",
+        "icon": "test.png",
+        "description": "Armor storage containers"
+      },
+      "ammo-cache": {
+        "size": 20,
+        "color": "#FF9800",
+        "icon": "test.png",
+        "description": "Ammunition storage"
+      },
+      "medical-box": {
+        "size": 18,
+        "color": "#E91E63",
+        "icon": "test.png",
+        "description": "Medical supplies"
+      },
+      "computer": {
+        "size": 18,
+        "color": "#607D8B",
+        "icon": "test.png",
+        "description": "Computer terminals"
+      },
+      "military-computer": {
+        "size": 20,
+        "color": "#455A64",
+        "icon": "test.png",
+        "description": "Military computer systems"
+      },
+      "document-box": {
+        "size": 19,
+        "color": "#8BC34A",
+        "icon": "test.png",
+        "description": "Document storage"
+      },
+      "toolbox": {
+        "size": 18,
+        "color": "#FFC107",
+        "icon": "test.png",
+        "description": "Tool storage"
+      },
+      "jacket": {
+        "size": 16,
+        "color": "#795548",
+        "icon": "test.png",
+        "description": "Clothing storage"
+      },
+      "suitcase": {
+        "size": 18,
+        "color": "#8D6E63",
+        "icon": "test.png",
+        "description": "Travel cases"
+      },
+      "cash-register": {
+        "size": 19,
+        "color": "#4CAF50",
+        "icon": "test.png",
+        "description": "Cash registers"
+      },
+      "airdrop": {
+        "size": 26,
+        "color": "#9C27B0",
+        "icon": "test.png",
+        "description": "Supply airdrops"
+      },
+      "large-weapon-crate": {
+        "size": 26,
+        "color": "#D32F2F",
+        "icon": "test.png",
+        "description": "Large weapon storage"
+      },
+      "grenade-box": {
+        "size": 20,
+        "color": "#FF5722",
+        "icon": "test.png",
+        "description": "Explosive storage"
+      },
+      "large-material-crate": {
+        "size": 24,
+        "color": "#607D8B",
+        "icon": "test.png",
+        "description": "Construction materials"
+      },
+      "electronics-box": {
+        "size": 19,
+        "color": "#03A9F4",
+        "icon": "test.png",
+        "description": "Electronic components"
+      },
+      "rare-container": {
+        "size": 24,
+        "color": "#FF9800",
+        "icon": "test.png",
+        "description": "High-value containers"
+      },
+      "tactical-accessory-case": {
+        "size": 22,
+        "color": "#9C27B0",
+        "icon": "test.png",
+        "description": "Tactical equipment"
+      },
+      "military-supply-case": {
+        "size": 23,
+        "color": "#689F38",
+        "icon": "test.png",
+        "description": "Military supplies"
+      },
+      "gym-bag": {
+        "size": 18,
+        "color": "#FF7043",
+        "icon": "test.png",
+        "description": "Sports equipment"
+      },
+      "medbag": {
+        "size": 19,
+        "color": "#E91E63",
+        "icon": "test.png",
+        "description": "Medical bags"
+      },
+      "medkit": {
+        "size": 17,
+        "color": "#F48FB1",
+        "icon": "test.png",
+        "description": "Medical kits"
+      },
+      "normal-safe": {
+        "size": 20,
+        "color": "#FF7043",
+        "icon": "test.png"
+      },
+      "exit": {
+        "size": 28,
+        "color": "#4CAF50",
+        "icon": "test.png"
+      },
+      "scav-exit": {
+        "size": 26,
+        "color": "#8BC34A",
+        "icon": "test.png"
+      },
+      "player-spawn": {
+        "size": 24,
+        "color": "#2196F3",
+        "icon": "test.png"
+      },
+      "airdrop": {
+        "size": 30,
+        "color": "#E91E63",
+        "icon": "test.png"
+      },
+      "large-weapon-crate": {
+        "size": 26,
+        "color": "#D32F2F",
+        "icon": "test.png"
+      },
+      "ammo-cache": {
+        "size": 20,
+        "color": "#FFC107",
+        "icon": "test.png"
+      },
+      "storage-crate": {
+        "size": 22,
+        "color": "#607D8B",
+        "icon": "test.png"
+      },
+      "jacket": {
+        "size": 18,
+        "color": "#795548",
+        "icon": "test.png"
+      },
+      "suitcase": {
+        "size": 20,
+        "color": "#5D4037",
+        "icon": "test.png"
+      },
+      "tunnel-ladder": {
+        "size": 24,
+        "color": "#424242",
+        "icon": "test.png"
+      },
+      "toolbox": {
+        "size": 18,
+        "color": "#9E9E9E",
+        "icon": "test.png"
+      },
+      "premium-weapon-box": {
+        "size": 24,
+        "color": "#9C27B0",
+        "icon": "test.png"
+      },
+      "long-weapon-box": {
+        "size": 22,
+        "color": "#673AB7",
+        "icon": "test.png"
+      },
+      "lever": {
+        "size": 20,
+        "color": "#FF9800",
+        "icon": "test.png"
+      },
+      "sniper-scav": {
+        "size": 26,
+        "color": "#F44336",
+        "icon": "test.png"
+      },
+      "computer": {
+        "size": 20,
+        "color": "#00BCD4",
+        "icon": "test.png"
+      },
+      "military-computer": {
+        "size": 22,
+        "color": "#009688",
+        "icon": "test.png"
+      },
+      "document-box": {
+        "size": 18,
+        "color": "#FFEB3B",
+        "icon": "test.png"
+      },
+      "floor-spawn": {
+        "size": 16,
+        "color": "#CDDC39",
+        "icon": "test.png"
+      },
+      "grenade-box": {
+        "size": 20,
+        "color": "#FF5722",
+        "icon": "test.png"
+      },
+      "large-material-crate": {
+        "size": 26,
+        "color": "#3F51B5",
+        "icon": "test.png"
+      },
+      "locked-door": {
+        "size": 24,
+        "color": "#E65100",
+        "icon": "test.png"
+      },
+      "office-drawers": {
+        "size": 18,
+        "color": "#6D4C41",
+        "icon": "test.png"
+      },
+      "medkit": {
+        "size": 20,
+        "color": "#4CAF50",
+        "icon": "test.png"
+      },
+      "gym-bag": {
+        "size": 18,
+        "color": "#388E3C",
+        "icon": "test.png"
+      },
+      "medbag": {
+        "size": 20,
+        "color": "#2E7D32",
+        "icon": "test.png"
+      },
+      "cash-register": {
+        "size": 20,
+        "color": "#4CAF50",
+        "icon": "test.png"
+      },
+      "tactical-accessory-case": {
+        "size": 22,
+        "color": "#795548",
+        "icon": "test.png"
+      },
+      "military-supply-case": {
+        "size": 24,
+        "color": "#8D6E63",
+        "icon": "test.png"
+      },
+      "red-envelope-spawn": {
+        "size": 18,
+        "color": "#F44336",
+        "icon": "test.png"
+      },
+      "weapon-crate": {
+        "size": 20,
+        "color": "#FF5722",
+        "icon": "test.png"
+      },
+      "armor-box": {
+        "size": 20,
+        "color": "#795548",
+        "icon": "test.png"
+      },
+      "medical-kit": {
+        "size": 18,
+        "color": "#4CAF50",
+        "icon": "test.png"
+      },
+      "electronics-box": {
+        "size": 18,
+        "color": "#2196F3",
+        "icon": "test.png"
+      },
+      "ammo-crate": {
+        "size": 20,
+        "color": "#FFC107",
+        "icon": "test.png"
+      },
+      "ammo-box": {
+        "size": 20,
+        "color": "#FFC107",
+        "icon": "test.png"
+      },
+      "medical-box": {
+        "size": 18,
+        "color": "#4CAF50",
+        "icon": "test.png"
+      },
+      "survival-kit": {
+        "size": 18,
+        "color": "#8BC34A",
+        "icon": "test.png"
+      },
+      "military-cache": {
+        "size": 24,
+        "color": "#FF5722",
+        "icon": "test.png"
+      },
+      "supply-box": {
+        "size": 18,
+        "color": "#607D8B",
+        "icon": "test.png"
+      },
+      "fuel-container": {
+        "size": 20,
+        "color": "#FF9800",
+        "icon": "test.png"
+      },
+      "tool-box": {
+        "size": 18,
+        "color": "#9E9E9E",
+        "icon": "test.png"
+      },
+      "supply-drop": {
+        "size": 26,
+        "color": "#E91E63",
+        "icon": "test.png"
+      }
+    }
+  },
+  "rarityColors": {
+    "common": "#9E9E9E",
+    "uncommon": "#4CAF50", 
+    "rare": "#2196F3",
+    "epic": "#9C27B0",
+    "legendary": "#FF9800"
+  }
+}
