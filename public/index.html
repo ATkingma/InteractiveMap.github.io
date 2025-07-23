@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arena Breakout - Interactive Maps</title>
+    
+    <!-- Note: Security headers should be set at server level (see .htaccess or nginx.conf) -->
+    <!-- Meta CSP is limited and some directives like frame-ancestors are ignored -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https: http:;">
+    
     <link rel="stylesheet" href="../src/landing.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,22 +19,20 @@
     <div class="hero-section">
         <div class="hero-background">
             <div class="hero-overlay"></div>
-            <video autoplay muted loop class="hero-video">
-                <source src="hero-bg.mp4" type="video/mp4">
-            </video>
         </div>
         
         <nav class="navbar">
             <div class="nav-container">
                 <div class="nav-brand">
-                    <span class="brand-icon">🎯</span>
-                    <span class="brand-text">Arena Breakout Maps</span>
+                    <a href="index.html" class="brand-text">Arena Breakout Maps</a>
                 </div>
                 <div class="nav-links">
                     <a href="#maps" class="nav-link">Maps</a>
                     <a href="#features" class="nav-link">Features</a>
-                    <a href="#community" class="nav-link">Community</a>
-                    <button class="nav-cta">Get Started</button>
+                    <a href="privacy-policy.html" class="nav-link">Privacy</a>
+                    <a href="gdpr.html" class="nav-link">GDPR</a>
+                    <!-- <a href="#ratspots" class="nav-link">ratspots</a> -->
+                    <button class="nav-cta">Map</button>
                 </div>
                 <button class="mobile-menu-btn">
                     <span></span>
@@ -51,15 +54,15 @@
                 </p>
                 <div class="hero-stats">
                     <div class="stat">
-                        <span class="stat-number">5</span>
+                        <span class="stat-number" data-target="5">0</span>
                         <span class="stat-label">Maps</span>
                     </div>
                     <div class="stat">
-                        <span class="stat-number">200+</span>
+                        <span class="stat-number" data-target="200" data-suffix="+">0</span>
                         <span class="stat-label">Markers</span>
                     </div>
                     <div class="stat">
-                        <span class="stat-number">5k+</span>
+                        <span class="stat-number" data-target="5000" data-suffix="k+">0</span>
                         <span class="stat-label">Users</span>
                     </div>
                 </div>
@@ -70,6 +73,8 @@
                             <path d="M8 0L16 8L8 16L6.59 14.59L12.17 9H0V7H12.17L6.59 1.41L8 0Z" fill="currentColor"/>
                         </svg>
                     </button>
+                    <!-- Test button for GDPR popup -->
+                    <!-- <button class="btn-secondary" onclick="testGDPRPopup()" style="margin-left: 1rem;">Test GDPR Popup</button> -->
                 </div>
             </div>
         </div>
@@ -91,8 +96,8 @@
                                 <h3>Armory</h3>
                                 <p>High-tier loot facility with multiple extraction points</p>
                                 <div class="map-stats">
-                                    <span class="stat">🎯 45 Markers</span>
-                                    <span class="stat">⚡ Updated</span>
+                                    <span class="stat">45 Markers</span>
+                                    <span class="stat">Updated</span>
                                 </div>
                             </div>
                             <button class="play-btn">
@@ -109,9 +114,9 @@
                         </div>
                         <p class="map-description">Industrial weapons facility with dense CQB areas</p>
                         <div class="map-features">
-                            <span class="feature">🔥 Hot Zone</span>
-                            <span class="feature">💎 High Loot</span>
-                            <span class="feature">🏢 Multi-Level</span>
+                            <span class="feature">Hot Zone</span>
+                            <span class="feature">High Loot</span>
+                            <span class="feature">Multi-Level</span>
                         </div>
                     </div>
                 </div>
@@ -124,8 +129,8 @@
                                 <h3>Valley</h3>
                                 <p>Open terrain with long-range engagement opportunities</p>
                                 <div class="map-stats">
-                                    <span class="stat">🎯 32 Markers</span>
-                                    <span class="stat">⚡ Updated</span>
+                                    <span class="stat">32 Markers</span>
+                                    <span class="stat">Updated</span>
                                 </div>
                             </div>
                             <button class="play-btn">
@@ -142,9 +147,9 @@
                         </div>
                         <p class="map-description">Mountainous region with strategic vantage points</p>
                         <div class="map-features">
-                            <span class="feature">🏔️ Open Terrain</span>
-                            <span class="feature">🔭 Sniper Spots</span>
-                            <span class="feature">🌿 Natural Cover</span>
+                            <span class="feature">Open Terrain</span>
+                            <span class="feature">Sniper Spots</span>
+                            <span class="feature">Natural Cover</span>
                         </div>
                     </div>
                 </div>
@@ -157,8 +162,8 @@
                                 <h3>Northridge</h3>
                                 <p>Mountainous terrain with elevated positions and strategic vantage points</p>
                                 <div class="map-stats">
-                                    <span class="stat">🎯 35 Markers</span>
-                                    <span class="stat">⚡ Updated</span>
+                                    <span class="stat">35 Markers</span>
+                                    <span class="stat">Updated</span>
                                 </div>
                             </div>
                             <button class="play-btn">
@@ -190,8 +195,8 @@
                                 <h3>TV Station</h3>
                                 <p>Urban broadcasting facility with multiple levels and communication equipment</p>
                                 <div class="map-stats">
-                                    <span class="stat">🎯 28 Markers</span>
-                                    <span class="stat">⚡ Updated</span>
+                                    <span class="stat">28 Markers</span>
+                                    <span class="stat">Updated</span>
                                 </div>
                             </div>
                             <button class="play-btn">
@@ -208,9 +213,9 @@
                         </div>
                         <p class="map-description">Multi-story broadcasting facility with rooftop access</p>
                         <div class="map-features">
-                            <span class="feature">📺 Broadcasting</span>
-                            <span class="feature">🏢 Multi-Level</span>
-                            <span class="feature">📡 Rooftop</span>
+                            <span class="feature">Broadcasting</span>
+                            <span class="feature">Multi-Level</span>
+                            <span class="feature">Rooftop</span>
                         </div>
                     </div>
                 </div>
@@ -227,32 +232,26 @@
             
             <div class="features-grid">
                 <div class="feature-card">
-                    <div class="feature-icon">🎯</div>
                     <h3>Precision Markers</h3>
                     <p>Pinpoint locations with pixel-perfect accuracy. Add custom markers with detailed descriptions and categories.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🔍</div>
                     <h3>Advanced Filtering</h3>
                     <p>Filter by loot quality, marker type, or custom tags. Find exactly what you need instantly.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">📱</div>
                     <h3>Mobile Optimized</h3>
                     <p>Seamless experience across all devices. Touch controls and responsive design for on-the-go tactical planning.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
                     <h3>Real-time Updates</h3>
                     <p>Community-driven markers with live updates. Stay ahead with the latest intel and discoveries.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🎨</div>
                     <h3>Custom Overlays</h3>
                     <p>Create tactical overlays, route planning, and team coordination tools directly on the map.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🔒</div>
                     <h3>Save & Share</h3>
                     <p>Save your custom markers and share tactical plans with your team. Export and import functionality.</p>
                 </div>
@@ -262,20 +261,19 @@
 
     <footer class="footer">
         <div class="container">
+            <div class="footer-brand">
+                <span class="brand-text">Arena Breakout Maps</span>
+            </div>
             <div class="footer-content">
-                <div class="footer-brand">
-                    <span class="brand-icon">🎯</span>
-                    <span class="brand-text">Arena Breakout Maps</span>
-                </div>
                 <div class="footer-links">
                     <a href="#maps">Maps</a>
                     <a href="#features">Features</a>
-                    <a href="#community">Community</a>
-                    <a href="#support">Support</a>
+                    <a href="privacy-policy.html">Privacy Policy</a>
+                    <a href="gdpr.html">GDPR</a>
                 </div>
                 <div class="footer-social">
-                    <a href="#" class="social-link">Discord</a>
-                    <a href="#" class="social-link">Reddit</a>
+                    <!-- <a href="#" class="social-link">Discord</a>
+                    <a href="#" class="social-link">Reddit</a> -->
                     <a href="#" class="social-link">GitHub</a>
                 </div>
             </div>
@@ -285,6 +283,8 @@
         </div>
     </footer>
 
+    <script src="../src/hash-utils.js"></script>
     <script src="../src/landing.js"></script>
+    <script src="../src/adblocker-manager.js"></script>
 </body>
 </html>

@@ -3,7 +3,7 @@
     "spawn": {
       "size": 24,
       "color": "#4CAF50",
-      "icon": "test.png",
+      "icon": "spawn-point.svg",
       "description": "Player spawn locations"
     },
     "extraction": {
@@ -15,7 +15,7 @@
     "spawn-points": {
       "size": 24,
       "color": "#4CAF50",
-      "icon": "test.png",
+      "icon": "spawn-point.svg",
       "description": "Player spawn locations"
     },
     "extraction-points": {

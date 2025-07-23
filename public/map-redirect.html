@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arena Breakout - Interactive Map (Redirecting...)</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background: linear-gradient(135deg, #001428, #002040);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Inter', Arial, sans-serif;
+            color: #ffffff;
+        }
+        
+        .redirect-container {
+            text-align: center;
+            padding: 40px;
+            background: rgba(0, 20, 40, 0.9);
+            border: 2px solid #00ff88;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .redirect-container h1 {
+            color: #00ff88;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .redirect-container p {
+            margin-bottom: 30px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        
+        .redirect-btn {
+            background: linear-gradient(135deg, #00ff88, #00cc66);
+            color: #001428;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .redirect-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.3);
+        }
+        
+        .loading {
+            margin-top: 20px;
+            color: #00ff88;
+        }
+        
+        .spinner {
+            border: 2px solid rgba(0, 255, 136, 0.3);
+            border-top: 2px solid #00ff88;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="redirect-container">
+        <h1>🗺️ Arena Breakout Interactive Map</h1>
+        <p>We've upgraded to a new and improved map system!<br>
+        You'll be redirected to the enhanced Leaflet-based map in <span id="countdown">3</span> seconds.</p>
+        
+        <a href="map-leaflet.html" class="redirect-btn">Go to New Map Now</a>
+        
+        <div class="loading">
+            <div class="spinner"></div>
+            Loading enhanced map system...
+        </div>
+    </div>
+
+    <script>
+        // Countdown and redirect
+        let countdown = 3;
+        const countdownElement = document.getElementById('countdown');
+        
+        const timer = setInterval(() => {
+            countdown--;
+            countdownElement.textContent = countdown;
+            
+            if (countdown <= 0) {
+                clearInterval(timer);
+                window.location.href = 'map-leaflet.html';
+            }
+        }, 1000);
+        
+        // Immediate redirect if user clicks anywhere
+        document.addEventListener('click', () => {
+            window.location.href = 'map-leaflet.html';
+        });
+    </script>
+</body>
+</html>

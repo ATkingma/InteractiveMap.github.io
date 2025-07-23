@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GDPR Compliance - Arena Breakout Maps</title>
+    
+    <!-- Note: Security headers should be set at server level (see .htaccess or nginx.conf) -->
+    <!-- Meta CSP is limited and some directives like frame-ancestors are ignored -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https: http:;">
+    
+    <link rel="stylesheet" href="../src/landing.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .legal-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 140, 0, 0.1);
+        }
+        .legal-content h1 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        .legal-content h2 {
+            color: var(--text-primary);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        .legal-content p, .legal-content li {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        .legal-content ul {
+            margin-left: 1.5rem;
+        }
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            margin-bottom: 2rem;
+            transition: color 0.2s ease;
+        }
+        .back-btn:hover {
+            color: var(--primary-light);
+        }
+        .consent-section {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+        .consent-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .consent-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        .consent-accept {
+            background: var(--primary-color);
+            color: white;
+        }
+        .consent-accept:hover {
+            background: var(--primary-light);
+        }
+        .consent-decline {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .consent-decline:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .nav-link.active {
+            color: var(--primary-color) !important;
+            font-weight: 600;
+        }
+        body {
+            overflow-y: auto;
+            min-height: 100vh;
+            background: var(--bg-dark);
+        }
+        .legal-page {
+            min-height: 100vh;
+            padding-bottom: 4rem;
+            position: relative;
+        }
+        .hero-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-darker) 50%, var(--bg-dark) 100%);
+            z-index: -1;
+        }
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(255, 140, 0, 0.1) 0%, transparent 70%);
+        }
+    </style>
+</head>
+<body>
+    <div class="legal-page">
+        <div class="hero-background">
+            <div class="hero-overlay"></div>
+        </div>
+        
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-brand">
+                    <a href="index.html" class="brand-text">Arena Breakout Maps</a>
+                </div>
+                <div class="nav-links">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="gdpr.html" class="nav-link active">GDPR</a>
+                    <a href="privacy-policy.html" class="nav-link">Privacy</a>
+                    <button class="nav-cta" onclick="window.location.href='map-leaflet.html'">Map</button>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <a href="index.html" class="back-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M19 12H5M12 19L5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Back to Home
+            </a>
+            
+            <div class="legal-content">
+                <h1>GDPR Compliance</h1>
+                <p><strong>General Data Protection Regulation Compliance</strong></p>
+
+                <h2>Your Data Rights Under GDPR</h2>
+                <p>As a user of Arena Breakout Maps, you have the following rights under the General Data Protection Regulation (GDPR):</p>
+
+                <ul>
+                    <li><strong>Right to be informed:</strong> We provide clear information about how we collect and use your data</li>
+                    <li><strong>Right of access:</strong> You can request access to the personal data we hold about you</li>
+                    <li><strong>Right to rectification:</strong> You can request correction of inaccurate personal data</li>
+                    <li><strong>Right to erasure:</strong> You can request deletion of your personal data</li>
+                    <li><strong>Right to restrict processing:</strong> You can request limitation of how we process your data</li>
+                    <li><strong>Right to data portability:</strong> You can request transfer of your data to another service</li>
+                    <li><strong>Right to object:</strong> You can object to our processing of your personal data</li>
+                </ul>
+
+                <h2>Data We Process</h2>
+                <p>We process the following categories of data:</p>
+                <ul>
+                    <li><strong>Technical Data:</strong> IP address, browser type, device information</li>
+                    <li><strong>Usage Data:</strong> Map interactions, marker placements, preferences</li>
+                    <li><strong>Cookie Data:</strong> Preferences, settings, and ad blocker detection</li>
+                </ul>
+
+                <h2>Legal Basis for Processing</h2>
+                <p>We process your data based on:</p>
+                <ul>
+                    <li><strong>Legitimate Interest:</strong> To provide and improve our mapping service</li>
+                    <li><strong>Consent:</strong> For advertising and analytics (where required)</li>
+                    <li><strong>Performance of Contract:</strong> To deliver the service you've requested</li>
+                </ul>
+
+                <div class="consent-section">
+                    <h3>Cookie and Data Processing Consent</h3>
+                    <p>We use cookies and similar technologies to enhance your experience. Please choose your preferences below. Essential cookies are required for the website to function and cannot be disabled.</p>
+                    
+                    <div style="margin: 1.5rem 0;">
+                        <div style="margin-bottom: 1rem; padding: 1rem; background: rgba(255, 255, 255, 0.05); border-radius: 8px;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: not-allowed;">
+                                <input type="checkbox" id="essential-cookies" checked disabled style="cursor: not-allowed;">
+                                <div>
+                                    <strong>Essential Cookies (Required)</strong><br>
+                                    <small style="color: #ccc;">These cookies are necessary for the website to function properly. They enable core functionality such as security, navigation, and basic features.</small>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div style="margin-bottom: 1rem; padding: 1rem; background: rgba(255, 255, 255, 0.05); border-radius: 8px;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                <input type="checkbox" id="analytics-cookies" checked>
+                                <div>
+                                    <strong>Analytics Cookies</strong><br>
+                                    <small style="color: #ccc;">Help us understand how visitors interact with our website by collecting and reporting information anonymously.</small>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div style="margin-bottom: 1rem; padding: 1rem; background: rgba(255, 255, 255, 0.05); border-radius: 8px;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                <input type="checkbox" id="advertising-cookies" checked>
+                                <div>
+                                    <strong>Advertising Cookies</strong><br>
+                                    <small style="color: #ccc;">Used to make advertising messages more relevant to you and your interests. Support our free service through targeted advertisements.</small>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div style="margin-bottom: 1rem; padding: 1rem; background: rgba(255, 255, 255, 0.05); border-radius: 8px;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                <input type="checkbox" id="functional-cookies">
+                                <div>
+                                    <strong>Functional Cookies</strong><br>
+                                    <small style="color: #ccc;">Enable enhanced functionality and personalization, such as remembering your map preferences and custom markers.</small>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="consent-buttons">
+                        <button class="consent-btn consent-accept" onclick="saveConsentPreferences()">Save Preferences</button>
+                        <button class="consent-btn consent-decline" onclick="acceptOnlyEssential()">Accept Only Essential</button>
+                        <button class="consent-btn consent-decline" onclick="acceptAllCookies()">Accept All</button>
+                    </div>
+                    
+                    <p style="color: #666; font-size: 0.8rem; margin-top: 1rem;">
+                        You can change your preferences at any time by returning to this page. Some features may not work correctly if you disable certain cookies.
+                    </p>
+                </div>
+
+                <h2>Data Retention</h2>
+                <p>We retain your data for the following periods:</p>
+                <ul>
+                    <li><strong>Local Storage Data:</strong> Until you clear your browser data</li>
+                    <li><strong>Analytics Data:</strong> Up to 26 months</li>
+                    <li><strong>Ad Data:</strong> As per advertising partner policies</li>
+                </ul>
+
+                <h2>Data Transfers</h2>
+                <p>Your data may be transferred to and processed in countries outside the European Economic Area (EEA). We ensure appropriate safeguards are in place for such transfers.</p>
+
+                <h2>Your Choices</h2>
+                <p>You can exercise your rights by:</p>
+                <ul>
+                    <li>Clearing your browser's local storage and cookies</li>
+                    <li>Using browser settings to block cookies</li>
+                    <li>Contacting us directly for data requests</li>
+                    <li>Using the cookie consent controls on our website</li>
+                </ul>
+
+                <h2>Complaints</h2>
+                <p>If you believe we have not complied with GDPR requirements, you have the right to lodge a complaint with your local data protection authority.</p>
+
+                <h2>Contact Information</h2>
+                <p>For any GDPR-related queries or to exercise your rights, please contact us through our support channels.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function saveConsentPreferences() {
+            const consent = {
+                essential: true, // Always true, cannot be disabled
+                analytics: document.getElementById('analytics-cookies').checked,
+                advertising: document.getElementById('advertising-cookies').checked,
+                functional: document.getElementById('functional-cookies').checked,
+                timestamp: Date.now(),
+                version: '1.0'
+            };
+            
+            localStorage.setItem('gdpr_consent', JSON.stringify(consent));
+            localStorage.setItem('gdpr_consent_given', 'true');
+            
+            showNotification('Your preferences have been saved successfully', 'success');
+            
+            // Initialize ad manager with new preferences
+            if (window.adBlockerManager) {
+                window.adBlockerManager.updateConsent(consent);
+            }
+        }
+
+        function acceptAllCookies() {
+            // Check all optional cookies
+            document.getElementById('analytics-cookies').checked = true;
+            document.getElementById('advertising-cookies').checked = true;
+            document.getElementById('functional-cookies').checked = true;
+            
+            saveConsentPreferences();
+        }
+
+        function acceptOnlyEssential() {
+            // Uncheck all optional cookies
+            document.getElementById('analytics-cookies').checked = false;
+            document.getElementById('advertising-cookies').checked = false;
+            document.getElementById('functional-cookies').checked = false;
+            
+            saveConsentPreferences();
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#4CAF50' : '#2196F3'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 6px;
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease forwards';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Check if user has already given consent
+        document.addEventListener('DOMContentLoaded', function() {
+            const existingConsent = localStorage.getItem('gdpr_consent');
+            if (existingConsent) {
+                try {
+                    const consent = JSON.parse(existingConsent);
+                    document.getElementById('analytics-cookies').checked = consent.analytics || false;
+                    document.getElementById('advertising-cookies').checked = consent.advertising || false;
+                    document.getElementById('functional-cookies').checked = consent.functional || false;
+                    
+                    showNotification('Loaded your existing cookie preferences', 'success');
+                } catch (e) {
+                    console.error('Error loading consent preferences:', e);
+                }
+            }
+        });
+
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            @keyframes slideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+    <script src="../src/hash-utils.js"></script>
+    <script src="../src/adblocker-manager.js"></script>
+</body>
+</html>

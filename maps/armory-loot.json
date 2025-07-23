@@ -9,19 +9,31 @@
           "id": "spawn-1",
           "type": "spawn-points",
           "name": "Armory Main Entrance",
-          "x": 500,
-          "y": 300,
+          "x": 1000,
+          "y": 500,
           "floor": "ground",
-          "description": "Primary spawn point for armory raids"
+          "description": "Primary spawn point for armory raids",
+          "rarity": "common"
         },
         {
           "id": "spawn-2",
-          "type": "spawn-points",
+          "type": "spawn-points", 
           "name": "Side Entry",
-          "x": 3500,
+          "x": 3000,
           "y": 800,
           "floor": "ground",
-          "description": "Secondary spawn point"
+          "description": "Secondary spawn point",
+          "rarity": "common"
+        },
+        {
+          "id": "weapon-cache-1",
+          "type": "weapons",
+          "name": "Primary Weapon Cache",
+          "x": 2000,
+          "y": 600,
+          "floor": "ground",
+          "description": "High-tier weapons and attachments",
+          "rarity": "legendary"
         },
         {
           "id": "extract-1",

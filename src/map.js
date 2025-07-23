@@ -3,7 +3,7 @@ class ProfessionalInteractiveMap {
         this.canvas = document.getElementById('mapCanvas');
         this.ctx = this.canvas.getContext('2d');
         this.overlay = document.getElementById('mapOverlay');
-        this.wrapper = document.getElementById('mapWrapper');
+        this.wrapper = document.getElementById('mapContainer');
         
         // Map state
         this.mapImage = new Image();
@@ -51,6 +51,9 @@ class ProfessionalInteractiveMap {
         this.lastRenderTime = 0;
         this.renderThrottle = 16; // ~60fps
         this.markerUpdateTimeout = null;
+        
+        // Ad blocker and monetization
+        this.adBlockerManager = null;
         
         // Initialize
         this.init();
@@ -121,6 +124,11 @@ class ProfessionalInteractiveMap {
     async init() {
         this.showLoading(true);
         
+        // Initialize ad blocker manager first
+        if (window.adBlockerManager) {
+            this.adBlockerManager = window.adBlockerManager;
+        }
+        
         try {
             // First discover available maps
             await this.discoverAvailableMaps();
@@ -165,14 +173,46 @@ class ProfessionalInteractiveMap {
         const MAP_HEIGHT = 2158;
         const aspectRatio = MAP_WIDTH / MAP_HEIGHT;
         
-        // Calculate canvas size maintaining exact aspect ratio
-        let canvasWidth = rect.width;
-        let canvasHeight = rect.width / aspectRatio;
+        // Calculate canvas size maintaining exact aspect ratio with aggressive scaling
+        const padding = 4; // Minimal padding for maximum space utilization
+        const availableWidth = rect.width - padding;
+        const availableHeight = rect.height - padding;
+        
+        let canvasWidth = availableWidth;
+        let canvasHeight = availableWidth / aspectRatio;
         
         // If height is too tall, scale by height instead
-        if (canvasHeight > rect.height) {
-            canvasHeight = rect.height;
-            canvasWidth = rect.height * aspectRatio;
+        if (canvasHeight > availableHeight) {
+            canvasHeight = availableHeight;
+            canvasWidth = availableHeight * aspectRatio;
+        }
+        
+        // Aggressive scaling to fill as much space as possible
+        // Higher scale factors to eliminate gray areas
+        const viewportArea = rect.width * rect.height;
+        let scaleFactor = 1.4; // Increased base scale factor
+        
+        // More aggressive scale factors for larger viewports
+        if (viewportArea > 1500000) { // Large screens
+            scaleFactor = 1.55;
+        } else if (viewportArea > 800000) { // Medium screens
+            scaleFactor = 1.5;
+        }
+        
+        canvasWidth *= scaleFactor;
+        canvasHeight *= scaleFactor;
+        
+        // Ensure we don't exceed available space after scaling
+        if (canvasWidth > availableWidth) {
+            const downScale = availableWidth / canvasWidth;
+            canvasWidth *= downScale;
+            canvasHeight *= downScale;
+        }
+        
+        if (canvasHeight > availableHeight) {
+            const downScale = availableHeight / canvasHeight;
+            canvasWidth *= downScale;
+            canvasHeight *= downScale;
         }
         
         // Set canvas size
@@ -181,6 +221,11 @@ class ProfessionalInteractiveMap {
         this.canvas.style.width = canvasWidth + 'px';
         this.canvas.style.height = canvasHeight + 'px';
         
+        // Center the canvas within the container
+        this.canvas.style.position = 'relative';
+        this.canvas.style.display = 'block';
+        this.canvas.style.margin = 'auto';
+        
         // Store map dimensions for coordinate calculations
         this.mapDimensions = {
             width: MAP_WIDTH,
@@ -188,9 +233,15 @@ class ProfessionalInteractiveMap {
             aspectRatio: aspectRatio
         };
         
-        // Set overlay size to match canvas
+        // Set overlay size and position to match canvas exactly
         this.overlay.style.width = canvasWidth + 'px';
         this.overlay.style.height = canvasHeight + 'px';
+        this.overlay.style.position = 'absolute';
+        this.overlay.style.top = '50%';
+        this.overlay.style.left = '50%';
+        this.overlay.style.transform = 'translate(-50%, -50%)';
+        this.overlay.style.pointerEvents = 'none';
+        this.overlay.style.zIndex = '10';
         
         // Scale context for high DPI
         this.ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
@@ -200,6 +251,22 @@ class ProfessionalInteractiveMap {
         
         // Resize handler
         window.addEventListener('resize', () => this.handleResize());
+        
+        // Container resize observer for panel collapse/expand
+        if (window.ResizeObserver) {
+            this.resizeObserver = new ResizeObserver(() => {
+                // Debounce resize calls
+                clearTimeout(this.resizeTimeout);
+                this.resizeTimeout = setTimeout(() => this.handleResize(), 50);
+            });
+            this.resizeObserver.observe(this.wrapper);
+        }
+        
+        // Orientation change handler for mobile devices
+        window.addEventListener('orientationchange', () => {
+            // Add a small delay to ensure the orientation change is complete
+            setTimeout(() => this.handleResize(), 100);
+        });
     }
 
     handleResize() {
@@ -209,14 +276,46 @@ class ProfessionalInteractiveMap {
         // Use exact map dimensions
         const aspectRatio = this.mapDimensions ? this.mapDimensions.aspectRatio : (4078 / 2158);
         
-        // Calculate canvas size maintaining exact aspect ratio
-        let canvasWidth = rect.width;
-        let canvasHeight = rect.width / aspectRatio;
+        // Calculate canvas size maintaining exact aspect ratio with aggressive scaling
+        const padding = 4; // Minimal padding for maximum space utilization
+        const availableWidth = rect.width - padding;
+        const availableHeight = rect.height - padding;
+        
+        let canvasWidth = availableWidth;
+        let canvasHeight = availableWidth / aspectRatio;
         
         // If height is too tall, scale by height instead
-        if (canvasHeight > rect.height) {
-            canvasHeight = rect.height;
-            canvasWidth = rect.height * aspectRatio;
+        if (canvasHeight > availableHeight) {
+            canvasHeight = availableHeight;
+            canvasWidth = availableHeight * aspectRatio;
+        }
+        
+        // Aggressive scaling to fill as much space as possible
+        // Higher scale factors to eliminate gray areas
+        const viewportArea = rect.width * rect.height;
+        let scaleFactor = 1.4; // Increased base scale factor
+        
+        // More aggressive scale factors for larger viewports
+        if (viewportArea > 1500000) { // Large screens
+            scaleFactor = 1.55;
+        } else if (viewportArea > 800000) { // Medium screens
+            scaleFactor = 1.5;
+        }
+        
+        canvasWidth *= scaleFactor;
+        canvasHeight *= scaleFactor;
+        
+        // Ensure we don't exceed available space after scaling
+        if (canvasWidth > availableWidth) {
+            const downScale = availableWidth / canvasWidth;
+            canvasWidth *= downScale;
+            canvasHeight *= downScale;
+        }
+        
+        if (canvasHeight > availableHeight) {
+            const downScale = availableHeight / canvasHeight;
+            canvasWidth *= downScale;
+            canvasHeight *= downScale;
         }
         
         this.canvas.width = canvasWidth * window.devicePixelRatio;
@@ -224,9 +323,20 @@ class ProfessionalInteractiveMap {
         this.canvas.style.width = canvasWidth + 'px';
         this.canvas.style.height = canvasHeight + 'px';
         
-        // Set overlay size to match canvas
+        // Center the canvas within the container
+        this.canvas.style.position = 'relative';
+        this.canvas.style.display = 'block';
+        this.canvas.style.margin = 'auto';
+        
+        // Set overlay size and position to match canvas exactly
         this.overlay.style.width = canvasWidth + 'px';
         this.overlay.style.height = canvasHeight + 'px';
+        this.overlay.style.position = 'absolute';
+        this.overlay.style.top = '50%';
+        this.overlay.style.left = '50%';
+        this.overlay.style.transform = 'translate(-50%, -50%)';
+        this.overlay.style.pointerEvents = 'none';
+        this.overlay.style.zIndex = '10';
         
         this.ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
         
@@ -739,9 +849,9 @@ class ProfessionalInteractiveMap {
     }
 
     async loadUserMarkersForFloor(mapName, floorName) {
-        const savedMarkers = localStorage.getItem(`user_markers_${mapName}_${floorName}`);
-        if (savedMarkers) {
-            try {
+        try {
+            const savedMarkers = localStorage.getItem(`user_markers_${mapName}_${floorName}`);
+            if (savedMarkers) {
                 const markersData = JSON.parse(savedMarkers);
                 
                 // Clear existing user markers
@@ -759,9 +869,9 @@ class ProfessionalInteractiveMap {
                     marker.floor = floorName;
                     this.addMarker(marker);
                 });
-            } catch (error) {
-                console.error('Failed to load user markers:', error);
             }
+        } catch (error) {
+            console.error('Failed to load user markers:', error);
         }
     }
 
@@ -928,6 +1038,10 @@ class ProfessionalInteractiveMap {
         this.isDragging = true;
         this.lastMousePos = this.getMousePos(e);
         this.canvas.style.cursor = 'grabbing';
+        this.wrapper.classList.add('dragging');
+        
+        // Prevent default to avoid text selection and other unwanted behaviors
+        e.preventDefault();
     }
 
     handleMouseMove(e) {
@@ -950,6 +1064,14 @@ class ProfessionalInteractiveMap {
     handleMouseUp() {
         this.isDragging = false;
         this.canvas.style.cursor = this.isAddingMarker ? 'crosshair' : 'grab';
+        this.wrapper.classList.remove('dragging');
+    }
+
+    handleGlobalMouseUp() {
+        // Ensure dragging stops even if mouse up happens outside canvas
+        this.isDragging = false;
+        this.canvas.style.cursor = this.isAddingMarker ? 'crosshair' : 'grab';
+        this.wrapper.classList.remove('dragging');
     }
 
     handleWheel(e) {
@@ -1037,6 +1159,12 @@ class ProfessionalInteractiveMap {
     handleFormSubmit(e) {
         e.preventDefault();
         
+        // Check if user can use custom markers (ad blocker check)
+        if (this.adBlockerManager && !this.adBlockerManager.canUsePremiumFeatures()) {
+            this.adBlockerManager.handleCustomMarkerUsage();
+            return;
+        }
+        
         const formData = new FormData(e.target);
         const selectedFloor = document.getElementById('markerFloor').value;
         const markerData = {
@@ -1058,6 +1186,11 @@ class ProfessionalInteractiveMap {
         
         document.getElementById('cancelAddBtn').style.display = 'inline-flex';
         this.showNotification('Click on the map to place the marker', 'info');
+        
+        // Track custom marker usage
+        if (this.adBlockerManager) {
+            this.adBlockerManager.handleCustomMarkerUsage();
+        }
     }
 
     handleMarkerTypeChange(e) {
@@ -1129,7 +1262,7 @@ class ProfessionalInteractiveMap {
     }
 
     zoomAt(x, y, factor) {
-        const newScale = Math.max(0.5, Math.min(3, this.scale * factor));
+        const newScale = Math.max(0.3, Math.min(5, this.scale * factor));
         
         if (newScale === this.scale) return;
         
@@ -1792,11 +1925,20 @@ class ProfessionalInteractiveMap {
     }
 
     clampTranslation() {
-        const rect = this.canvas.getBoundingClientRect();
-        const maxTranslateX = rect.width * 0.5;
-        const maxTranslateY = rect.height * 0.5;
-        const minTranslateX = -rect.width * this.scale + rect.width * 0.5;
-        const minTranslateY = -rect.height * this.scale + rect.height * 0.5;
+        // Use container rect instead of canvas rect for proper clamping
+        const containerRect = this.wrapper.getBoundingClientRect();
+        const canvasRect = this.canvas.getBoundingClientRect();
+        
+        // Allow more flexible panning when zoomed in
+        const maxTranslateX = containerRect.width * 0.3;
+        const maxTranslateY = containerRect.height * 0.3;
+        
+        // Calculate minimum translation based on canvas size and scale
+        const scaledCanvasWidth = canvasRect.width * this.scale;
+        const scaledCanvasHeight = canvasRect.height * this.scale;
+        
+        const minTranslateX = containerRect.width - scaledCanvasWidth - containerRect.width * 0.3;
+        const minTranslateY = containerRect.height - scaledCanvasHeight - containerRect.height * 0.3;
         
         this.translateX = Math.max(minTranslateX, Math.min(maxTranslateX, this.translateX));
         this.translateY = Math.max(minTranslateY, Math.min(maxTranslateY, this.translateY));
@@ -2213,7 +2355,46 @@ class ProfessionalInteractiveMap {
     // Panel toggle functions
     togglePanel(side) {
         const panel = document.getElementById(side === 'left' ? 'leftPanel' : 'rightPanel');
-        panel.classList.toggle('active');
+        const mapContainer = document.getElementById('mapContainer');
+        const mainContent = document.querySelector('.main-content');
+        
+        // Check if we're on mobile (window width <= 768px)
+        const isMobile = window.innerWidth <= 768;
+        
+        if (isMobile) {
+            // Mobile behavior - use active class
+            panel.classList.toggle('active');
+        } else {
+            // Desktop behavior - use collapsed class
+            panel.classList.toggle('collapsed');
+            
+            // Update main content class to reflect panel states
+            const leftCollapsed = document.getElementById('leftPanel').classList.contains('collapsed');
+            const rightCollapsed = document.getElementById('rightPanel').classList.contains('collapsed');
+            
+            // Remove all panel state classes
+            mainContent.classList.remove('left-collapsed', 'right-collapsed', 'both-collapsed');
+            
+            // Add appropriate state classes
+            if (leftCollapsed && rightCollapsed) {
+                mainContent.classList.add('both-collapsed');
+            } else if (leftCollapsed) {
+                mainContent.classList.add('left-collapsed');
+            } else if (rightCollapsed) {
+                mainContent.classList.add('right-collapsed');
+            }
+        }
+        
+        // Trigger map resize after panel animation (only on desktop)
+        if (!isMobile) {
+            setTimeout(() => {
+                this.handleResize();
+                // Also update marker positions after panel resize
+                if (this.markerSystem) {
+                    this.markerSystem.updateAllPositions();
+                }
+            }, 400); // Match the CSS transition duration
+        }
     }
 
     async loadMarkerIcons() {
@@ -2233,7 +2414,21 @@ class ProfessionalInteractiveMap {
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     window.interactiveMap = new ProfessionalInteractiveMap();
-    });
+    
+    // Initialize panel animations
+    setTimeout(() => {
+        if (window.interactiveMap) {
+            window.interactiveMap.initializePanelAnimations();
+        }
+    }, 500);
+});
+
+// Global function for HTML onclick handlers
+function togglePanel(side) {
+    if (window.interactiveMap) {
+        window.interactiveMap.togglePanel(side);
+    }
+}
 
     // Handle page visibility changes
     document.addEventListener('visibilitychange', () => {
