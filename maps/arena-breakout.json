@@ -1,0 +1,140 @@
+{
+  "mapName": "arena-breakout",
+  "difficulties": {
+    "normal": {
+      "name": "normal",
+      "levels": [
+        {
+          "name": "Ground Floor",
+          "floor": 0,
+          "mapImage": "map.png",
+          "markers": [
+            {
+              "name": "Spawn Point Alpha",
+              "type": "spawn",
+              "icon": "test.png",
+              "color": "#00ff00",
+              "fallbackColor": "#008800",
+              "description": "Primary spawn location for team Alpha",
+              "position": { "x": 400, "y": 300 }
+            },
+            {
+              "name": "Spawn Point Beta",
+              "type": "spawn",
+              "icon": "spawn-point.svg",
+              "color": "#0000ff",
+              "fallbackColor": "#000088",
+              "description": "Primary spawn location for team Beta",
+              "position": { "x": 3600, "y": 1800 }
+            },
+            {
+              "name": "Central Loot Area",
+              "type": "loot",
+              "icon": "test.png",
+              "color": "#ffff00",
+              "fallbackColor": "#cccc00",
+              "description": "High-value loot spawns in center",
+              "position": { "x": 2039, "y": 1079 }
+            },
+            {
+              "name": "Medical Station",
+              "type": "medical",
+              "icon": "test.png",
+              "color": "#ff4444",
+              "fallbackColor": "#cc3333",
+              "description": "Medical supplies and healing items",
+              "position": { "x": 1500, "y": 500 }
+            },
+            {
+              "name": "Weapon Cache North",
+              "type": "weapons",
+              "icon": "test.png",
+              "color": "#ff8800",
+              "fallbackColor": "#cc6600",
+              "description": "Military weapon storage",
+              "position": { "x": 2500, "y": 400 }
+            },
+            {
+              "name": "Extraction Point",
+              "type": "extraction",
+              "icon": "test.png",
+              "color": "#00ffff",
+              "fallbackColor": "#00cccc",
+              "description": "Primary extraction zone",
+              "position": { "x": 3200, "y": 1600 }
+            }
+          ]
+        }
+      ]
+    },
+    "lockdown": {
+      "name": "lockdown",
+      "levels": [
+        {
+          "name": "Ground Floor",
+          "floor": 0,
+          "mapImage": "map.png",
+          "markers": [
+            {
+              "name": "Emergency Spawn",
+              "type": "spawn",
+              "icon": "spawn-point.svg",
+              "color": "#ff8800",
+              "fallbackColor": "#cc6600",
+              "description": "Emergency spawn during lockdown",
+              "position": { "x": 800, "y": 600 }
+            },
+            {
+              "name": "Lockdown Cache",
+              "type": "loot",
+              "icon": "test.png",
+              "color": "#ff00ff",
+              "fallbackColor": "#cc00cc",
+              "description": "Special lockdown equipment",
+              "position": { "x": 2200, "y": 1200 }
+            },
+            {
+              "name": "Security Override",
+              "type": "objective",
+              "icon": "test.png",
+              "color": "#ff0000",
+              "fallbackColor": "#cc0000",
+              "description": "Terminal to override lockdown",
+              "position": { "x": 1800, "y": 900 }
+            }
+          ]
+        }
+      ]
+    },
+    "forbidden": {
+      "name": "forbidden",
+      "levels": [
+        {
+          "name": "Ground Floor",
+          "floor": 0,
+          "mapImage": "map.png",
+          "markers": [
+            {
+              "name": "Forbidden Zone Entry",
+              "type": "danger",
+              "icon": "test.png",
+              "color": "#aa0000",
+              "fallbackColor": "#880000",
+              "description": "Highly dangerous area - proceed with caution",
+              "position": { "x": 1000, "y": 1000 }
+            },
+            {
+              "name": "Rare Artifact",
+              "type": "rare-loot",
+              "icon": "test.png",
+              "color": "#gold",
+              "fallbackColor": "#cc9900",
+              "description": "Extremely rare and valuable item",
+              "position": { "x": 3000, "y": 1300 }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

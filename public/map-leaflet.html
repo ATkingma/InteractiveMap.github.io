@@ -36,6 +36,41 @@
 </head>
 
 <body>
+    <!-- Navigation Bar -->
+    <nav class="map-navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html" class="brand-link">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <span class="brand-text">Arena Breakout Maps</span>
+                </a>
+            </div>
+            
+            <div class="nav-center">
+                <div class="current-page-info">
+                    <i class="fas fa-location-dot"></i>
+                    <span class="page-indicator">Interactive Map</span>
+                    <span class="map-name-indicator" id="current-map-name">Loading...</span>
+                </div>
+            </div>
+            
+            <div class="nav-actions">
+                <button class="nav-btn" onclick="window.location.href='index.html'" title="Back to Main Page">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </button>
+                <button class="nav-btn" onclick="toggleSidebar()" title="Toggle Sidebar">
+                    <i class="fas fa-bars"></i>
+                    <span>Menu</span>
+                </button>
+                <button class="nav-btn" onclick="resetMapView()" title="Reset Map View">
+                    <i class="fas fa-refresh"></i>
+                    <span>Reset</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
     <!-- Top Ad Space -->
     <div id="top-ad" class="ad-space top-ad">
         <div class="ad-content">
@@ -46,13 +81,7 @@
 
     <!-- Main Content Area -->
     <div id="main-content">
-        <!-- Bottom Ad Space (moved above map) -->
-        <div id="bottom-ad" class="ad-space bottom-ad above-map">
-            <div class="ad-content">
-                <h3>Featured Advertisement</h3>
-                <p>Your advertisement here - Featured banner space</p>
-            </div>
-        </div>
+
 
         <div id="sidebar" class="leaflet-sidebar collapsed">
             <!-- Expand button for collapsed sidebar -->
@@ -63,10 +92,8 @@
             <!-- Nav tabs -->
             <div class="leaflet-sidebar-tabs">
                 <ul role="tablist">
-                    <li><a href="#markers" role="tab"><i class="fas fa-map-marker-alt"></i></a></li>
                     <li><a href="#filters" role="tab"><i class="fas fa-filter"></i></a></li>
                     <li><a href="#floors" role="tab"><i class="fas fa-building"></i></a></li>
-                    <li><a href="#create" role="tab"><i class="fas fa-plus"></i></a></li>
                 </ul>
 
                 <ul role="tablist">
@@ -79,51 +106,16 @@
 
             <!-- Tab panes -->
             <div class="leaflet-sidebar-content">
-                <!-- Markers Panel -->
-                <div class="leaflet-sidebar-pane" id="markers">
-                    <h1 class="leaflet-sidebar-header">
-                        Map Markers
-                        <span class="leaflet-sidebar-close"><i class="fas fa-caret-left"></i></span>
-                    </h1>
-                    <div class="markers-container">
-                        <div class="marker-controls">
-                            <button id="toggle-all-markers" class="control-btn">
-                                <i class="fas fa-eye"></i> Toggle All
-                            </button>
-                            <button id="clear-custom-markers" class="control-btn danger">
-                                <i class="fas fa-trash"></i> Clear Custom
-                            </button>
-                        </div>
-                        <div id="marker-categories"></div>
-                    </div>
-                </div>
-
                 <!-- Filters Panel -->
                 <div class="leaflet-sidebar-pane" id="filters">
                     <h1 class="leaflet-sidebar-header">
-                        Item Filters
+                        Map Settings
                         <span class="leaflet-sidebar-close"><i class="fas fa-caret-left"></i></span>
                     </h1>
                     <div class="filters-container">
                         <div class="filter-section">
-                            <h3>Loot Type</h3>
-                            <div id="loot-type-filters"></div>
-                        </div>
-                        <div class="filter-section">
-                            <h3>Rarity</h3>
-                            <div id="rarity-filters"></div>
-                        </div>
-                        <div class="filter-section">
-                            <h3>Location</h3>
-                            <div id="location-filters"></div>
-                        </div>
-                        <div class="filter-controls">
-                            <button id="apply-filters" class="control-btn primary">
-                                <i class="fas fa-check"></i> Apply Filters
-                            </button>
-                            <button id="clear-filters" class="control-btn">
-                                <i class="fas fa-times"></i> Clear All
-                            </button>
+                            <h3>Map Display</h3>
+                            <p>Configure map display options and grid settings.</p>
                         </div>
                     </div>
                 </div>
@@ -153,74 +145,6 @@
                                 <strong>Ground Floor</strong>
                                 <p>Main level with primary locations</p>
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Create Marker Panel -->
-                <div class="leaflet-sidebar-pane" id="create">
-                    <h1 class="leaflet-sidebar-header">
-                        Create Marker
-                        <span class="leaflet-sidebar-close"><i class="fas fa-caret-left"></i></span>
-                    </h1>
-                    <div class="create-container">
-                        <div class="create-instructions">
-                            <p><i class="fas fa-info-circle"></i> Click on the map to place a new marker</p>
-                        </div>
-                        <form id="marker-form">
-                            <div class="form-group">
-                                <label for="marker-name">Marker Name:</label>
-                                <input type="text" id="marker-name" placeholder="Enter marker name" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="marker-description">Description:</label>
-                                <textarea id="marker-description" placeholder="Enter description"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="marker-type">Loot Type:</label>
-                                <select id="marker-type">
-                                    <option value="weapons">Weapons</option>
-                                    <option value="armor">Armor</option>
-                                    <option value="medical">Medical</option>
-                                    <option value="ammo">Ammo</option>
-                                    <option value="equipment">Equipment</option>
-                                    <option value="supplies">Supplies</option>
-                                    <option value="custom">Custom</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="marker-rarity">Rarity:</label>
-                                <select id="marker-rarity">
-                                    <option value="common">Common</option>
-                                    <option value="rare">Rare</option>
-                                    <option value="epic">Epic</option>
-                                    <option value="legendary">Legendary</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="marker-icon">Icon:</label>
-                                <select id="marker-icon">
-                                    <option value="fas fa-crosshairs">Crosshairs</option>
-                                    <option value="fas fa-shield-alt">Shield</option>
-                                    <option value="fas fa-plus">Medical</option>
-                                    <option value="fas fa-box">Box</option>
-                                    <option value="fas fa-star">Star</option>
-                                    <option value="fas fa-flag">Flag</option>
-                                    <option value="fas fa-exclamation">Exclamation</option>
-                                </select>
-                            </div>
-                            <div class="form-actions">
-                                <button type="submit" class="control-btn primary">
-                                    <i class="fas fa-plus"></i> Create Marker
-                                </button>
-                                <button type="button" id="cancel-create" class="control-btn">
-                                    <i class="fas fa-times"></i> Cancel
-                                </button>
-                            </div>
-                        </form>
-                        <div id="custom-markers-list">
-                            <h3>Custom Markers</h3>
-                            <div id="custom-markers-container"></div>
                         </div>
                     </div>
                 </div>
@@ -325,6 +249,15 @@
         </div>
 
         <div id="map"></div>
+        
+        <!-- Bottom Ad Space -->
+        <div id="bottom-ad" class="ad-space bottom-ad">
+            <div class="ad-content">
+                <h3>Featured Advertisement</h3>
+                <p>Your advertisement here - Featured banner space</p>
+            </div>
+        </div>
+        
     </div>
 
     <!-- include classes -->
@@ -334,28 +267,73 @@
     <script src="../src/js/leaflet/share_marker.js" type="text/javascript"></script>
     <script src="../src/js/leaflet/utils.js" type="text/javascript"></script>
     <script src="../src/js/leaflet/floor_control.js" type="text/javascript"></script>
+    <script src="../src/js/leaflet/map_data_manager.js" type="text/javascript"></script>
+    <script src="../src/js/leaflet/enhanced_marker_system.js" type="text/javascript"></script>
     <script src="../src/js/leaflet/enhanced_map_features.js" type="text/javascript"></script>
-
-    <!-- include marker data -->
-    <script src="../src/js/leaflet/marker/armory_loot.js" type="text/javascript"></script>
-    <script src="../src/js/leaflet/marker/farm_loot.js" type="text/javascript"></script>
-    <script src="../src/js/leaflet/marker/northridge_loot.js" type="text/javascript"></script>
-    <script src="../src/js/leaflet/marker/tvstation_loot.js" type="text/javascript"></script>
-    <script src="../src/js/leaflet/marker/valley_loot.js" type="text/javascript"></script>
-    <script src="../src/js/leaflet/marker/spawn_points.js" type="text/javascript"></script>
-
-    <!-- include layer logic -->
-    <script src="../src/js/leaflet/marker_logic/armory_loot.js" type="text/javascript"></script>
-    <script src="../src/js/leaflet/marker_logic/farm_loot.js" type="text/javascript"></script>
-    <script src="../src/js/leaflet/marker_logic/northridge_loot.js" type="text/javascript"></script>
-    <script src="../src/js/leaflet/marker_logic/tvstation_loot.js" type="text/javascript"></script>
-    <script src="../src/js/leaflet/marker_logic/valley_loot.js" type="text/javascript"></script>
-    <script src="../src/js/leaflet/marker_logic/spawn_points.js" type="text/javascript"></script>
 
     <!-- include map specific stuff -->
     <script src="../src/js/leaflet/arena_breakout_map.js" type="text/javascript"></script>
     
     <script>
+        // Navigation bar functions
+        function toggleSidebar() {
+            var sidebar = document.getElementById('sidebar');
+            if (sidebar) {
+                if (sidebar.classList.contains('collapsed')) {
+                    sidebar.classList.remove('collapsed');
+                } else {
+                    sidebar.classList.add('collapsed');
+                }
+                updateExpandButton();
+            }
+        }
+        
+        function resetMapView() {
+            if (window.interactive_map && window.interactive_map.getMap()) {
+                const map = window.interactive_map.getMap();
+                // Reset to default bounds
+                const mapBounds = [[0, 0], [2158, 4078]];
+                map.fitBounds(mapBounds, {
+                    padding: [50, 50],
+                    maxZoom: -1
+                });
+                console.log('Map view reset to default');
+            }
+        }
+        
+        function updateMapName() {
+            const mapNameElement = document.getElementById('current-map-name');
+            let selectedMap = sessionStorage.getItem('selectedMap') || 'arena-breakout';
+            
+            // If we have loaded map data, use the actual map name from the data
+            if (window.mapDataManager && window.mapDataManager.mapData) {
+                selectedMap = window.mapDataManager.mapData.mapName;
+            }
+            
+            // Format map name for display
+            const displayName = selectedMap
+                .split('-')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+                
+            if (mapNameElement) {
+                mapNameElement.textContent = displayName;
+            }
+            
+            // Also update page title
+            document.title = `${displayName} - Arena Breakout Interactive Map`;
+        }
+        
+        // Update map name when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            updateMapName();
+        });
+        
+        // Make functions globally accessible
+        window.toggleSidebar = toggleSidebar;
+        window.resetMapView = resetMapView;
+        window.updateMapName = updateMapName;
+        
         // Simple function to open sidebar
         function openSidebar() {
             var sidebar = document.getElementById('sidebar');

@@ -4,31 +4,18 @@
  */
 
 class FloorControl {
-    constructor(map) {
+    constructor(map, mapDataManager = null) {
         this.map = map;
-        this.currentFloor = 'ground';
+        this.mapDataManager = mapDataManager;
+        this.currentFloor = 0; // Use numeric floor values
+        this.currentDifficulty = 'normal';
         this.mapDimensions = { width: 4078, height: 2158 };
         this.gridSize = 100; // Grid cell size in pixels
         this.gridOverlay = null;
         this.showGrid = false;
         this.gridLabels = [];
-        this.floorData = {
-            'ground': {
-                name: 'Ground Floor',
-                mapImage: '../public/images/maps/map.png',
-                description: 'Main level with primary locations'
-            },
-            'basement1': {
-                name: 'Basement 1',
-                mapImage: '../public/images/maps/armory-ground.png', // Placeholder
-                description: 'Underground storage areas'
-            },
-            'basement2': {
-                name: 'Basement 2', 
-                mapImage: '../public/images/maps/armory-basement2.png',
-                description: 'Deep underground facilities'
-            }
-        };
+        this.availableFloors = []; // Will be populated from JSON data
+        this.floorData = {}; // Will be populated from JSON data
         
         this.currentPosition = { x: 0, y: 0 };
         this.currentImageOverlay = null;
@@ -37,11 +24,83 @@ class FloorControl {
     }
 
     init() {
-        this.createFloorControl();
+        this.setDefaultFloors(); // Initialize with default floors
+        this.createFloorControlInstance();
         this.createGridDisplay();
         this.createGridOverlay();
         this.setupMouseTracking();
         this.setInitialView();
+    }
+
+    /**
+     * Update floors based on map data
+     */
+    updateFloorsFromMapData() {
+        if (!this.mapDataManager || !this.mapDataManager.mapData) {
+            this.setDefaultFloors();
+            return;
+        }
+
+        const difficulty = this.mapDataManager.mapData.getDifficulty(this.currentDifficulty);
+        if (!difficulty) {
+            this.setDefaultFloors();
+            return;
+        }
+
+        // Extract floor data from JSON
+        this.availableFloors = [];
+        this.floorData = {};
+
+        difficulty.levels.forEach(level => {
+            this.availableFloors.push(level.floor);
+            this.floorData[level.floor] = {
+                name: level.name,
+                mapImage: `../public/images/maps/${level.mapImage}`,
+                description: `Floor ${level.floor}: ${level.name}`,
+                floor: level.floor
+            };
+        });
+
+        // Sort floors numerically
+        this.availableFloors.sort((a, b) => b - a); // Descending order (highest floors first)
+
+        this.updateFloorControlButtons();
+    }
+
+    /**
+     * Set default floors when no map data is available
+     */
+    setDefaultFloors() {
+        this.availableFloors = [0, -1, -2];
+        this.floorData = {
+            0: {
+                name: 'Ground Floor',
+                mapImage: '../public/images/maps/map.png',
+                description: 'Main level with primary locations',
+                floor: 0
+            },
+            '-1': {
+                name: 'Basement 1',
+                mapImage: '../public/images/maps/armory-ground.png',
+                description: 'Underground storage areas',
+                floor: -1
+            },
+            '-2': {
+                name: 'Basement 2', 
+                mapImage: '../public/images/maps/armory-basement2.png',
+                description: 'Deep underground facilities',
+                floor: -2
+            }
+        };
+        this.updateFloorControlButtons();
+    }
+
+    /**
+     * Set current difficulty and update floors
+     */
+    setDifficulty(difficulty) {
+        this.currentDifficulty = difficulty;
+        this.updateFloorsFromMapData();
     }
 
     createFloorControl() {
@@ -50,75 +109,122 @@ class FloorControl {
         
         floorControl.onAdd = (map) => {
             const div = L.DomUtil.create('div', 'floor-control-container');
-            div.innerHTML = `
-                <div class="floor-control">
-                    <div class="floor-title">
-                        <i class="fas fa-building"></i>
-                        <span>Floor Selection</span>
-                    </div>
-                    <div class="floor-buttons">
-                        ${Object.entries(this.floorData).map(([key, floor]) => `
-                            <button class="floor-btn ${key === this.currentFloor ? 'active' : ''}" 
-                                    data-floor="${key}" 
-                                    title="${floor.description}">
-                                <i class="fas fa-layer-group"></i>
-                                ${floor.name}
-                            </button>
-                        `).join('')}
-                    </div>
-                    <div class="grid-controls">
-                        <div class="grid-title">
-                            <i class="fas fa-th"></i>
-                            <span>Grid System</span>
-                        </div>
-                        <div class="grid-options">
-                            <button class="grid-toggle-btn" title="Toggle grid overlay">
-                                <i class="fas fa-th"></i> Show Grid
-                            </button>
-                            <select class="grid-size-select" title="Grid size">
-                                <option value="50">50px Grid</option>
-                                <option value="100" selected>100px Grid</option>
-                                <option value="200">200px Grid</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            `;
+            this.floorControlDiv = div; // Store reference for updates
+            
+            this.updateFloorControlContent(div);
 
             // Prevent map interaction when clicking on control
             L.DomEvent.disableClickPropagation(div);
             L.DomEvent.disableScrollPropagation(div);
 
-            // Add click events to floor buttons
-            div.querySelectorAll('.floor-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const floorId = e.currentTarget.getAttribute('data-floor');
-                    this.switchFloor(floorId);
-                });
+            return div;
+        };
+
+        floorControl.addTo(this.map);
+        this.floorControlInstance = floorControl;
+    }
+
+    /**
+     * Update floor control buttons based on current data
+     */
+    updateFloorControlButtons() {
+        if (this.floorControlDiv) {
+            this.updateFloorControlContent(this.floorControlDiv);
+        }
+    }
+
+    /**
+     * Update the content of the floor control div
+     */
+    updateFloorControlContent(div) {
+        const floorButtons = this.availableFloors.map(floor => {
+            const floorData = this.floorData[floor];
+            if (!floorData) return '';
+            
+            return `
+                <button class="floor-btn ${floor === this.currentFloor ? 'active' : ''}" 
+                        data-floor="${floor}" 
+                        title="${floorData.description}">
+                    <i class="fas fa-layer-group"></i>
+                    ${floorData.name}
+                </button>
+            `;
+        }).join('');
+
+        div.innerHTML = `
+            <div class="floor-control">
+                <div class="floor-title">
+                    <i class="fas fa-building"></i>
+                    <span>Floor Selection</span>
+                </div>
+                <div class="floor-buttons">
+                    ${floorButtons}
+                </div>
+                <div class="grid-controls">
+                    <div class="grid-title">
+                        <i class="fas fa-th"></i>
+                        <span>Grid System</span>
+                    </div>
+                    <div class="grid-options">
+                        <button class="grid-toggle-btn" title="Toggle grid overlay">
+                            <i class="fas fa-th"></i> ${this.showGrid ? 'Hide Grid' : 'Show Grid'}
+                        </button>
+                        <select class="grid-size-select" title="Grid size">
+                            <option value="50" ${this.gridSize === 50 ? 'selected' : ''}>50px Grid</option>
+                            <option value="100" ${this.gridSize === 100 ? 'selected' : ''}>100px Grid</option>
+                            <option value="200" ${this.gridSize === 200 ? 'selected' : ''}>200px Grid</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Add click events to floor buttons
+        div.querySelectorAll('.floor-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const floorId = parseInt(e.currentTarget.getAttribute('data-floor'));
+                this.switchFloor(floorId);
             });
+        });
 
-            // Add grid control events
-            const gridToggleBtn = div.querySelector('.grid-toggle-btn');
-            const gridSizeSelect = div.querySelector('.grid-size-select');
+        // Add grid control events
+        const gridToggleBtn = div.querySelector('.grid-toggle-btn');
+        const gridSizeSelect = div.querySelector('.grid-size-select');
 
-            if (gridToggleBtn) {
-                gridToggleBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    this.toggleGrid();
-                });
-            }
+        if (gridToggleBtn) {
+            gridToggleBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.toggleGrid();
+            });
+        }
 
-            if (gridSizeSelect) {
-                gridSizeSelect.addEventListener('change', (e) => {
-                    const newSize = parseInt(e.target.value);
-                    this.setGridSize(newSize);
-                });
-            }
+        if (gridSizeSelect) {
+            gridSizeSelect.addEventListener('change', (e) => {
+                const newSize = parseInt(e.target.value);
+                this.setGridSize(newSize);
+            });
+        }
+    }
+
+    createFloorControlInstance() {
+        // Create floor control container
+        const floorControl = L.control({ position: 'bottomleft' });
+        
+        floorControl.onAdd = (map) => {
+            const div = L.DomUtil.create('div', 'floor-control-container');
+            this.floorControlDiv = div; // Store reference for updates
+            
+            this.updateFloorControlContent(div);
+
+            // Prevent map interaction when clicking on control
+            L.DomEvent.disableClickPropagation(div);
+            L.DomEvent.disableScrollPropagation(div);
 
             return div;
         };
 
         floorControl.addTo(this.map);
+        this.floorControlInstance = floorControl;
     }
 
     createGridDisplay() {
@@ -172,13 +278,13 @@ class FloorControl {
 
     convertLatLngToXY(latlng) {
         // Convert Leaflet LatLng to game coordinates based on 4078x2158 map
-        // The image bounds should be exactly [0,0] to [2158,4078] (height,width)
-        const bounds = [[0, 0], [2158, 4078]];
+        // The image bounds should be exactly [0,240] to [2158,4078] (height,width) with 240 offset
+        const bounds = [[0, 240], [2158, 4078]];
         
         // Map bounds are in Leaflet coordinate system: [south,west] to [north,east]
-        // For our coordinate system: [0,0] to [2158,4078]
+        // For our coordinate system: [0,240] to [2158,4078]
         const south = bounds[0][0];    // 0
-        const west = bounds[0][1];     // 0  
+        const west = bounds[0][1];     // 240  
         const north = bounds[1][0];    // 2158
         const east = bounds[1][1];     // 4078
         
@@ -186,8 +292,8 @@ class FloorControl {
         const relX = (latlng.lng - west) / (east - west);
         const relY = (north - latlng.lat) / (north - south);
         
-        // Convert to actual pixel coordinates
-        const x = Math.round(Math.max(0, Math.min(this.mapDimensions.width, relX * this.mapDimensions.width)));
+        // Convert to actual pixel coordinates (accounting for 240 offset)
+        const x = Math.round(Math.max(240, Math.min(this.mapDimensions.width, 240 + relX * (this.mapDimensions.width - 240))));
         const y = Math.round(Math.max(0, Math.min(this.mapDimensions.height, relY * this.mapDimensions.height)));
         
         return { x, y };
@@ -195,16 +301,16 @@ class FloorControl {
 
     convertXYToLatLng(coords) {
         // Convert game coordinates to Leaflet LatLng based on 4078x2158 map
-        // The image bounds should be exactly [0,0] to [2158,4078] (height,width)
-        const bounds = [[0, 0], [2158, 4078]];
+        // The image bounds should be exactly [0,240] to [2158,4078] (height,width) with 240 offset
+        const bounds = [[0, 240], [2158, 4078]];
         
         const south = bounds[0][0];    // 0
-        const west = bounds[0][1];     // 0  
+        const west = bounds[0][1];     // 240  
         const north = bounds[1][0];    // 2158
         const east = bounds[1][1];     // 4078
         
-        // Calculate relative position (0-1)
-        const relX = coords.x / this.mapDimensions.width;
+        // Calculate relative position (0-1) accounting for 240 offset
+        const relX = (coords.x - 240) / (this.mapDimensions.width - 240);
         const relY = coords.y / this.mapDimensions.height;
         
         // Convert to LatLng coordinates
@@ -232,12 +338,18 @@ class FloorControl {
     }
 
     switchFloor(floorId) {
+        // Ensure floorId is a number
+        floorId = typeof floorId === 'string' ? parseInt(floorId) : floorId;
+        
         if (floorId === this.currentFloor) return;
         
         const floorData = this.floorData[floorId];
-        if (!floorData) return;
+        if (!floorData) {
+            console.warn(`Floor data not found for floor: ${floorId}`);
+            return;
+        }
 
-        console.log(`Switching to floor: ${floorId}`);
+        console.log(`Switching to floor: ${floorId} (${floorData.name})`);
         
         // Update current floor
         this.currentFloor = floorId;
@@ -245,7 +357,7 @@ class FloorControl {
         // Update active button
         document.querySelectorAll('.floor-btn').forEach(btn => {
             btn.classList.remove('active');
-            if (btn.getAttribute('data-floor') === floorId) {
+            if (parseInt(btn.getAttribute('data-floor')) === floorId) {
                 btn.classList.add('active');
             }
         });
@@ -259,10 +371,22 @@ class FloorControl {
             floorData: floorData 
         });
         
+        // Update marker system if available
+        if (window.markerSystem) {
+            window.markerSystem.setFloor(floorId);
+        }
+        
         // Update enhanced features if available
         if (window.enhancedFeatures) {
             window.enhancedFeatures.switchFloor(floorId);
         }
+    }
+
+    /**
+     * Set current floor (external API)
+     */
+    setFloor(floorId) {
+        this.switchFloor(floorId);
     }
 
     updateMapImage(imagePath) {
@@ -271,10 +395,10 @@ class FloorControl {
             this.map.removeLayer(this.currentImageOverlay);
         }
 
-        // Calculate bounds for the map based on 4078x2158 dimensions
+        // Calculate bounds for the map based on 4078x2158 dimensions with 240 offset
         const bounds = [
-            [0, 0],
-            [this.mapDimensions.height, this.mapDimensions.width] // Use actual coordinates
+            [0, 240],
+            [this.mapDimensions.height, this.mapDimensions.width] // Use actual coordinates with offset
         ];
 
         // Add new image overlay
@@ -287,10 +411,10 @@ class FloorControl {
     }
 
     setInitialView() {
-        // Set initial view to show full map (zoomed out) based on 4078x2158
+        // Set initial view to show full map (zoomed out) based on 4078x2158 with 240 offset
         const bounds = [
-            [0, 0],
-            [this.mapDimensions.height, this.mapDimensions.width] // 2158x4078
+            [0, 240],
+            [this.mapDimensions.height, this.mapDimensions.width] // 2158x4078 with offset
         ];
         
         // Fit to bounds with padding and allow more zoom out

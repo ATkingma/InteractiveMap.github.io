@@ -32,16 +32,7 @@ try {
 
     console.log('Tile layer added');
 
-    // Add marker layers in order (they will appear in this order in sidebar and layer control)
-    console.log('Adding marker layers...');
-    addArmoryLoot(interactive_map);
-    addFarmLoot(interactive_map);
-    addNorthridgeLoot(interactive_map);
-    addTvStationLoot(interactive_map);
-    addValleyLoot(interactive_map);
-    addSpawnPoints(interactive_map);
-
-    console.log('Marker layers added, finalizing map...');
+    console.log('Map setup complete, no marker layers...');
 
     // Finalize the map after adding all layers
     interactive_map.finalize();
@@ -51,8 +42,8 @@ try {
     setTimeout(() => {
         // Set custom bounds for 4078x2158 map and start zoomed out
         const mapBounds = [
-            [0, 0],
-            [2158, 4078] // Using actual game coordinates
+            [0, 240],
+            [2158, 4078] // Using actual game coordinates with offset start
         ];
         
         // Set view to show full map with maximum zoom out
@@ -70,10 +61,64 @@ try {
         try {
             // Initialize Floor Control first
             if (window.FloorControl && map) {
-                window.floorControl = new FloorControl(map);
+                window.floorControl = new FloorControl(map, window.mapDataManager);
                 console.log('Floor control initialized successfully!');
             } else {
                 console.warn('Floor control not available or map not ready');
+            }
+
+            // Initialize Map Data Manager and Marker System
+            if (window.MapDataManager && window.EnhancedMarkerSystem) {
+                window.mapDataManager = new MapDataManager();
+                window.markerSystem = new EnhancedMarkerSystem(map, window.mapDataManager);
+                
+                // Get selected map from sessionStorage or default to arena-breakout
+                const selectedMap = sessionStorage.getItem('selectedMap') || 'arena-breakout';
+                console.log(`Loading map data for: ${selectedMap}`);
+                
+                // Load selected map data
+                window.markerSystem.loadMapData(selectedMap).then(() => {
+                    console.log(`${selectedMap} marker data loaded successfully!`);
+                    
+                    // Update navigation bar with loaded map name
+                    if (window.mapDataManager && window.mapDataManager.mapData) {
+                        const mapNameElement = document.getElementById('current-map-name');
+                        if (mapNameElement) {
+                            const displayName = window.mapDataManager.mapData.mapName
+                                .split('-')
+                                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                                .join(' ');
+                            mapNameElement.textContent = displayName;
+                            
+                            // Also update page title
+                            document.title = `${displayName} - Arena Breakout Interactive Map`;
+                        }
+                        
+                        // Call updateMapName if available
+                        if (typeof window.updateMapName === 'function') {
+                            window.updateMapName();
+                        }
+                    }
+                    
+                    // Update floor control with map data
+                    if (window.floorControl) {
+                        window.floorControl.mapDataManager = window.mapDataManager;
+                        window.floorControl.updateFloorsFromMapData();
+                    }
+                }).catch(error => {
+                    console.error('Error loading marker data:', error);
+                    // Fallback to arena-breakout if selected map fails
+                    if (selectedMap !== 'arena-breakout') {
+                        console.log('Falling back to arena-breakout map...');
+                        window.markerSystem.loadMapData('arena-breakout');
+                    }
+                });
+                
+                // Make marker system globally accessible for UI callbacks
+                window.markerSystem = window.markerSystem;
+                console.log('Marker system initialized successfully!');
+            } else {
+                console.warn('Marker system not available');
             }
 
             // Then initialize Enhanced Features
@@ -88,10 +133,21 @@ try {
                     window.enhancedFeatures.convertXYToLatLng = (coords) => window.floorControl.convertXYToLatLng(coords);
                 }
                 
-                // Apply initial filters to show only current floor markers
+                // Connect floor changes to marker system
+                if (window.floorControl && window.markerSystem) {
+                    const originalSetFloor = window.floorControl.setFloor;
+                    window.floorControl.setFloor = function(floorNumber) {
+                        originalSetFloor.call(this, floorNumber);
+                        window.markerSystem.setFloor(floorNumber);
+                    };
+                }
+                
+                // Apply initial filters to show markers
                 setTimeout(() => {
-                    window.enhancedFeatures.applyFilters();
-                    console.log('Initial floor-based filtering applied');
+                    if (window.markerSystem) {
+                        window.markerSystem.updateMarkers();
+                    }
+                    console.log('Initial marker display applied');
                 }, 500);
             } else {
                 console.warn('Enhanced features not available or map not ready');

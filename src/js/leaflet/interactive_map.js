@@ -90,8 +90,8 @@ class InteractiveMap {
 
         // Special handling for Arena Breakout map - use image overlay
         if (name === 'Arena Breakout Map') {
-            // Map bounds based on image dimensions (4078x2158)
-            var imageBounds = [[0, 0], [2158, 4078]];
+            // Map bounds based on image dimensions (4078x2158) with 240 offset
+            var imageBounds = [[0, 240], [2158, 4078]];
             
             this.#tile_layers[name] = L.imageOverlay('images/maps/map.png', imageBounds, {
                 attribution: params.attribution
@@ -461,6 +461,11 @@ class InteractiveMap {
         this.getLayers().forEach((layer, id) => {
             bounds.extend(layer.getGroupBounds());
         });
+
+        // If no layers or invalid bounds, return default bounds for Arena Breakout map with 240 offset
+        if (!bounds.isValid()) {
+            bounds = L.latLngBounds([[0, 240], [2158, 4078]]);
+        }
 
         return bounds;
     }

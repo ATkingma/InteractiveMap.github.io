@@ -31,6 +31,179 @@ body {
     background: var(--bg-dark);
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     color: var(--text-primary);
+    overflow: hidden; /* Prevent body scrollbars */
+}
+
+/* ===========================================
+   NAVIGATION BAR STYLES
+   =========================================== */
+
+.map-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10000;
+    background: var(--gradient-dark);
+    border-bottom: 2px solid var(--border-accent);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-orange);
+}
+
+.nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.brand-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.brand-link:hover {
+    color: var(--text-accent);
+}
+
+.brand-link i {
+    font-size: 20px;
+    color: var(--primary-color);
+}
+
+.nav-center {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 20px;
+}
+
+.current-page-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-panel);
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+}
+
+.current-page-info i {
+    color: var(--primary-color);
+    font-size: 14px;
+}
+
+.page-indicator {
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.map-name-indicator {
+    color: var(--text-accent);
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+    background: var(--bg-panel);
+    border-color: var(--border-accent);
+    color: var(--text-primary);
+    transform: translateY(-1px);
+}
+
+.nav-btn i {
+    font-size: 14px;
+}
+
+/* Responsive Navigation */
+@media (max-width: 768px) {
+    .nav-container {
+        padding: 10px 15px;
+    }
+    
+    .nav-center {
+        margin: 0 10px;
+    }
+    
+    .current-page-info {
+        padding: 6px 12px;
+    }
+    
+    .page-indicator,
+    .map-name-indicator {
+        font-size: 12px;
+    }
+    
+    .nav-btn span {
+        display: none;
+    }
+    
+    .nav-btn {
+        padding: 8px;
+        min-width: 36px;
+        justify-content: center;
+    }
+    
+    .brand-text {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .current-page-info {
+        flex-direction: column;
+        gap: 4px;
+        padding: 6px 10px;
+    }
+    
+    .nav-actions {
+        gap: 4px;
+    }
+}
+
+/* Remove body padding - handled by flexbox layout */
+body {
+    overflow: hidden; /* Prevent page scrollbars */
 }
 
 /* Ad Spaces */
@@ -43,6 +216,7 @@ body {
     backdrop-filter: blur(10px);
     transition: all 0.3s ease;
     cursor: pointer;
+    flex-shrink: 0; /* Prevent shrinking */
 }
 
 .ad-space:hover {
@@ -53,6 +227,7 @@ body {
 .top-ad {
     border-color: var(--secondary-color);
     background: linear-gradient(135deg, rgba(255, 107, 53, 0.2), rgba(255, 107, 53, 0.1));
+    margin-top: 60px; /* Account for fixed navbar */
 }
 
 .top-ad:hover {
@@ -63,6 +238,10 @@ body {
 .bottom-ad {
     border-color: var(--primary-color);
     background: linear-gradient(135deg, rgba(255, 140, 0, 0.2), rgba(255, 140, 0, 0.1));
+    margin-top: auto; /* Push to bottom of flex container */
+    position: relative;
+    z-index: 1000;
+    flex-shrink: 0; /* Prevent shrinking */
 }
 
 .bottom-ad:hover {
@@ -70,9 +249,7 @@ body {
     border-color: var(--accent-color);
 }
 
-.above-map {
-    order: -1; /* Move above map in flex layout */
-}
+/* Remove above-map class as it's no longer needed */
 
 .ad-content {
     max-width: 1200px;
@@ -107,16 +284,19 @@ body {
     flex-direction: column;
     position: relative;
     min-height: 0; /* Important for flex child */
+    height: 100%;
+    overflow: hidden; /* Prevent scrollbars in main content */
 }
 
 /* Map container */
 #map {
     flex: 1;
-    height: 100%;
+    min-height: 0; /* Allow flexbox to shrink the map */
     width: 100%;
     background: var(--bg-dark);
     /* Ensure background color shows outside map bounds */
     background-color: var(--bg-dark) !important;
+    overflow: hidden;
 }
 
 /* Leaflet map container background */
@@ -418,6 +598,12 @@ body {
     
     .ad-content {
         padding: 10px;
+    }
+    
+    /* Adjust layout for mobile */
+    body {
+        height: 100vh;
+        height: 100dvh; /* Use dynamic viewport height on mobile */
     }
 }
 
@@ -1181,4 +1367,327 @@ input[type="checkbox"] {
     .coord-display {
         padding: 6px;
     }
+}
+
+/* ===========================================
+   ENHANCED MARKER SYSTEM STYLES
+   =========================================== */
+
+/* Filter Section Styles */
+.filters-section {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: var(--bg-panel);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.filters-section h3 {
+    margin: 0 0 12px 0;
+    color: var(--text-accent);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.filter-checkboxes {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.filter-checkbox {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+    font-size: 13px;
+}
+
+.filter-checkbox:hover {
+    background: var(--bg-light);
+}
+
+.filter-checkbox input[type="checkbox"] {
+    margin-right: 8px;
+    width: 16px;
+    height: 16px;
+    accent-color: var(--primary-color);
+}
+
+/* Difficulty Section Styles */
+.difficulty-section {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: var(--bg-panel);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.difficulty-section h3 {
+    margin: 0 0 12px 0;
+    color: var(--text-accent);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.difficulty-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.difficulty-btn {
+    padding: 8px 12px;
+    background: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.difficulty-btn:hover {
+    background: var(--bg-darker);
+    border-color: var(--border-accent);
+}
+
+.difficulty-btn.active {
+    background: var(--gradient-primary);
+    border-color: var(--primary-color);
+    color: var(--bg-dark);
+    font-weight: 600;
+}
+
+/* User Markers Section Styles */
+.user-markers-section {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: var(--bg-panel);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.user-markers-section h3 {
+    margin: 0 0 12px 0;
+    color: var(--text-accent);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.action-btn {
+    width: 100%;
+    padding: 10px 15px;
+    background: var(--gradient-primary);
+    border: none;
+    border-radius: 6px;
+    color: var(--bg-dark);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-orange);
+}
+
+.marker-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.marker-form input,
+.marker-form textarea {
+    padding: 8px 10px;
+    background: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-primary);
+    font-size: 12px;
+    font-family: inherit;
+}
+
+.marker-form input:focus,
+.marker-form textarea:focus {
+    outline: none;
+    border-color: var(--border-accent);
+    box-shadow: 0 0 0 2px rgba(255, 140, 0, 0.2);
+}
+
+.marker-form textarea {
+    min-height: 60px;
+    resize: vertical;
+}
+
+.form-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.confirm-btn,
+.cancel-btn {
+    flex: 1;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.confirm-btn {
+    background: #28a745;
+    color: white;
+}
+
+.confirm-btn:hover {
+    background: #218838;
+}
+
+.cancel-btn {
+    background: #dc3545;
+    color: white;
+}
+
+.cancel-btn:hover {
+    background: #c82333;
+}
+
+/* Marker Styles */
+.custom-marker {
+    background: transparent !important;
+    border: none !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.marker-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.marker-icon img {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+}
+
+.marker-circle {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.marker-inner {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.temp-marker {
+    font-size: 24px;
+    animation: pulse 1s infinite;
+}
+
+.temp-marker-icon {
+    background: transparent !important;
+    border: none !important;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.7; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Marker Popup Styles */
+.marker-popup {
+    min-width: 200px;
+    max-width: 300px;
+}
+
+.marker-popup h4 {
+    margin: 0 0 8px 0;
+    color: var(--text-accent);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.marker-popup p {
+    margin: 4px 0;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.marker-type {
+    font-weight: 500;
+    color: var(--text-primary) !important;
+}
+
+.marker-coords {
+    font-family: 'Courier New', monospace;
+    color: var(--text-muted) !important;
+}
+
+.marker-description {
+    font-style: italic;
+    color: var(--text-secondary) !important;
+    border-top: 1px solid var(--border-color);
+    padding-top: 6px;
+    margin-top: 6px;
+}
+
+.delete-marker-btn {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.delete-marker-btn:hover {
+    background: #c82333;
+}
+
+/* Type-specific marker styles */
+.marker-type-spawn .marker-circle { border-color: #00ff00; }
+.marker-type-loot .marker-circle { border-color: #ffff00; }
+.marker-type-weapons .marker-circle { border-color: #ff8800; }
+.marker-type-medical .marker-circle { border-color: #ff4444; }
+.marker-type-extraction .marker-circle { border-color: #00ffff; }
+.marker-type-entrance .marker-circle { border-color: #00ff00; }
+.marker-type-objective .marker-circle { border-color: #ff0000; }
+.marker-type-vehicle .marker-circle { border-color: #0000ff; }
+.marker-type-danger .marker-circle { border-color: #aa0000; }
+.marker-type-rare-loot .marker-circle { border-color: #ffd700; }
+.marker-type-obstacle .marker-circle { border-color: #888888; }
+.marker-type-user-marker .marker-circle { 
+    border-color: var(--primary-color);
+    border-width: 3px;
 }

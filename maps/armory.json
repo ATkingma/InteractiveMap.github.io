@@ -1,0 +1,138 @@
+{
+  "mapName": "armory",
+  "difficulties": {
+    "normal": {
+      "name": "normal",
+      "levels": [
+        {
+          "name": "Basement 2",
+          "floor": -2,
+          "mapImage": "armory-basement2.png",
+          "markers": [
+            {
+              "name": "Main Entrance",
+              "type": "entrance",
+              "icon": "test.png",
+              "color": "#00ff00",
+              "fallbackColor": "#008800",
+              "description": "Primary entrance to the basement level",
+              "position": { "x": 500, "y": 800 }
+            },
+            {
+              "name": "Weapon Cache",
+              "type": "loot",
+              "icon": "test.png",
+              "color": "#ffff00",
+              "fallbackColor": "#cccc00",
+              "description": "High-value weapon storage area",
+              "position": { "x": 1200, "y": 600 }
+            },
+            {
+              "name": "Security Room",
+              "type": "objective",
+              "icon": "test.png",
+              "color": "#ff0000",
+              "fallbackColor": "#cc0000",
+              "description": "Control room with security systems",
+              "position": { "x": 800, "y": 400 }
+            }
+          ]
+        },
+        {
+          "name": "Ground Floor",
+          "floor": 0,
+          "mapImage": "armory-ground.png",
+          "markers": [
+            {
+              "name": "Main Gate",
+              "type": "entrance",
+              "color": "#00ff00",
+              "fallbackColor": "#008800",
+              "description": "Main entrance gate",
+              "position": { "x": 2000, "y": 1000 }
+            },
+            {
+              "name": "Vehicle Bay",
+              "type": "vehicle",
+              "color": "#0000ff",
+              "fallbackColor": "#000088",
+              "description": "Vehicle storage and maintenance area",
+              "position": { "x": 1500, "y": 1200 }
+            },
+            {
+              "name": "Supply Drop",
+              "type": "loot",
+              "color": "#ffff00",
+              "fallbackColor": "#cccc00",
+              "description": "Supply crate location",
+              "position": { "x": 3000, "y": 1500 }
+            },
+            {
+              "name": "Command Center",
+              "type": "objective",
+              "color": "#ff0000",
+              "fallbackColor": "#cc0000",
+              "description": "Main command and control center",
+              "position": { "x": 2500, "y": 800 }
+            }
+          ]
+        }
+      ]
+    },
+    "lockdown": {
+      "name": "lockdown",
+      "levels": [
+        {
+          "name": "Basement 2",
+          "floor": -2,
+          "mapImage": "armory-basement2.png",
+          "markers": [
+            {
+              "name": "Emergency Exit",
+              "type": "entrance",
+              "icon": "test.png",
+              "color": "#ff8800",
+              "fallbackColor": "#cc6600",
+              "description": "Emergency exit route during lockdown",
+              "position": { "x": 300, "y": 900 }
+            },
+            {
+              "name": "Secured Vault",
+              "type": "loot",
+              "icon": "test.png",
+              "color": "#ff00ff",
+              "fallbackColor": "#cc00cc",
+              "description": "High-security vault with rare items",
+              "position": { "x": 1000, "y": 500 }
+            }
+          ]
+        },
+        {
+          "name": "Ground Floor",
+          "floor": 0,
+          "mapImage": "armory-ground.png",
+          "markers": [
+            {
+              "name": "Lockdown Barrier",
+              "type": "obstacle",
+              "icon": "test.png",
+              "color": "#888888",
+              "fallbackColor": "#666666",
+              "description": "Security barrier activated during lockdown",
+              "position": { "x": 1800, "y": 1100 }
+            },
+            {
+              "name": "Emergency Supplies",
+              "type": "loot",
+              "icon": "test.png",
+              "color": "#00ffff",
+              "fallbackColor": "#00cccc",
+              "description": "Emergency supply cache",
+              "position": { "x": 2800, "y": 1400 }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
