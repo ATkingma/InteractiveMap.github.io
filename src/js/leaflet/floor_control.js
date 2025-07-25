@@ -151,33 +151,17 @@ class FloorControl {
             `;
         }).join('');
 
-        // div.innerHTML = `
-        //     <div class="floor-control">
-        //         <div class="floor-title">
-        //             <i class="fas fa-building"></i>
-        //             <span>Floor Selection</span>
-        //         </div>
-        //         <div class="floor-buttons">
-        //             ${floorButtons}
-        //         </div>
-        //         <div class="grid-controls">
-        //             <div class="grid-title">
-        //                 <i class="fas fa-th"></i>
-        //                 <span>Grid System</span>
-        //             </div>
-        //             <div class="grid-options">
-        //                 <button class="grid-toggle-btn" title="Toggle grid overlay">
-        //                     <i class="fas fa-th"></i> ${this.showGrid ? 'Hide Grid' : 'Show Grid'}
-        //                 </button>
-        //                 <select class="grid-size-select" title="Grid size">
-        //                     <option value="50" ${this.gridSize === 50 ? 'selected' : ''}>50px Grid</option>
-        //                     <option value="100" ${this.gridSize === 100 ? 'selected' : ''}>100px Grid</option>
-        //                     <option value="200" ${this.gridSize === 200 ? 'selected' : ''}>200px Grid</option>
-        //                 </select>
-        //             </div>
-        //         </div>
-        //     </div>
-        // `;
+        div.innerHTML = `
+            <div class="floor-control">
+                <div class="floor-title">
+                    <i class="fas fa-building"></i>
+                    <span>Floor Selection</span>
+                </div>
+                <div class="floor-buttons">
+                    ${floorButtons}
+                </div>
+            </div>
+        `;
 
         // Add click events to floor buttons
         div.querySelectorAll('.floor-btn').forEach(btn => {
@@ -186,24 +170,6 @@ class FloorControl {
                 this.switchFloor(floorId);
             });
         });
-
-        // Add grid control events
-        const gridToggleBtn = div.querySelector('.grid-toggle-btn');
-        const gridSizeSelect = div.querySelector('.grid-size-select');
-
-        if (gridToggleBtn) {
-            gridToggleBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.toggleGrid();
-            });
-        }
-
-        if (gridSizeSelect) {
-            gridSizeSelect.addEventListener('change', (e) => {
-                const newSize = parseInt(e.target.value);
-                this.setGridSize(newSize);
-            });
-        }
     }
 
     createFloorControlInstance() {
@@ -227,22 +193,34 @@ class FloorControl {
         this.floorControlInstance = floorControl;
     }
 
+    
     createGridDisplay() {
-        // Create grid position display
-        const gridControl = L.control({ position: 'bottomleft' });
+        // Create grid display container outside of Leaflet controls
+        const gridDisplayContainer = L.DomUtil.create('div', 'grid-display-container');
         
-        gridControl.onAdd = (map) => {
-            const div = L.DomUtil.create('div', 'grid-display-container');
-            div.innerHTML = `
-                <div class="grid-display">
+        // Position it independently, not as a Leaflet control - TOP RIGHT
+        gridDisplayContainer.style.position = 'absolute';
+        gridDisplayContainer.style.top = '20px';
+        gridDisplayContainer.style.right = '20px';
+        gridDisplayContainer.style.zIndex = '1000';
+        gridDisplayContainer.style.pointerEvents = 'auto';
+        
+        gridDisplayContainer.innerHTML = `
+            <div class="grid-display">
+                <div class="grid-header">
                     <div class="grid-title">
                         <i class="fas fa-crosshairs"></i>
                         <span>Position</span>
                     </div>
+                    <button class="minimize-btn" title="Minimize/Maximize">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+                <div class="grid-content">
                     <div class="grid-coordinates">
                         <div class="coord-display">
                             <span class="coord-label">X:</span>
-                            <span class="coord-value" id="grid-x">0</span>
+                            <span class="coord-value" id="grid-x">240</span>
                         </div>
                         <div class="coord-display">
                             <span class="coord-label">Y:</span>
@@ -253,20 +231,83 @@ class FloorControl {
                             <span class="coord-value" id="grid-cell">A1</span>
                         </div>
                     </div>
-                    <div class="grid-info">
-                        <small>${this.mapDimensions.width}x${this.mapDimensions.height} • ${this.gridSize}px grid</small>
+                    <div class="grid-controls">
+                        <div class="grid-title">
+                            <i class="fas fa-th"></i>
+                            <span>Grid System</span>
+                        </div>
+                        <div class="grid-options">
+                            <button class="grid-toggle-btn" title="Toggle grid overlay">
+                                <i class="fas fa-th"></i> ${this.showGrid ? 'Hide Grid' : 'Show Grid'}
+                            </button>
+                            <select class="grid-size-select" title="Grid size">
+                                <option value="50" ${this.gridSize === 50 ? 'selected' : ''}>50px Grid</option>
+                                <option value="100" ${this.gridSize === 100 ? 'selected' : ''}>100px Grid</option>
+                                <option value="200" ${this.gridSize === 200 ? 'selected' : ''}>200px Grid</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
-            `;
-
-            // Prevent map interaction when clicking on control
-            L.DomEvent.disableClickPropagation(div);
-            L.DomEvent.disableScrollPropagation(div);
-
-            return div;
-        };
-
-        gridControl.addTo(this.map);
+            </div>
+        `;
+        
+        // Prevent map interaction when clicking on the grid display
+        L.DomEvent.disableClickPropagation(gridDisplayContainer);
+        L.DomEvent.disableScrollPropagation(gridDisplayContainer);
+        
+        // Add event listeners for grid controls
+        const gridToggleBtn = gridDisplayContainer.querySelector('.grid-toggle-btn');
+        const gridSizeSelect = gridDisplayContainer.querySelector('.grid-size-select');
+        const minimizeBtn = gridDisplayContainer.querySelector('.minimize-btn');
+        
+        if (gridToggleBtn) {
+            gridToggleBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.toggleGrid();
+                // Update button text after toggle
+                gridToggleBtn.innerHTML = this.showGrid ? 
+                    '<i class="fas fa-th"></i> Hide Grid' : 
+                    '<i class="fas fa-th"></i> Show Grid';
+            });
+        }
+        
+        if (gridSizeSelect) {
+            gridSizeSelect.addEventListener('change', (e) => {
+                const newSize = parseInt(e.target.value);
+                this.setGridSize(newSize);
+            });
+        }
+        
+        if (minimizeBtn) {
+            minimizeBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.toggleGridDisplayMinimize(gridDisplayContainer);
+            });
+        }
+        
+        // Add directly to the map container instead of Leaflet controls
+        const mapContainer = this.map.getContainer();
+        mapContainer.appendChild(gridDisplayContainer);
+        
+        return gridDisplayContainer;
+    }
+    
+    toggleGridDisplayMinimize(container) {
+        const content = container.querySelector('.grid-content');
+        const minimizeBtn = container.querySelector('.minimize-btn');
+        const icon = minimizeBtn.querySelector('i');
+        
+        if (content.style.display === 'none') {
+            // Expand
+            content.style.display = 'block';
+            icon.className = 'fas fa-minus';
+            minimizeBtn.title = 'Minimize';
+        } else {
+            // Minimize
+            content.style.display = 'none';
+            icon.className = 'fas fa-plus';
+            minimizeBtn.title = 'Maximize';
+        }
     }
 
     setupMouseTracking() {

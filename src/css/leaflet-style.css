@@ -1265,8 +1265,16 @@ input[type="checkbox"] {
 
 /* Grid Display Styling */
 .grid-display-container {
-    margin-top: 10px;
     z-index: 1001 !important;
+}
+
+/* Independent grid display positioning (outside Leaflet controls) */
+.grid-display-container:not(.leaflet-control) {
+    position: absolute !important;
+    top: 20px !important;
+    right: 20px !important;
+    z-index: 1000 !important;
+    pointer-events: auto !important;
 }
 
 .grid-display {
@@ -1279,14 +1287,41 @@ input[type="checkbox"] {
     backdrop-filter: blur(10px);
 }
 
+.grid-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .grid-title {
     display: flex;
     align-items: center;
     gap: 8px;
     color: var(--secondary-color);
     font-weight: 600;
-    margin-bottom: 12px;
     font-size: 14px;
+}
+
+.minimize-btn {
+    align-self: flex-start;
+    background: transparent;
+    border: 1px solid var(--secondary-color);
+    color: var(--secondary-color);
+    border-radius: 4px;
+    padding: 4px 8px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s ease;
+}
+
+.minimize-btn:hover {
+    background: var(--secondary-color);
+    color: var(--bg-panel);
+    transform: scale(1.05);
+}
+
+.grid-content {
+    transition: all 0.3s ease;
 }
 
 .grid-coordinates {
@@ -1349,6 +1384,18 @@ input[type="checkbox"] {
     .grid-display {
         min-width: 180px;
         padding: 12px;
+    }
+    
+    /* Mobile positioning for independent grid display */
+    .grid-display-container:not(.leaflet-control) {
+        top: 10px !important;
+        right: 10px !important;
+        min-width: 150px;
+    }
+    
+    .grid-display-container:not(.leaflet-control) .grid-display {
+        padding: 8px;
+        min-width: 150px;
     }
     
     .floor-title,
