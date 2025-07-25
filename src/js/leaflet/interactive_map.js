@@ -54,7 +54,8 @@ class InteractiveMap {
         }).addTo(this.#map);
 
         this.#setUpToolbar();
-        this.#setUpSidebar(params.attribution, params.website_source, this.#website_subdir);
+            //  <!-- side bar todo -->
+        // this.#setUpSidebar(params.attribution, params.website_source, this.#website_subdir);
 
         this.#user_layers = JSON.parse(localStorage.getItem(`${this.#website_subdir}:user_layers`));
         this.#share_marker = new ShareMarker(this);
