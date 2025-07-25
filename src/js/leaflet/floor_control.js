@@ -10,7 +10,7 @@ class FloorControl {
         this.currentFloor = 0; // Use numeric floor values
         this.currentDifficulty = 'normal';
         this.mapDimensions = { width: 4078, height: 2158 };
-        this.gridSize = 100; // Grid cell size in pixels
+        this.gridSize = 200; // Grid cell size in pixels
         this.gridOverlay = null;
         this.showGrid = false;
         this.gridLabels = [];
@@ -241,9 +241,9 @@ class FloorControl {
                                 <i class="fas fa-th"></i> ${this.showGrid ? 'Hide Grid' : 'Show Grid'}
                             </button>
                             <select class="grid-size-select" title="Grid size">
-                                <option value="50" ${this.gridSize === 50 ? 'selected' : ''}>50px Grid</option>
                                 <option value="100" ${this.gridSize === 100 ? 'selected' : ''}>100px Grid</option>
                                 <option value="200" ${this.gridSize === 200 ? 'selected' : ''}>200px Grid</option>
+                                <option value="400" ${this.gridSize === 400 ? 'selected' : ''}>400px Grid</option>
                             </select>
                         </div>
                     </div>
