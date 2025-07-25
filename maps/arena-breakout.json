@@ -12,12 +12,12 @@
             {
               "name": "Spawn Point Alpha",
               "type": "spawn",
-              "icon": "test.png",
+              "icon": "spawn-point.svg",
               "color": "#00ff00",
               "fallbackColor": "#008800",
               "description": "Primary spawn location for team Alpha",
               "position": { "x": 400, "y": 300 },
-              "scale": 60
+              "scale": 1.5
             },
             {
               "name": "Spawn Point Beta",
@@ -66,6 +66,58 @@
               "fallbackColor": "#00cccc",
               "description": "Primary extraction zone",
               "position": { "x": 3200, "y": 1600 }
+            },
+            {
+              "name": "Danger Zone Alpha",
+              "type": "danger",
+              "icon": "test.png",
+              "color": "#ff0000",
+              "fallbackColor": "#cc0000",
+              "description": "High-risk combat area",
+              "position": { "x": 1200, "y": 800 },
+              "scale": 1.2
+            },
+            {
+              "name": "Supply Cache Beta",
+              "type": "loot",
+              "icon": "test.png",
+              "color": "#ffff00",
+              "fallbackColor": "#cccc00",
+              "description": "Secondary loot location",
+              "position": { "x": 2800, "y": 1400 }
+            }
+          ]
+        },
+        {
+          "name": "goga",
+          "floor": -1,
+          "mapImage": "map.png",
+          "markers": [
+            {
+              "name": "Spawn Point Alpha",
+              "type": "spawn",
+              "color": "#1900ff",
+              "fallbackColor": "#008800",
+              "description": "Primary spawn location for team Alpha",
+              "position": { "x": 400, "y": 300 },
+              "scale": 1.5
+            }
+          ]
+        }
+        ,
+        {
+          "name": "goga",
+          "floor": 1,
+          "mapImage": "map.png",
+          "markers": [
+            {
+              "name": "Spawn Point Alpha",
+              "type": "spawn",
+              "color": "#1900ff",
+              "fallbackColor": "#008800",
+              "description": "Primary spawn location for team Alpha",
+              "position": { "x": 400, "y": 300 },
+              "scale": 1.5
             }
           ]
         }

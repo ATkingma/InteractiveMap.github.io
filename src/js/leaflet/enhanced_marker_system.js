@@ -285,16 +285,27 @@ class EnhancedMarkerSystem {
         const iconStyle = `transform: scale(${scale}); transform-origin: center;`;
         
         if (markerData.icon) {
+            // Create image marker with fallback to circle
+            const imgId = `marker-img-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+            setTimeout(() => {
+                const img = document.getElementById(imgId);
+                if (img) {
+                    img.onerror = () => {
+                        const circleHtml = `<div class="marker-circle" style="background-color: ${markerData.color}; border-color: ${markerData.fallbackColor}; ${iconStyle}"><div class="marker-inner" style="background-color: ${markerData.fallbackColor};"></div></div>`;
+                        img.parentElement.innerHTML = circleHtml;
+                    };
+                }
+            }, 10);
+            
             return `
                 <div class="marker-icon" style="background-color: transparent; ${iconStyle}">
-                    <img src="../public/images/icons/${markerData.icon}" alt="${markerData.name}" 
-                         onerror="this.parentElement.outerHTML='<div class=\\"marker-circle\\" style=\\"background-color: ${markerData.color}; border-color: ${markerData.fallbackColor}; ${iconStyle}\\"><div class=\\"marker-inner\\"></div></div>'" />
+                    <img id="${imgId}" src="../public/images/icons/${markerData.icon}" alt="${markerData.name}" />
                 </div>
             `;
         } else {
             return `
                 <div class="marker-circle" style="background-color: ${markerData.color}; border-color: ${markerData.fallbackColor}; ${iconStyle}">
-                    <div class="marker-inner"></div>
+                    <div class="marker-inner" style="background-color: ${markerData.fallbackColor};"></div>
                 </div>
             `;
         }

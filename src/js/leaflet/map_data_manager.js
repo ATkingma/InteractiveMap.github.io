@@ -23,7 +23,7 @@ class MapMarker {
     constructor(data = {}) {
         this.name = data.name || '';
         this.type = data.type || 'default';
-        this.icon = data.icon || 'test.png';
+        this.icon = data.icon; // Don't set default icon - undefined means no icon (colored circle)
         this.color = data.color || '#808080'; // Default gray
         this.fallbackColor = data.fallbackColor || '#606060';
         this.description = data.description || '';

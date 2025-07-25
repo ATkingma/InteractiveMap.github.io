@@ -49,8 +49,7 @@
               "color": "#00ff00",
               "fallbackColor": "#008800",
               "description": "Main entrance gate",
-              "position": { "x": 2000, "y": 1000 },
-              "scale": 1.5
+              "position": { "x": 2000, "y": 1000 }
             },
             {
               "name": "Vehicle Bay",

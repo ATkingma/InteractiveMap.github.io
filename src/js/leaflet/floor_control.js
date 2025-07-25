@@ -137,31 +137,54 @@ class FloorControl {
      * Update the content of the floor control div
      */
     updateFloorControlContent(div) {
-        const floorButtons = this.availableFloors.map(floor => {
+        // Sort floors from highest to lowest for display (largest to smallest)
+        const sortedFloors = [...this.availableFloors].sort((a, b) => b - a);
+        
+        const floorButtons = sortedFloors.map((floor, index) => {
             const floorData = this.floorData[floor];
             if (!floorData) return '';
+            
+            // Create meaningful floor labels
+            let floorLabel;
+            if (floor === 0) {
+                floorLabel = 'G'; // Ground floor
+            } else if (floor > 0) {
+                floorLabel = floor.toString(); // Floor 1, 2, 3, etc.
+            } else {
+                floorLabel = `B${Math.abs(floor)}`; // B1, B2, B3 for basements
+            }
             
             return `
                 <button class="floor-btn ${floor === this.currentFloor ? 'active' : ''}" 
                         data-floor="${floor}" 
                         title="${floorData.description}">
-                    <i class="fas fa-layer-group"></i>
-                    ${floorData.name}
+                    ${floorLabel}
                 </button>
             `;
         }).join('');
 
         div.innerHTML = `
             <div class="floor-control">
-                <div class="floor-title">
-                    <i class="fas fa-building"></i>
-                    <span>Floor Selection</span>
-                </div>
                 <div class="floor-buttons">
                     ${floorButtons}
                 </div>
             </div>
         `;
+
+        // Add responsive column classes based on number of floors
+        const floorButtonsContainer = div.querySelector('.floor-buttons');
+        const floorCount = sortedFloors.length;
+        
+        // Remove existing column classes
+        floorButtonsContainer.classList.remove('multi-column-2', 'multi-column-3');
+        
+        // Add appropriate column class based on floor count
+        if (floorCount > 12) {
+            floorButtonsContainer.classList.add('multi-column-3');
+        } else if (floorCount > 6) {
+            floorButtonsContainer.classList.add('multi-column-2');
+        }
+        // Default single column for 6 or fewer floors
 
         // Add click events to floor buttons
         div.querySelectorAll('.floor-btn').forEach(btn => {
@@ -173,24 +196,26 @@ class FloorControl {
     }
 
     createFloorControlInstance() {
-        // Create floor control container
-        const floorControl = L.control({ position: 'bottomleft' });
+        // Create floor control container - positioned independently bottom right
+        const floorControlContainer = L.DomUtil.create('div', 'floor-control-container');
         
-        floorControl.onAdd = (map) => {
-            const div = L.DomUtil.create('div', 'floor-control-container');
-            this.floorControlDiv = div; // Store reference for updates
-            
-            this.updateFloorControlContent(div);
+        // Position it independently, not as a Leaflet control - BOTTOM RIGHT
+        floorControlContainer.style.position = 'absolute';
+        floorControlContainer.style.bottom = '20px';
+        floorControlContainer.style.right = '20px';
+        floorControlContainer.style.zIndex = '1000';
+        floorControlContainer.style.pointerEvents = 'auto';
+        
+        this.floorControlDiv = floorControlContainer; // Store reference for updates
+        this.updateFloorControlContent(floorControlContainer);
 
-            // Prevent map interaction when clicking on control
-            L.DomEvent.disableClickPropagation(div);
-            L.DomEvent.disableScrollPropagation(div);
+        // Prevent map interaction when clicking on control
+        L.DomEvent.disableClickPropagation(floorControlContainer);
+        L.DomEvent.disableScrollPropagation(floorControlContainer);
 
-            return div;
-        };
-
-        floorControl.addTo(this.map);
-        this.floorControlInstance = floorControl;
+        // Add directly to the map container instead of Leaflet controls
+        const mapContainer = this.map.getContainer();
+        mapContainer.appendChild(floorControlContainer);
     }
 
     
