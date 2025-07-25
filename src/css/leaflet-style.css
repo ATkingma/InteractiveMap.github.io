@@ -541,6 +541,7 @@ body {
 
 /* Controls */
 .leaflet-control-layers {
+    display: none;
     background: var(--bg-panel);
     border: 1px solid var(--primary-color);
     border-radius: 8px;
@@ -1690,4 +1691,7 @@ input[type="checkbox"] {
 .marker-type-user-marker .marker-circle { 
     border-color: var(--primary-color);
     border-width: 3px;
+}
+.leaflet-control-attribution{
+    display: none;
 }

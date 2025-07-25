@@ -242,11 +242,13 @@ class EnhancedMarkerSystem {
 
         // Create custom icon
         const iconHtml = this.createMarkerIcon(markerData);
+        const baseSize = 24;
+        
         const customIcon = L.divIcon({
             html: iconHtml,
             className: `custom-marker marker-type-${markerData.type}`,
-            iconSize: [24, 24],
-            iconAnchor: [12, 12]
+            iconSize: [baseSize, baseSize],
+            iconAnchor: [baseSize / 2, baseSize / 2]
         });
 
         // Create marker
@@ -279,16 +281,19 @@ class EnhancedMarkerSystem {
      * Create marker icon HTML
      */
     createMarkerIcon(markerData) {
+        const scale = markerData.scale || 1.0;
+        const iconStyle = `transform: scale(${scale}); transform-origin: center;`;
+        
         if (markerData.icon) {
             return `
-                <div class="marker-icon" style="background-color: ${markerData.color};">
+                <div class="marker-icon" style="background-color: transparent; ${iconStyle}">
                     <img src="../public/images/icons/${markerData.icon}" alt="${markerData.name}" 
-                         onerror="this.parentElement.outerHTML='<div class=\\"marker-circle\\" style=\\"background-color: ${markerData.color}; border-color: ${markerData.fallbackColor};\\"><div class=\\"marker-inner\\"></div></div>'" />
+                         onerror="this.parentElement.outerHTML='<div class=\\"marker-circle\\" style=\\"background-color: ${markerData.color}; border-color: ${markerData.fallbackColor}; ${iconStyle}\\"><div class=\\"marker-inner\\"></div></div>'" />
                 </div>
             `;
         } else {
             return `
-                <div class="marker-circle" style="background-color: ${markerData.color}; border-color: ${markerData.fallbackColor};">
+                <div class="marker-circle" style="background-color: ${markerData.color}; border-color: ${markerData.fallbackColor}; ${iconStyle}">
                     <div class="marker-inner"></div>
                 </div>
             `;
@@ -326,11 +331,13 @@ class EnhancedMarkerSystem {
      */
     updateMarkerSizes() {
         const zoom = this.map.getZoom();
-        const scale = Math.max(0.5, Math.min(2, zoom / 3));
+        const zoomScale = Math.max(0.5, Math.min(2, zoom / 3));
 
-        this.activeMarkers.forEach(({ marker }) => {
+        this.activeMarkers.forEach(({ marker, data }) => {
             const icon = marker.getIcon();
-            const newSize = [24 * scale, 24 * scale];
+            const markerScale = data.scale || 1.0;
+            const totalScale = zoomScale * markerScale;
+            const newSize = [24 * totalScale, 24 * totalScale];
             icon.options.iconSize = newSize;
             icon.options.iconAnchor = [newSize[0] / 2, newSize[1] / 2];
             marker.setIcon(icon);

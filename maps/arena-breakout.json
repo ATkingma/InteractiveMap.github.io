@@ -16,7 +16,8 @@
               "color": "#00ff00",
               "fallbackColor": "#008800",
               "description": "Primary spawn location for team Alpha",
-              "position": { "x": 400, "y": 300 }
+              "position": { "x": 400, "y": 300 },
+              "scale": 60
             },
             {
               "name": "Spawn Point Beta",
@@ -25,7 +26,8 @@
               "color": "#0000ff",
               "fallbackColor": "#000088",
               "description": "Primary spawn location for team Beta",
-              "position": { "x": 3600, "y": 1800 }
+              "position": { "x": 3600, "y": 1800 },
+              "scale": 1.2
             },
             {
               "name": "Central Loot Area",
@@ -34,7 +36,8 @@
               "color": "#ffff00",
               "fallbackColor": "#cccc00",
               "description": "High-value loot spawns in center",
-              "position": { "x": 2039, "y": 1079 }
+              "position": { "x": 2039, "y": 1079 },
+              "scale": 1.8
             },
             {
               "name": "Medical Station",
@@ -43,7 +46,8 @@
               "color": "#ff4444",
               "fallbackColor": "#cc3333",
               "description": "Medical supplies and healing items",
-              "position": { "x": 1500, "y": 500 }
+              "position": { "x": 1500, "y": 500 },
+              "scale": 1.3
             },
             {
               "name": "Weapon Cache North",

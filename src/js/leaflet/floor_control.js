@@ -151,33 +151,33 @@ class FloorControl {
             `;
         }).join('');
 
-        div.innerHTML = `
-            <div class="floor-control">
-                <div class="floor-title">
-                    <i class="fas fa-building"></i>
-                    <span>Floor Selection</span>
-                </div>
-                <div class="floor-buttons">
-                    ${floorButtons}
-                </div>
-                <div class="grid-controls">
-                    <div class="grid-title">
-                        <i class="fas fa-th"></i>
-                        <span>Grid System</span>
-                    </div>
-                    <div class="grid-options">
-                        <button class="grid-toggle-btn" title="Toggle grid overlay">
-                            <i class="fas fa-th"></i> ${this.showGrid ? 'Hide Grid' : 'Show Grid'}
-                        </button>
-                        <select class="grid-size-select" title="Grid size">
-                            <option value="50" ${this.gridSize === 50 ? 'selected' : ''}>50px Grid</option>
-                            <option value="100" ${this.gridSize === 100 ? 'selected' : ''}>100px Grid</option>
-                            <option value="200" ${this.gridSize === 200 ? 'selected' : ''}>200px Grid</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-        `;
+        // div.innerHTML = `
+        //     <div class="floor-control">
+        //         <div class="floor-title">
+        //             <i class="fas fa-building"></i>
+        //             <span>Floor Selection</span>
+        //         </div>
+        //         <div class="floor-buttons">
+        //             ${floorButtons}
+        //         </div>
+        //         <div class="grid-controls">
+        //             <div class="grid-title">
+        //                 <i class="fas fa-th"></i>
+        //                 <span>Grid System</span>
+        //             </div>
+        //             <div class="grid-options">
+        //                 <button class="grid-toggle-btn" title="Toggle grid overlay">
+        //                     <i class="fas fa-th"></i> ${this.showGrid ? 'Hide Grid' : 'Show Grid'}
+        //                 </button>
+        //                 <select class="grid-size-select" title="Grid size">
+        //                     <option value="50" ${this.gridSize === 50 ? 'selected' : ''}>50px Grid</option>
+        //                     <option value="100" ${this.gridSize === 100 ? 'selected' : ''}>100px Grid</option>
+        //                     <option value="200" ${this.gridSize === 200 ? 'selected' : ''}>200px Grid</option>
+        //                 </select>
+        //             </div>
+        //         </div>
+        //     </div>
+        // `;
 
         // Add click events to floor buttons
         div.querySelectorAll('.floor-btn').forEach(btn => {

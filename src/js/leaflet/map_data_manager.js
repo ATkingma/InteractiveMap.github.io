@@ -28,6 +28,7 @@ class MapMarker {
         this.fallbackColor = data.fallbackColor || '#606060';
         this.description = data.description || '';
         this.position = data.position instanceof Vector2 ? data.position : Vector2.fromObject(data.position || {});
+        this.scale = data.scale || 1.0; // Icon scale multiplier (1.0 = normal, 1.5 = 50% bigger, etc.)
         this.isUserCreated = data.isUserCreated || false;
     }
 
@@ -47,6 +48,7 @@ class MapMarker {
             fallbackColor: this.fallbackColor,
             description: this.description,
             position: this.position.toObject(),
+            scale: this.scale,
             isUserCreated: this.isUserCreated
         };
     }
