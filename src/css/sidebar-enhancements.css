@@ -1,0 +1,948 @@
+/* ===========================================
+   ENHANCED SIDEBAR FEATURES STYLES
+   =========================================== */
+
+/* Color Picker Styles */
+.color-picker-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.color-presets {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.color-preset {
+    width: 30px;
+    height: 30px;
+    border: 2px solid var(--border-color);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.color-preset:hover,
+.color-preset.active {
+    border-color: var(--primary-color);
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(255, 140, 0, 0.3);
+}
+
+/* Position Group Styles */
+.position-group {
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 15px;
+    background: var(--bg-darker);
+}
+
+.position-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.coordinate-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.coord-input {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.coord-input label {
+    font-size: 12px;
+    color: var(--text-accent);
+    font-weight: 500;
+}
+
+/* Custom Markers List */
+.custom-markers-list {
+    margin-top: 30px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 20px;
+}
+
+.no-markers {
+    text-align: center;
+    color: var(--text-muted);
+    font-style: italic;
+    padding: 20px;
+    background: var(--bg-darker);
+    border-radius: 6px;
+    border: 1px dashed var(--border-color);
+}
+
+.custom-marker-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background: var(--bg-darker);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    margin-bottom: 8px;
+    transition: all 0.2s ease;
+}
+
+.custom-marker-item:hover {
+    background: var(--bg-light);
+    border-color: var(--primary-color);
+}
+
+.custom-marker-item input[type="checkbox"] {
+    margin: 0;
+}
+
+.custom-marker-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.custom-marker-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.custom-marker-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 4px 0;
+    font-size: 14px;
+}
+
+.custom-marker-coords {
+    font-family: monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.custom-marker-actions {
+    display: flex;
+    gap: 5px;
+    flex-shrink: 0;
+}
+
+.marker-action-btn {
+    padding: 4px 8px;
+    font-size: 11px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-panel);
+    color: var(--text-secondary);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.marker-action-btn:hover {
+    background: var(--bg-light);
+    border-color: var(--primary-color);
+    color: var(--text-primary);
+}
+
+.marker-action-btn.danger {
+    border-color: #ff4444;
+    color: #ff4444;
+}
+
+.marker-action-btn.danger:hover {
+    background: rgba(255, 68, 68, 0.1);
+}
+
+.marker-list-actions {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+/* Drawing Tools Styles */
+.drawing-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.tool-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.tool-btn {
+    padding: 10px 12px;
+    background: var(--bg-darker);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    justify-content: center;
+}
+
+.tool-btn:hover {
+    background: var(--bg-light);
+    border-color: var(--primary-color);
+    color: var(--text-primary);
+}
+
+.tool-btn.active {
+    background: var(--gradient-primary);
+    border-color: var(--primary-color);
+    color: var(--bg-dark);
+    font-weight: 600;
+}
+
+.style-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.drawing-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Info Panel Styles */
+.site-info h3 {
+    color: var(--primary-color);
+    margin: 0 0 15px 0;
+    font-size: 20px;
+}
+
+.site-info h4 {
+    color: var(--text-accent);
+    margin: 20px 0 10px 0;
+    font-size: 16px;
+}
+
+.site-info ul,
+.site-info ol {
+    padding-left: 20px;
+    margin: 10px 0;
+}
+
+.site-info li {
+    margin: 5px 0;
+    line-height: 1.5;
+}
+
+.version-info {
+    background: var(--bg-darker);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 15px;
+    margin-top: 20px;
+}
+
+.version-info p {
+    margin: 5px 0;
+    color: var(--text-secondary);
+}
+
+/* GitHub Panel Styles */
+.github-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.github-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.github-links a {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 15px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.code-block {
+    background: var(--bg-darker);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 15px;
+    margin: 10px 0;
+    font-family: monospace;
+    font-size: 12px;
+    color: var(--text-secondary);
+    overflow-x: auto;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.stat-item {
+    background: var(--bg-darker);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 10px;
+    text-align: center;
+    font-size: 12px;
+}
+
+.stat-item strong {
+    color: var(--text-accent);
+    display: block;
+    margin-bottom: 4px;
+}
+
+/* Discord Panel Styles */
+.discord-features {
+    margin: 20px 0;
+}
+
+.discord-features ul {
+    list-style: none;
+    padding: 0;
+}
+
+.discord-features li {
+    background: var(--bg-darker);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 10px;
+    margin: 8px 0;
+    transition: all 0.2s ease;
+}
+
+.discord-features li:hover {
+    background: var(--bg-light);
+    border-color: var(--primary-color);
+}
+
+.discord-invite {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.discord-btn {
+    background: #5865F2 !important;
+    border-color: #5865F2 !important;
+}
+
+.discord-btn:hover {
+    background: #4752C4 !important;
+}
+
+.community-rules {
+    background: var(--bg-darker);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 15px;
+    margin: 20px 0;
+}
+
+.community-rules ul {
+    margin: 10px 0;
+    padding-left: 20px;
+}
+
+.community-rules li {
+    margin: 8px 0;
+    line-height: 1.4;
+}
+
+/* Settings Panel Styles */
+.settings-container {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.settings-section,
+.actions-section,
+.danger-section,
+.about-section {
+    background: var(--bg-darker);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.settings-section h3,
+.actions-section h3,
+.danger-section h3,
+.about-section h3 {
+    margin: 0 0 15px 0;
+    color: var(--text-accent);
+    font-size: 16px;
+}
+
+.setting-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 12px 0;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 140, 0, 0.1);
+}
+
+.setting-item:last-child {
+    border-bottom: none;
+}
+
+.setting-item label {
+    color: var(--text-primary);
+    font-weight: 500;
+    margin: 0;
+}
+
+.setting-item input[type="checkbox"] {
+    accent-color: var(--primary-color);
+}
+
+.setting-item input[type="range"] {
+    width: 100px;
+    accent-color: var(--primary-color);
+}
+
+.setting-item select {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.danger-section {
+    border-color: #ff4444;
+    background: rgba(255, 68, 68, 0.05);
+}
+
+.danger-section h3 {
+    color: #ff4444;
+}
+
+.danger-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.danger-warning {
+    background: rgba(255, 68, 68, 0.1);
+    border: 1px solid #ff4444;
+    border-radius: 6px;
+    padding: 15px;
+    margin-top: 15px;
+}
+
+.danger-warning p {
+    margin: 0 0 10px 0;
+    color: #ff4444;
+    font-weight: 600;
+}
+
+.danger-warning ul {
+    margin: 10px 0 0 0;
+    padding-left: 20px;
+}
+
+.danger-warning li {
+    margin: 5px 0;
+    color: var(--text-secondary);
+}
+
+/* Enhanced Filter Checkboxes */
+.filter-checkboxes {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.filter-checkboxes::-webkit-scrollbar {
+    width: 6px;
+}
+
+.filter-checkboxes::-webkit-scrollbar-track {
+    background: var(--bg-darker);
+    border-radius: 3px;
+}
+
+.filter-checkboxes::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 3px;
+}
+
+.filter-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background: var(--bg-darker);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 13px;
+}
+
+.filter-checkbox:hover {
+    background: var(--bg-light);
+    border-color: var(--primary-color);
+}
+
+.filter-checkbox.active {
+    background: rgba(255, 140, 0, 0.1);
+    border-color: var(--primary-color);
+}
+
+.filter-checkbox input[type="checkbox"] {
+    margin: 0;
+    width: 16px;
+    height: 16px;
+}
+
+.filter-checkbox-label {
+    flex: 1;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.filter-checkbox-count {
+    color: var(--text-muted);
+    font-size: 11px;
+    background: var(--bg-panel);
+    padding: 2px 6px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+}
+
+.filter-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 15px;
+}
+
+/* Enhanced Floor Selection */
+.sidebar-floor-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sidebar-floor-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 15px;
+    background: var(--bg-darker);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+}
+
+.sidebar-floor-btn:hover {
+    background: var(--bg-light);
+    border-color: var(--primary-color);
+}
+
+.sidebar-floor-btn.active {
+    background: var(--gradient-primary);
+    border-color: var(--primary-color);
+    color: var(--bg-dark);
+}
+
+.sidebar-floor-info {
+    flex: 1;
+}
+
+.sidebar-floor-name {
+    font-weight: 600;
+    margin: 0 0 4px 0;
+    font-size: 14px;
+}
+
+.sidebar-floor-description {
+    font-size: 11px;
+    margin: 0;
+    opacity: 0.8;
+}
+
+.sidebar-floor-number {
+    background: var(--bg-panel);
+    color: var(--text-accent);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 12px;
+    min-width: 30px;
+    text-align: center;
+}
+
+.sidebar-floor-btn.active .sidebar-floor-number {
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--bg-dark);
+}
+
+/* Responsive Enhancements */
+@media (max-width: 768px) {
+    .tool-buttons {
+        grid-template-columns: 1fr;
+    }
+    
+    .color-presets {
+        grid-template-columns: repeat(8, 1fr);
+    }
+    
+    .coordinate-inputs {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .github-links,
+    .action-buttons,
+    .danger-actions {
+        gap: 8px;
+    }
+    
+    .marker-list-actions,
+    .filter-actions,
+    .drawing-actions {
+        flex-direction: column;
+    }
+    
+    .custom-marker-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .custom-marker-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+}
+
+@media (max-width: 480px) {
+    .leaflet-sidebar {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+    
+    .control-btn {
+        padding: 12px 16px;
+        font-size: 14px;
+    }
+}
+
+/* Enhanced scrollbars for all containers */
+.filters-container::-webkit-scrollbar,
+.custom-markers-container::-webkit-scrollbar,
+.drawing-container::-webkit-scrollbar,
+.info-container::-webkit-scrollbar,
+.coordinates-container::-webkit-scrollbar,
+.github-container::-webkit-scrollbar,
+.discord-container::-webkit-scrollbar,
+.settings-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.filters-container::-webkit-scrollbar-track,
+.custom-markers-container::-webkit-scrollbar-track,
+.drawing-container::-webkit-scrollbar-track,
+.info-container::-webkit-scrollbar-track,
+.coordinates-container::-webkit-scrollbar-track,
+.github-container::-webkit-scrollbar-track,
+.discord-container::-webkit-scrollbar-track,
+.settings-container::-webkit-scrollbar-track {
+    background: var(--bg-darker);
+    border-radius: 3px;
+}
+
+.filters-container::-webkit-scrollbar-thumb,
+.custom-markers-container::-webkit-scrollbar-thumb,
+.drawing-container::-webkit-scrollbar-thumb,
+.info-container::-webkit-scrollbar-thumb,
+.coordinates-container::-webkit-scrollbar-thumb,
+.github-container::-webkit-scrollbar-thumb,
+.discord-container::-webkit-scrollbar-thumb,
+.settings-container::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 3px;
+}
+
+/* Animation for sidebar panels */
+.leaflet-sidebar-pane {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Click to place marker indicator */
+.click-to-place-active {
+    background: var(--gradient-secondary) !important;
+    color: var(--text-primary) !important;
+    animation: pulse-orange 1s infinite;
+}
+
+@keyframes pulse-orange {
+    0% { box-shadow: 0 0 0 0 rgba(255, 140, 0, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(255, 140, 0, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 140, 0, 0); }
+}
+
+/* Enhanced marker type icons */
+.marker-type-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    display: inline-block;
+}
+
+/* Loading states */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid var(--primary-color);
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ===========================================
+   SIDEBAR TAB NAVIGATION STYLES
+   =========================================== */
+
+/* Sidebar Navigation Tabs - All in one row */
+.leaflet-sidebar-tabs {
+    background: #2a2a2a;
+    border-bottom: 2px solid #ff6b35;
+    padding: 10px;
+    flex-shrink: 0;
+}
+
+.leaflet-sidebar-tabs ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.leaflet-sidebar-tabs li {
+    flex: 1;
+    min-width: 35px;
+}
+
+.leaflet-sidebar-tabs a {
+    display: block;
+    width: 100%;
+    height: 35px;
+    background: #333;
+    color: #ccc;
+    text-decoration: none;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    border: 1px solid #444;
+}
+
+.leaflet-sidebar-tabs a:hover {
+    background: #444;
+    color: #ff6b35;
+    border-color: #ff6b35;
+}
+
+.leaflet-sidebar-tabs .active a {
+    background: #ff6b35;
+    color: white;
+    border-color: #ff8c00;
+}
+
+/* Sidebar Content Area */
+.leaflet-sidebar-content {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+.leaflet-sidebar-pane {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #1a1a1a;
+    display: none;
+    flex-direction: column;
+}
+
+.leaflet-sidebar-pane.active {
+    display: flex;
+}
+
+.leaflet-sidebar-header {
+    background: #2a2a2a;
+    color: #ff6b35;
+    padding: 15px 20px;
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+    border-bottom: 1px solid #444;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+}
+
+.leaflet-sidebar-header i {
+    margin-right: 10px;
+}
+
+.leaflet-sidebar-close {
+    cursor: pointer;
+    color: #ccc;
+    font-size: 20px;
+    transition: color 0.3s ease;
+}
+
+.leaflet-sidebar-close:hover {
+    color: #ff6b35;
+}
+
+/* Individual Panel Containers */
+.filters-container,
+.floors-container,
+.custom-markers-container,
+.drawing-container,
+.info-container,
+.coordinates-container,
+.github-container,
+.discord-container,
+.settings-container {
+    padding: 20px;
+    color: #e0e0e0;
+    overflow-y: auto;
+    flex: 1;
+}
+
+/* Scrollbar Styling for sidebar */
+.leaflet-sidebar-pane::-webkit-scrollbar,
+.filters-container::-webkit-scrollbar,
+.floors-container::-webkit-scrollbar,
+.custom-markers-container::-webkit-scrollbar,
+.drawing-container::-webkit-scrollbar,
+.info-container::-webkit-scrollbar,
+.coordinates-container::-webkit-scrollbar,
+.github-container::-webkit-scrollbar,
+.discord-container::-webkit-scrollbar,
+.settings-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.leaflet-sidebar-pane::-webkit-scrollbar-track,
+.filters-container::-webkit-scrollbar-track,
+.floors-container::-webkit-scrollbar-track,
+.custom-markers-container::-webkit-scrollbar-track,
+.drawing-container::-webkit-scrollbar-track,
+.info-container::-webkit-scrollbar-track,
+.coordinates-container::-webkit-scrollbar-track,
+.github-container::-webkit-scrollbar-track,
+.discord-container::-webkit-scrollbar-track,
+.settings-container::-webkit-scrollbar-track {
+    background: #2a2a2a;
+}
+
+.leaflet-sidebar-pane::-webkit-scrollbar-thumb,
+.filters-container::-webkit-scrollbar-thumb,
+.floors-container::-webkit-scrollbar-thumb,
+.custom-markers-container::-webkit-scrollbar-thumb,
+.drawing-container::-webkit-scrollbar-thumb,
+.info-container::-webkit-scrollbar-thumb,
+.coordinates-container::-webkit-scrollbar-thumb,
+.github-container::-webkit-scrollbar-thumb,
+.discord-container::-webkit-scrollbar-thumb,
+.settings-container::-webkit-scrollbar-thumb {
+    background: #ff6b35;
+    border-radius: 3px;
+}
+
+.leaflet-sidebar-pane::-webkit-scrollbar-thumb:hover,
+.filters-container::-webkit-scrollbar-thumb:hover,
+.floors-container::-webkit-scrollbar-thumb:hover,
+.custom-markers-container::-webkit-scrollbar-thumb:hover,
+.drawing-container::-webkit-scrollbar-thumb:hover,
+.info-container::-webkit-scrollbar-thumb:hover,
+.coordinates-container::-webkit-scrollbar-thumb:hover,
+.github-container::-webkit-scrollbar-thumb:hover,
+.discord-container::-webkit-scrollbar-thumb:hover,
+.settings-container::-webkit-scrollbar-thumb:hover {
+    background: #ff8c00;
+}

@@ -12,7 +12,6 @@
             {
               "name": "Spawn Point Alpha",
               "type": "spawn",
-              "icon": "spawn-point.svg",
               "color": "#00ff00",
               "fallbackColor": "#008800",
               "description": "Primary spawn location for team Alpha",
@@ -22,12 +21,12 @@
             {
               "name": "Spawn Point Beta",
               "type": "spawn",
-              "icon": "spawn-point.svg",
+              "icon": "homie.png",
               "color": "#0000ff",
               "fallbackColor": "#000088",
               "description": "Primary spawn location for team Beta",
               "position": { "x": 3600, "y": 1800 },
-              "scale": 1.2
+              "scale": 1
             },
             {
               "name": "Central Loot Area",
@@ -117,7 +116,75 @@
               "fallbackColor": "#008800",
               "description": "Primary spawn location for team Alpha",
               "position": { "x": 400, "y": 300 },
-              "scale": 1.5
+              "scale": 4
+            }
+          ]
+        }
+        ,
+        {
+          "name": "goga",
+          "floor": -3,
+          "mapImage": "map.png",
+          "markers": [
+            {
+              "name": "Spawn Point Alpha",
+              "type": "spawn",
+              "color": "#1900ff",
+              "fallbackColor": "#008800",
+              "description": "Primary spawn location for team Alpha",
+              "position": { "x": 400, "y": 300 },
+              "scale": 4
+            }
+          ]
+        }
+        ,
+        {
+          "name": "goga",
+          "floor": -2,
+          "mapImage": "map.png",
+          "markers": [
+            {
+              "name": "Spawn Point Alpha",
+              "type": "spawn",
+              "color": "#1900ff",
+              "fallbackColor": "#008800",
+              "description": "Primary spawn location for team Alpha",
+              "position": { "x": 400, "y": 300 },
+              "scale": 4
+            }
+          ]
+        }
+        ,
+        {
+          "name": "goga",
+          "floor": -5,
+          "mapImage": "map.png",
+          "markers": [
+            {
+              "name": "Spawn Point Alpha",
+              "type": "spawn",
+              "color": "#1900ff",
+              "fallbackColor": "#008800",
+              "description": "Primary spawn location for team Alpha",
+              "position": { "x": 400, "y": 300 },
+              "scale": 4
+            }
+          ]
+        }
+        ,
+        {
+          "name": "goga",
+          "floor": -6,
+          "mapImage": "map.png",
+          "markers": [
+            {
+              "name": "Spawn Point Alpha",
+              "type": "spawn",
+              "color": "#1900ff",
+              "fallbackColor": "#008800",
+              "description": "Primary spawn location for team Alpha",
+              "position": { "x": 400, "y": 300 },
+              "scale": 4
             }
           ]
         }

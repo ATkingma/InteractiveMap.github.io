@@ -225,6 +225,7 @@ body {
 }
 
 .top-ad {
+    z-index: 10001;
     border-color: var(--secondary-color);
     background: linear-gradient(135deg, rgba(255, 107, 53, 0.2), rgba(255, 107, 53, 0.1));
     margin-top: 60px; /* Account for fixed navbar */
@@ -318,87 +319,210 @@ body {
     background: var(--secondary-color) !important;
 }
 
-/* Leaflet Interactive Map Styles */
+/* Modern Vertical Sidebar Styles with Animations */
 
 .leaflet-sidebar {
-    border-right: 2px solid var(--primary-color);
-    background: var(--bg-panel);
-    backdrop-filter: blur(10px);
-    position: absolute;
-    top: 0;
+    margin-top: 100px;
+    position: fixed;
+    top: 60px; /* Account for navbar */
     left: 0;
-    height: 100%;
-    z-index: 1000;
-    box-shadow: var(--shadow-orange);
-}
-
-/* Sidebar expand button */
-.sidebar-expand-btn {
-    position: absolute;
-    top: 50%;
-    right: -40px;
-    transform: translateY(-50%);
-    background: var(--gradient-primary);
-    border: 2px solid var(--primary-color);
-    border-left: none;
-    border-radius: 0 8px 8px 0;
-    color: var(--text-primary);
-    padding: 15px 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 18px;
-    z-index: 1001;
-    box-shadow: var(--shadow-orange);
-}
-
-.sidebar-expand-btn:hover {
-    background: var(--gradient-secondary);
-    transform: translateY(-50%) translateX(3px);
-}
-
-.leaflet-sidebar.collapsed .sidebar-expand-btn {
-    display: block;
-}
-
-.leaflet-sidebar:not(.collapsed) .sidebar-expand-btn {
-    display: none;
-}
-
-.leaflet-sidebar-tabs {
-    background: var(--bg-darker);
+    width: 60px; /* Collapsed width for icons */
+    height: calc(100vh - 120px); /* Account for navbar and bottom ad */
+    background: var(--bg-panel);
     border-right: 2px solid var(--primary-color);
+    box-shadow: var(--shadow-orange);
+    z-index: 1000;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    backdrop-filter: blur(10px);
+    border-radius: 0 12px 12px 0;
+    overflow: hidden;
 }
 
-.leaflet-sidebar-tabs > ul > li.active {
-    background: var(--gradient-primary);
+.leaflet-sidebar:hover {
+    box-shadow: 0 4px 20px rgba(255, 140, 0, 0.4);
 }
 
-.leaflet-sidebar-tabs > ul > li.active a {
-    color: var(--text-primary) !important;
+.leaflet-sidebar:not(.collapsed) {
+    left: 100px;
+    width: 450px;
+    box-shadow: 0 4px 30px rgba(255, 140, 0, 0.3);
+    z-index: 10;
 }
 
-.leaflet-sidebar-tabs > ul > li a {
-    color: var(--primary-color);
+.leaflet-sidebar.collapsed {
+    width: 60px;
+    z-index: 10;
+}
+
+/* Add animation class for smoother sidebar opening */
+.sidebar-opening {
+    animation: slideInFromLeft 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.sidebar-closing {
+    animation: slideOutToLeft 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes slideInFromLeft {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOutToLeft {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-100%);
+    }
+}
+
+/* Remove old sidebar expand button - using modern always-visible sidebar */
+
+/* Modern Vertical Sidebar Tabs */
+.leaflet-sidebar-tabs {
     background: transparent;
+    border: none;
+    padding: 15px 0;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.leaflet-sidebar-tabs ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    align-items: center;
+}
+
+.leaflet-sidebar-tabs li {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.leaflet-sidebar-tabs a {
+    display: flex;
+    width: 44px;
+    height: 44px;
+    background: var(--bg-darker);
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-radius: 12px;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
     transition: all 0.3s ease;
+    border: 2px solid transparent;
+    position: relative;
 }
 
-.leaflet-sidebar-tabs > ul > li a:hover {
+.leaflet-sidebar-tabs a:hover {
     background: var(--bg-light);
-    color: var(--accent-color);
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+    transform: scale(1.05);
 }
 
-.leaflet-sidebar-tabs > ul > li a:hover {
-    background: rgba(0, 255, 136, 0.1);
+.leaflet-sidebar-tabs li.active a {
+    background: var(--gradient-primary);
+    color: var(--text-primary);
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow-orange);
 }
 
+/* Tooltip for collapsed sidebar */
+.leaflet-sidebar-tabs a::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 55px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--bg-darker);
+    color: var(--text-primary);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    border: 1px solid var(--border-color);
+    z-index: 10001;
+    box-shadow: var(--shadow-orange);
+}
+
+.leaflet-sidebar.collapsed .leaflet-sidebar-tabs a:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Modern Sidebar Content */
 .leaflet-sidebar-content {
-    background: rgba(0, 20, 40, 0.95);
-    color: #ffffff;
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+    background: var(--bg-panel);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease 0.1s;
+}
+
+.leaflet-sidebar:not(.collapsed) .leaflet-sidebar-content {
+    opacity: 1;
+    visibility: visible;
 }
 
 .leaflet-sidebar-pane {
-    color: #ffffff;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-panel);
+    color: var(--text-primary);
+    display: none;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.leaflet-sidebar-pane.active {
+    display: flex;
+}
+
+/* Custom scrollbar for sidebar content */
+.leaflet-sidebar-pane::-webkit-scrollbar {
+    width: 6px;
+}
+
+.leaflet-sidebar-pane::-webkit-scrollbar-track {
+    background: var(--bg-darker);
+    border-radius: 3px;
+}
+
+.leaflet-sidebar-pane::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 3px;
+}
+
+.leaflet-sidebar-pane::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-color);
 }
 
 .leaflet-sidebar-pane h1,
@@ -556,16 +680,51 @@ body {
     color: var(--text-primary);
 }
 
+.leaflet-control-zoom {
+    z-index: 1002 !important;
+}
+
 .leaflet-control-zoom a {
-    background: var(--bg-panel);
-    border: 1px solid var(--primary-color);
-    color: var(--primary-color);
+    background: var(--bg-panel) !important;
+    border: 1px solid var(--primary-color) !important;
+    color: var(--primary-color) !important;
     transition: all 0.3s ease;
+    box-shadow: var(--shadow-orange);
 }
 
 .leaflet-control-zoom a:hover {
-    background: rgba(255, 140, 0, 0.1);
-    color: var(--accent-color);
+    background: rgba(255, 140, 0, 0.1) !important;
+    color: var(--accent-color) !important;
+    border-color: var(--accent-color) !important;
+    transform: scale(1.05);
+}
+
+/* Dynamic positioning based on sidebar state */
+.leaflet-top.leaflet-left {
+    top: 80px !important; /* Below navbar */
+    left: 70px !important; /* Account for collapsed sidebar */
+    z-index: 1002 !important;
+    transition: left 0.3s ease;
+}
+
+/* When sidebar is expanded */
+.leaflet-sidebar:not(.collapsed) ~ #map .leaflet-top.leaflet-left {
+    left: 560px !important;
+}
+
+/* Ensure all Leaflet controls have proper z-index and are clickable */
+.leaflet-control {
+    z-index: 1002 !important;
+    pointer-events: auto !important;
+}
+
+/* Make sure map controls container has proper positioning */
+.leaflet-control-container {
+    pointer-events: none;
+}
+
+.leaflet-control-container .leaflet-control {
+    pointer-events: auto;
 }
 
 /* Map container */
@@ -575,36 +734,79 @@ body {
     background: #001428;
 }
 
-/* Responsive design */
+/* Mobile-First Responsive Design */
 @media (max-width: 767px) {
     .leaflet-sidebar {
-        max-width: 100%;
+        width: 50px !important; /* Smaller on mobile */
+        height: calc(100vh - 140px) !important; /* Account for navbar and bottom ad */
+        border-radius: 0 8px 8px 0 !important;
     }
     
-    .collectibles_list {
-        grid-template-columns: 1fr;
+    .leaflet-sidebar:not(.collapsed) {
+        width: 100vw !important;
+        border-radius: 0 !important;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.5) !important;
     }
     
-    .ad-content h3 {
-        font-size: 16px;
+    .leaflet-sidebar-tabs {
+        padding: 8px 0 !important;
+        gap: 4px !important;
     }
     
-    .ad-content p {
-        font-size: 12px;
+    .leaflet-sidebar-tabs li {
+        width: 36px !important;
+        height: 36px !important;
     }
     
-    .ad-space {
-        padding: 8px;
+    .leaflet-sidebar-tabs a {
+        width: 36px !important;
+        height: 36px !important;
+        font-size: 15px !important;
+        border-radius: 8px !important;
     }
     
-    .ad-content {
-        padding: 10px;
+    /* Mobile zoom controls positioning */
+    .leaflet-top.leaflet-left {
+        left: 60px !important; /* Account for mobile sidebar */
+        top: 70px !important;
     }
     
-    /* Adjust layout for mobile */
-    body {
-        height: 100vh;
-        height: 100dvh; /* Use dynamic viewport height on mobile */
+    .leaflet-sidebar:not(.collapsed) ~ #map .leaflet-top.leaflet-left {
+        left: 10px !important;
+        top: 70px !important;
+    }
+    
+    /* Mobile floor and grid controls - above bottom ad */
+    .floor-control-container:not(.leaflet-control) {
+        bottom: 70px !important; /* Above bottom ad */
+        right: 10px !important;
+        scale: 0.85;
+    }
+    
+    .grid-display-container:not(.leaflet-control) {
+        top: 70px !important;
+        right: 10px !important;
+        scale: 0.85;
+    }
+    
+    /* Mobile sidebar content */
+    .leaflet-sidebar-header {
+        padding: 12px 15px !important;
+        font-size: 16px !important;
+    }
+    
+    .leaflet-sidebar-pane > div {
+        padding: 15px !important;
+    }
+    
+    /* Tooltips disabled on mobile */
+    .leaflet-sidebar-tabs a::after {
+        display: none !important;
+    }
+    
+    /* Mobile main content adjustment */
+    #main-content {
+        height: calc(100vh - 130px) !important; /* Account for mobile layout */
     }
 }
 
@@ -929,39 +1131,56 @@ body {
     font-size: 12px;
 }
 
-/* Sidebar Panels */
-.leaflet-sidebar-pane {
-    padding: 0;
-    background: var(--bg-panel);
-}
-
+/* Modern Sidebar Header */
 .leaflet-sidebar-header {
-    background: rgba(255, 140, 0, 0.1);
+    background: linear-gradient(135deg, rgba(255, 140, 0, 0.1), rgba(255, 107, 53, 0.05));
     border-bottom: 1px solid var(--primary-color);
     color: var(--primary-color);
-    padding: 15px 20px;
+    padding: 20px;
     margin: 0;
     font-size: 18px;
+    font-weight: 600;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-shrink: 0;
+    backdrop-filter: blur(10px);
+}
+
+.leaflet-sidebar-header i {
+    margin-right: 10px;
+    font-size: 20px;
 }
 
 .leaflet-sidebar-header .leaflet-sidebar-close {
     cursor: pointer;
     font-size: 20px;
     color: var(--primary-color);
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
+    padding: 8px;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid transparent;
 }
 
 .leaflet-sidebar-header .leaflet-sidebar-close:hover {
     color: var(--accent-color);
+    background: rgba(255, 140, 0, 0.1);
+    border-color: var(--accent-color);
+    transform: scale(1.1);
 }
 
 .leaflet-sidebar-pane > div {
     padding: 20px;
     background: var(--bg-panel);
     color: var(--text-primary);
+    flex: 1;
+    overflow-y: auto;
 }
 
 /* Enhanced Mobile Responsive */
@@ -1088,19 +1307,75 @@ input[type="checkbox"] {
     accent-color: var(--primary-color);
 }
 
-/* Map container specific to new layout */
+/* Modern Layout with Bottom Ad Consideration */
 #main-content {
     position: relative;
+    height: calc(100vh - 120px); /* Account for navbar (60px) + bottom ad (60px) */
+    margin-top: 60px;
+    display: flex;
 }
 
 #main-content #map {
     position: relative;
     z-index: 1;
+    height: 100%;
+    width: 100%;
+    flex: 1;
 }
 
-#main-content #sidebar {
-    position: absolute;
-    z-index: 1000;
+/* Bottom ad positioning */
+.bottom-ad {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 999 !important;
+    margin-top: 0 !important;
+}
+
+/* Override sidebar-enhancements styles to fix display issues */
+.leaflet-sidebar-tabs {
+    background: var(--bg-darker) !important;
+    border-bottom: 2px solid var(--primary-color) !important;
+    padding: 10px !important;
+    flex-shrink: 0 !important;
+}
+
+.leaflet-sidebar-content {
+    flex: 1 !important;
+    overflow: hidden !important;
+    position: relative !important;
+    background: var(--bg-panel) !important;
+}
+
+.leaflet-sidebar-pane {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: var(--bg-panel) !important;
+    color: var(--text-primary) !important;
+    display: none !important;
+    flex-direction: column !important;
+}
+
+.leaflet-sidebar-pane.active {
+    display: flex !important;
+}
+
+/* Fix for sidebar header */
+.leaflet-sidebar-header {
+    background: rgba(255, 140, 0, 0.1) !important;
+    border-bottom: 1px solid var(--primary-color) !important;
+    color: var(--primary-color) !important;
+    padding: 15px 20px !important;
+    margin: 0 !important;
+    font-size: 18px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    flex-shrink: 0 !important;
 }
 
 
@@ -1110,12 +1385,58 @@ input[type="checkbox"] {
 
 
 .floor-control-container:not(.leaflet-control) {
-    position: absolute !important;
-    bottom: 20px !important;
-    right: 180px !important;
-    z-index: 1000 !important;
-    pointer-events: auto !important;
+    position: absolute;
+    bottom: 120px !important;
+    right: 190px !important;
+    z-index: 1000;
+    pointer-events: auto;
+    transition: right 0.3s ease;1
 }
+
+/* Dynamic positioning based on floor count */
+.floor-control-container:not(.leaflet-control).floors-7-12 {
+    right: 145px!important; /* 190 - 28.24 = 161.76 */
+}
+
+.floor-control-container:not(.leaflet-control).floors-13-18 {
+    right: 133.52px !important; /* 190 - (28.24 * 2) = 133.52 */
+}
+
+.floor-control-container:not(.leaflet-control).floors-19-24 {
+    right: 105.28px !important; /* 190 - (28.24 * 3) = 105.28 */
+}
+
+.floor-control-container:not(.leaflet-control).floors-25-30 {
+    right: 77.04px !important; /* 190 - (28.24 * 4) = 77.04 */
+}
+
+.floor-control-container:not(.leaflet-control).floors-31-36 {
+    right: 48.8px !important; /* 190 - (28.24 * 5) = 48.8 */
+}
+
+.floor-control-container:not(.leaflet-control).floors-37-plus {
+    right: 20.56px !important; /* 190 - (28.24 * 6) = 20.56 */
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+    .floor-control-container:not(.leaflet-control) {
+        right: 10px !important;
+        bottom: 80px !important;
+    }
+    
+    /* Override all floor count classes on mobile */
+    .floor-control-container:not(.leaflet-control).floors-7-12,
+    .floor-control-container:not(.leaflet-control).floors-13-18,
+    .floor-control-container:not(.leaflet-control).floors-19-24,
+    .floor-control-container:not(.leaflet-control).floors-25-30,
+    .floor-control-container:not(.leaflet-control).floors-31-36,
+    .floor-control-container:not(.leaflet-control).floors-37-plus {
+        right: 10px !important;
+        bottom: 80px !important;
+    }
+}
+
 
 .floor-control {
     background: var(--bg-panel);
@@ -1407,16 +1728,35 @@ input[type="checkbox"] {
         right: 10px !important;
     }
     
-    .floor-control,
-    .grid-display {
-        padding: 8px;
-    }
-    
     /* Mobile positioning for independent grid display */
     .grid-display-container:not(.leaflet-control) {
         top: 10px !important;
         right: 10px !important;
         min-width: 150px;
+    }
+    
+    /* Ensure zoom controls are visible on mobile */
+    .leaflet-sidebar:not(.collapsed) ~ #map .leaflet-top.leaflet-left {
+        left: 10px !important;
+        top: 10px !important;
+    }
+    
+    /* Mobile sidebar expand button positioning */
+    .sidebar-expand-btn {
+        left: 15px !important;
+        padding: 10px 6px !important;
+        font-size: 16px !important;
+    }
+    
+    /* Make sidebar full width on mobile */
+    .leaflet-sidebar {
+        width: 100vw !important;
+        max-width: 100% !important;
+    }
+    
+    .floor-control,
+    .grid-display {
+        padding: 8px;
     }
     
     .grid-display-container:not(.leaflet-control) .grid-display {

@@ -193,6 +193,40 @@ class FloorControl {
                 this.switchFloor(floorId);
             });
         });
+
+        // Update positioning based on floor count
+        this.updateFloorControlPositioning(sortedFloors.length);
+    }
+
+    /**
+     * Update floor control positioning based on the number of floors
+     */
+    updateFloorControlPositioning(floorCount) {
+        const floorContainer = this.floorControlDiv;
+        if (!floorContainer) return;
+        
+        // Remove all existing floor count classes
+        floorContainer.classList.remove(
+            'floors-7-12', 'floors-13-18', 'floors-19-24', 
+            'floors-25-30', 'floors-31-36', 'floors-37-plus'
+        );
+        
+        // Apply appropriate class based on floor count
+        if (floorCount >= 7 && floorCount <= 12) {
+            floorContainer.classList.add('floors-7-12');
+        } else if (floorCount >= 13 && floorCount <= 18) {
+            floorContainer.classList.add('floors-13-18');
+        } else if (floorCount >= 19 && floorCount <= 24) {
+            floorContainer.classList.add('floors-19-24');
+        } else if (floorCount >= 25 && floorCount <= 30) {
+            floorContainer.classList.add('floors-25-30');
+        } else if (floorCount >= 31 && floorCount <= 36) {
+            floorContainer.classList.add('floors-31-36');
+        } else if (floorCount >= 37) {
+            floorContainer.classList.add('floors-37-plus');
+        }
+        
+        console.log(`Floor control positioning updated for ${floorCount} floors`);
     }
 
     createFloorControlInstance() {

@@ -9,6 +9,9 @@
 
     <!-- Leaflet's CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@latest/dist/leaflet.css" crossorigin="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="../src/css/leaflet-style.css" />
+    <link rel="stylesheet" href="../src/css/sidebar-enhancements.css" />
 
     <!-- Make sure you put this AFTER Leaflet's CSS -->
     <script src="https://unpkg.com/leaflet@latest/dist/leaflet.js" crossorigin=""></script>
@@ -81,70 +84,233 @@
 
     <!-- Main Content Area -->
     <div id="main-content">
-
-
-        <div id="sidebar" class="leaflet-sidebar collapsed">
-            <!-- Expand button for collapsed sidebar -->
-            <button class="sidebar-expand-btn" onclick="openSidebar()">
-                <i class="fas fa-chevron-right"></i>
-            </button>
-            
+        <div id="sidebar" class="leaflet-sidebar">
             <!-- Nav tabs -->
             <div class="leaflet-sidebar-tabs">
-                <!-- side bar todo -->
-                <!-- <ul role="tablist">
-                    <li><a href="#filters" role="tab"><i class="fas fa-filter"></i></a></li>
-                    <li><a href="#floors" role="tab"><i class="fas fa-building"></i></a></li>
-                </ul>
-
                 <ul role="tablist">
-                    <li><a href="#coordinates" role="tab"><i class="fas fa-crosshairs"></i></a></li>
-                    <li><a href="#reset" role="tab"><i class="fas fa-trash"></i></a></li>
-                    <li><a href="#edit" role="tab"><i class="fas fa-map-marked"></i></a></li>
-                    <li><a href="#attributions" role="tab"><i class="fas fa-info-circle"></i></a></li>
-                </ul> -->
+                    <li><a href="#filters" role="tab" data-tooltip="Marker Filtering"><i class="fas fa-filter"></i></a></li>
+                    <li><a href="#floors" role="tab" data-tooltip="Floor Selection"><i class="fas fa-building"></i></a></li>
+                    <li><a href="#custom-markers" role="tab" data-tooltip="Custom Markers"><i class="fas fa-map-marker-alt"></i></a></li>
+                    <li><a href="#drawing" role="tab" data-tooltip="Drawing Tools"><i class="fas fa-pencil-alt"></i></a></li>
+                    <li><a href="#info" role="tab" data-tooltip="About & Info"><i class="fas fa-info-circle"></i></a></li>
+                    <li><a href="#coordinates" role="tab" data-tooltip="Coordinates"><i class="fas fa-crosshairs"></i></a></li>
+                    <li><a href="#github" role="tab" data-tooltip="GitHub Repository"><i class="fab fa-github"></i></a></li>
+                    <li><a href="#discord" role="tab" data-tooltip="Discord Community"><i class="fab fa-discord"></i></a></li>
+                    <li><a href="#settings" role="tab" data-tooltip="Settings & Actions"><i class="fas fa-cog"></i></a></li>
+                </ul>
             </div>
 
             <!-- Tab panes -->
             <div class="leaflet-sidebar-content">
-                <!-- Filters Panel -->
+                <!-- Marker Filters Panel -->
                 <div class="leaflet-sidebar-pane" id="filters">
                     <h1 class="leaflet-sidebar-header">
-                        Map Settings
+                        <i class="fas fa-filter"></i> Marker Filtering
                         <span class="leaflet-sidebar-close"><i class="fas fa-caret-left"></i></span>
                     </h1>
                     <div class="filters-container">
                         <div class="filter-section">
-                            <h3>Map Display</h3>
-                            <p>Configure map display options and grid settings.</p>
+                            <h3>🎯 Marker Types</h3>
+                            <div class="filter-checkboxes" id="marker-type-filters">
+                                <!-- Dynamically populated -->
+                            </div>
+                        </div>
+                        <div class="filter-actions">
+                            <button id="select-all-filters" class="control-btn secondary">
+                                <i class="fas fa-check-double"></i> Select All
+                            </button>
+                            <button id="clear-all-filters" class="control-btn secondary">
+                                <i class="fas fa-times"></i> Clear All
+                            </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Floors Panel -->
+                <!-- Floor Selection Panel -->
                 <div class="leaflet-sidebar-pane" id="floors">
                     <h1 class="leaflet-sidebar-header">
-                        Floor Selection
+                        <i class="fas fa-building"></i> Floor Selection
                         <span class="leaflet-sidebar-close"><i class="fas fa-caret-left"></i></span>
                     </h1>
                     <div class="floors-container">
                         <div class="floor-info">
                             <p>Switch between different map floors and levels</p>
                         </div>
-                        <div class="floor-selector-container">
-                            <label for="floor-select">Current Floor:</label>
-                            <select id="floor-select">
-                                <option value="ground">Ground Floor</option>
-                                <option value="basement1">Basement Level 1</option>
-                                <option value="basement2">Basement Level 2</option>
-                                <option value="floor1">Floor 1</option>
-                                <option value="floor2">Floor 2</option>
-                            </select>
+                        <div class="floor-selector-container" id="sidebar-floor-selector">
+                            <!-- Dynamically populated from JSON data -->
                         </div>
                         <div class="floor-preview">
                             <div id="current-floor-info">
-                                <strong>Ground Floor</strong>
-                                <p>Main level with primary locations</p>
+                                <strong>Loading...</strong>
+                                <p>Floor information will appear here</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Custom Markers Panel -->
+                <div class="leaflet-sidebar-pane" id="custom-markers">
+                    <h1 class="leaflet-sidebar-header">
+                        <i class="fas fa-map-marker-alt"></i> Custom Markers
+                        <span class="leaflet-sidebar-close"><i class="fas fa-caret-left"></i></span>
+                    </h1>
+                    <div class="custom-markers-container">
+                        <div class="marker-creation">
+                            <h3>Create New Marker</h3>
+                            <div class="marker-form">
+                                <div class="form-group">
+                                    <label for="marker-name">Name:</label>
+                                    <input type="text" id="marker-name" placeholder="Enter marker name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="marker-description">Description:</label>
+                                    <textarea id="marker-description" placeholder="Enter marker description" rows="3"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="marker-color">Color:</label>
+                                    <div class="color-picker-container">
+                                        <input type="color" id="marker-color" value="#ff6b35">
+                                        <div class="color-presets">
+                                            <button class="color-preset" data-color="#ff6b35" style="background-color: #ff6b35;"></button>
+                                            <button class="color-preset" data-color="#ff0000" style="background-color: #ff0000;"></button>
+                                            <button class="color-preset" data-color="#00ff00" style="background-color: #00ff00;"></button>
+                                            <button class="color-preset" data-color="#0000ff" style="background-color: #0000ff;"></button>
+                                            <button class="color-preset" data-color="#ffff00" style="background-color: #ffff00;"></button>
+                                            <button class="color-preset" data-color="#ff00ff" style="background-color: #ff00ff;"></button>
+                                            <button class="color-preset" data-color="#00ffff" style="background-color: #00ffff;"></button>
+                                            <button class="color-preset" data-color="#ffffff" style="background-color: #ffffff;"></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group position-group">
+                                    <h4>Position</h4>
+                                    <div class="position-options">
+                                        <button id="click-to-place" class="control-btn primary">
+                                            <i class="fas fa-mouse-pointer"></i> Click on Map
+                                        </button>
+                                        <div class="coordinate-inputs">
+                                            <div class="coord-input">
+                                                <label for="marker-x">X:</label>
+                                                <input type="number" id="marker-x" placeholder="X coordinate">
+                                            </div>
+                                            <div class="coord-input">
+                                                <label for="marker-y">Y:</label>
+                                                <input type="number" id="marker-y" placeholder="Y coordinate">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button id="create-marker" class="control-btn primary">
+                                    <i class="fas fa-plus"></i> Create Marker
+                                </button>
+                            </div>
+                        </div>
+                        <div class="custom-markers-list">
+                            <h3>Your Markers</h3>
+                            <div id="custom-markers-container">
+                                <p class="no-markers">No custom markers created yet</p>
+                            </div>
+                            <div class="marker-list-actions">
+                                <button id="delete-selected-markers" class="control-btn danger">
+                                    <i class="fas fa-trash"></i> Delete Selected
+                                </button>
+                                <button id="delete-all-markers" class="control-btn danger">
+                                    <i class="fas fa-trash-alt"></i> Delete All
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Drawing Tools Panel -->
+                <div class="leaflet-sidebar-pane" id="drawing">
+                    <h1 class="leaflet-sidebar-header">
+                        <i class="fas fa-pencil-alt"></i> Drawing Tools
+                        <span class="leaflet-sidebar-close"><i class="fas fa-caret-left"></i></span>
+                    </h1>
+                    <div class="drawing-container">
+                        <div class="drawing-tools">
+                            <h3>Drawing Mode</h3>
+                            <div class="tool-buttons">
+                                <button id="draw-line" class="tool-btn" data-tool="line">
+                                    <i class="fas fa-minus"></i> Line
+                                </button>
+                                <button id="draw-polygon" class="tool-btn" data-tool="polygon">
+                                    <i class="fas fa-draw-polygon"></i> Polygon
+                                </button>
+                                <button id="draw-circle" class="tool-btn" data-tool="circle">
+                                    <i class="fas fa-circle"></i> Circle
+                                </button>
+                                <button id="draw-rectangle" class="tool-btn" data-tool="rectangle">
+                                    <i class="fas fa-square"></i> Rectangle
+                                </button>
+                            </div>
+                        </div>
+                        <div class="drawing-options">
+                            <h3>Style Options</h3>
+                            <div class="style-controls">
+                                <div class="form-group">
+                                    <label for="draw-color">Color:</label>
+                                    <input type="color" id="draw-color" value="#ff6b35">
+                                </div>
+                                <div class="form-group">
+                                    <label for="draw-opacity">Opacity:</label>
+                                    <input type="range" id="draw-opacity" min="0" max="1" step="0.1" value="0.7">
+                                    <span id="opacity-value">70%</span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="draw-weight">Line Weight:</label>
+                                    <input type="range" id="draw-weight" min="1" max="10" value="3">
+                                    <span id="weight-value">3px</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="drawing-actions">
+                            <button id="clear-drawings" class="control-btn danger">
+                                <i class="fas fa-eraser"></i> Clear All Drawings
+                            </button>
+                            <button id="toggle-drawing-mode" class="control-btn secondary">
+                                <i class="fas fa-eye-slash"></i> Disable Drawing
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Panel -->
+                <div class="leaflet-sidebar-pane" id="info">
+                    <h1 class="leaflet-sidebar-header">
+                        <i class="fas fa-info-circle"></i> About
+                        <span class="leaflet-sidebar-close"><i class="fas fa-caret-left"></i></span>
+                    </h1>
+                    <div class="info-container">
+                        <div class="site-info">
+                            <h3>Arena Breakout Interactive Map</h3>
+                            <p>Welcome to the most comprehensive Arena Breakout interactive map experience. This tool provides real-time map navigation, custom marker placement, and advanced filtering capabilities.</p>
+                            
+                            <h4>Features:</h4>
+                            <ul>
+                                <li><strong>Multi-floor Navigation:</strong> Switch between different map levels seamlessly</li>
+                                <li><strong>Advanced Filtering:</strong> Filter markers by type (ammo, vaults, jackets, medboxes, spawn points, exits, etc.)</li>
+                                <li><strong>Custom Markers:</strong> Create and manage your own markers with custom colors</li>
+                                <li><strong>Drawing Tools:</strong> Draw lines, polygons, circles, and rectangles for planning</li>
+                                <li><strong>Real-time Coordinates:</strong> Track mouse position and navigate to specific coordinates</li>
+                                <li><strong>Grid System:</strong> Toggle grid overlay for precise positioning</li>
+                            </ul>
+
+                            <h4>How to Use:</h4>
+                            <ol>
+                                <li><strong>Navigation:</strong> Use mouse wheel to zoom, click and drag to pan</li>
+                                <li><strong>Markers:</strong> Click on any marker to see detailed information</li>
+                                <li><strong>Filtering:</strong> Use the filter panel to show/hide specific marker types</li>
+                                <li><strong>Custom Markers:</strong> Create your own markers by clicking on the map or entering coordinates</li>
+                                <li><strong>Drawing:</strong> Use drawing tools to mark routes, areas, or strategies</li>
+                                <li><strong>Floors:</strong> Switch between floors using the floor control or sidebar</li>
+                            </ol>
+
+                            <div class="version-info">
+                                <p><strong>Version:</strong> 2.0.0</p>
+                                <p><strong>Last Updated:</strong> December 2024</p>
+                                <p><strong>Map Data:</strong> Community sourced and verified</p>
                             </div>
                         </div>
                     </div>
@@ -153,7 +319,7 @@
                 <!-- Coordinates Panel -->
                 <div class="leaflet-sidebar-pane" id="coordinates">
                     <h1 class="leaflet-sidebar-header">
-                        Coordinates & Position
+                        <i class="fas fa-crosshairs"></i> Coordinates & Position
                         <span class="leaflet-sidebar-close"><i class="fas fa-caret-left"></i></span>
                     </h1>
                     <div class="coordinates-container">
@@ -167,6 +333,10 @@
                                 <div class="coord-item">
                                     <label>Y:</label>
                                     <span id="current-y">0</span>
+                                </div>
+                                <div class="coord-item">
+                                    <label>Grid:</label>
+                                    <span id="current-grid">A1</span>
                                 </div>
                             </div>
                         </div>
@@ -188,46 +358,210 @@
                         </div>
                         <div class="coordinate-export">
                             <h3>Export Tools</h3>
-                            <button id="copy-coords" class="control-btn">
+                            <button id="copy-coords" class="control-btn secondary">
                                 <i class="fas fa-copy"></i> Copy Current Position
                             </button>
-                            <button id="export-json" class="control-btn">
+                            <button id="export-json" class="control-btn secondary">
                                 <i class="fas fa-download"></i> Export Markers as JSON
                             </button>
                         </div>
                     </div>
                 </div>
 
-
-                <!-- Edit Panel -->
-                <div class="leaflet-sidebar-pane" id="edit">
+                <!-- GitHub Panel -->
+                <div class="leaflet-sidebar-pane" id="github">
                     <h1 class="leaflet-sidebar-header">
-                        Edit Mode
+                        <i class="fab fa-github"></i> GitHub Repository
                         <span class="leaflet-sidebar-close"><i class="fas fa-caret-left"></i></span>
                     </h1>
-                    <div class="edit-container">
-                        <p>Toggle edit mode for markers and map elements</p>
-                        <button id="toggle-edit" class="control-btn">
-                            <i class="fas fa-edit"></i> Toggle Edit Mode
-                        </button>
+                    <div class="github-container">
+                        <div class="github-info">
+                            <h3>Open Source Project</h3>
+                            <p>This Arena Breakout Interactive Map is an open-source project. All map data, JSON files, and source code are available on GitHub.</p>
+                            
+                            <div class="github-links">
+                                <a href="https://github.com/ATkingma/InteractiveMap.github.io" target="_blank" class="control-btn primary">
+                                    <i class="fab fa-github"></i> View Repository
+                                </a>
+                                <a href="https://github.com/ATkingma/InteractiveMap.github.io/tree/main/maps" target="_blank" class="control-btn secondary">
+                                    <i class="fas fa-folder"></i> Map Data (JSON)
+                                </a>
+                                <a href="https://github.com/ATkingma/InteractiveMap.github.io/issues" target="_blank" class="control-btn secondary">
+                                    <i class="fas fa-bug"></i> Report Issues
+                                </a>
+                            </div>
+
+                            <h4>Contributing</h4>
+                            <p>We welcome contributions! You can help by:</p>
+                            <ul>
+                                <li>Updating map data and marker locations</li>
+                                <li>Adding new maps and floors</li>
+                                <li>Reporting bugs and issues</li>
+                                <li>Suggesting new features</li>
+                                <li>Improving documentation</li>
+                            </ul>
+
+                            <h4>Map Data Structure</h4>
+                            <p>All map data is stored in JSON format with the following structure:</p>
+                            <div class="code-block">
+                                <code>
+                                    maps/<br>
+                                    ├── arena-breakout.json<br>
+                                    ├── armory.json<br>
+                                    └── [map-name].json
+                                </code>
+                            </div>
+
+                            <div class="github-stats">
+                                <h4>Repository Stats</h4>
+                                <div class="stats-grid">
+                                    <div class="stat-item">
+                                        <strong>Language:</strong> JavaScript
+                                    </div>
+                                    <div class="stat-item">
+                                        <strong>License:</strong> MIT
+                                    </div>
+                                    <div class="stat-item">
+                                        <strong>Maps:</strong> 2+
+                                    </div>
+                                    <div class="stat-item">
+                                        <strong>Contributors:</strong> Community
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Attributions Panel -->
-                <div class="leaflet-sidebar-pane" id="attributions">
+                <!-- Discord Panel -->
+                <div class="leaflet-sidebar-pane" id="discord">
                     <h1 class="leaflet-sidebar-header">
-                        About & Credits
+                        <i class="fab fa-discord"></i> Community Discord
                         <span class="leaflet-sidebar-close"><i class="fas fa-caret-left"></i></span>
                     </h1>
-                    <div class="attributions-container">
-                        <h3>Arena Breakout Interactive Map</h3>
-                        <p>Enhanced interactive map with custom markers and filtering</p>
-                        <h4>Technologies Used:</h4>
-                        <ul>
-                            <li>Leaflet.js for mapping</li>
-                            <li>Font Awesome for icons</li>
-                            <li>Custom marker system</li>
-                        </ul>
+                    <div class="discord-container">
+                        <div class="discord-info">
+                            <h3>Join Our Community</h3>
+                            <p>Connect with other Arena Breakout players, share strategies, get help with the map, and stay updated with the latest features.</p>
+                            
+                            <div class="discord-features">
+                                <h4>What you'll find:</h4>
+                                <ul>
+                                    <li><strong>🗺️ Map Discussion:</strong> Share findings and discuss map strategies</li>
+                                    <li><strong>🚀 Feature Requests:</strong> Suggest new features for the interactive map</li>
+                                    <li><strong>🐛 Bug Reports:</strong> Report issues and get quick support</li>
+                                    <li><strong>📡 Updates:</strong> Get notified about new map releases</li>
+                                    <li><strong>🎮 General Chat:</strong> Discuss Arena Breakout gameplay</li>
+                                    <li><strong>💡 Tips & Tricks:</strong> Share and learn advanced strategies</li>
+                                </ul>
+                            </div>
+
+                            <div class="discord-invite">
+                                <a href="https://discord.gg/your-discord-server" target="_blank" class="control-btn primary discord-btn">
+                                    <i class="fab fa-discord"></i> Join Discord Server
+                                </a>
+                            </div>
+
+                            <div class="community-rules">
+                                <h4>Community Guidelines</h4>
+                                <ul>
+                                    <li>Be respectful to all community members</li>
+                                    <li>Stay on topic in appropriate channels</li>
+                                    <li>No spam or excessive self-promotion</li>
+                                    <li>Help newcomers and share knowledge</li>
+                                    <li>Report bugs constructively with details</li>
+                                </ul>
+                            </div>
+
+                            <div class="discord-stats">
+                                <h4>Server Info</h4>
+                                <div class="stats-grid">
+                                    <div class="stat-item">
+                                        <strong>Members:</strong> 500+
+                                    </div>
+                                    <div class="stat-item">
+                                        <strong>Channels:</strong> 10+
+                                    </div>
+                                    <div class="stat-item">
+                                        <strong>Active:</strong> 24/7
+                                    </div>
+                                    <div class="stat-item">
+                                        <strong>Language:</strong> English
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Panel -->
+                <div class="leaflet-sidebar-pane" id="settings">
+                    <h1 class="leaflet-sidebar-header">
+                        <i class="fas fa-cog"></i> Settings & Actions
+                        <span class="leaflet-sidebar-close"><i class="fas fa-caret-left"></i></span>
+                    </h1>
+                    <div class="settings-container">
+                        <div class="settings-section">
+                            <h3>Map Settings</h3>
+                            <div class="setting-item">
+                                <label for="grid-toggle">Show Grid:</label>
+                                <input type="checkbox" id="grid-toggle">
+                            </div>
+                            <div class="setting-item">
+                                <label for="grid-size-setting">Grid Size:</label>
+                                <select id="grid-size-setting">
+                                    <option value="100">100px</option>
+                                    <option value="200" selected>200px</option>
+                                    <option value="400">400px</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <label for="marker-scale">Marker Scale:</label>
+                                <input type="range" id="marker-scale" min="0.5" max="2" step="0.1" value="1">
+                                <span id="scale-value">100%</span>
+                            </div>
+                        </div>
+
+                        <div class="actions-section">
+                            <h3>Data Actions</h3>
+                            <div class="action-buttons">
+                                <button id="export-all-data" class="control-btn primary">
+                                    <i class="fas fa-download"></i> Export All Data
+                                </button>
+                                <button id="import-data" class="control-btn secondary">
+                                    <i class="fas fa-upload"></i> Import Data
+                                </button>
+                                <input type="file" id="import-file" accept=".json" style="display: none;">
+                            </div>
+                        </div>
+
+                        <div class="danger-section">
+                            <h3>Danger Zone</h3>
+                            <div class="danger-actions">
+                                <button id="hard-delete" class="control-btn danger">
+                                    <i class="fas fa-trash"></i> Hard Delete All Custom Data
+                                </button>
+                                <button id="hard-reset" class="control-btn danger">
+                                    <i class="fas fa-undo"></i> Hard Reset Map
+                                </button>
+                            </div>
+                            <div class="danger-warning">
+                                <p><strong>⚠️ Warning:</strong> These actions cannot be undone!</p>
+                                <ul>
+                                    <li><strong>Hard Delete:</strong> Removes all custom markers and drawings</li>
+                                    <li><strong>Hard Reset:</strong> Resets map to initial state (position, zoom, filters)</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="about-section">
+                            <h3>About</h3>
+                            <div class="version-info">
+                                <p><strong>Version:</strong> 2.0.0</p>
+                                <p><strong>Build:</strong> 2024.12.25</p>
+                                <p><strong>Engine:</strong> Leaflet.js</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -260,17 +594,41 @@
     <script src="../src/js/leaflet/arena_breakout_map.js" type="text/javascript"></script>
     
     <script>
-        // Navigation bar functions
+        // Modern Sidebar Functions
         function toggleSidebar() {
             var sidebar = document.getElementById('sidebar');
             if (sidebar) {
                 if (sidebar.classList.contains('collapsed')) {
-                    sidebar.classList.remove('collapsed');
+                    openSidebar();
                 } else {
-                    sidebar.classList.add('collapsed');
+                    closeSidebar();
                 }
-                updateExpandButton();
             }
+        }
+        
+        function openSidebar() {
+            var sidebar = document.getElementById('sidebar');
+            if (sidebar) {
+                sidebar.classList.remove('collapsed');
+                adjustMapControls();
+            }
+        }
+        
+        function closeSidebar() {
+            var sidebar = document.getElementById('sidebar');
+            if (sidebar) {
+                sidebar.classList.add('collapsed');
+                adjustMapControls();
+            }
+        }
+        
+        function adjustMapControls() {
+            // Force map to resize and reposition controls
+            setTimeout(() => {
+                if (window.interactive_map && window.interactive_map.getMap()) {
+                    window.interactive_map.getMap().invalidateSize();
+                }
+            }, 300);
         }
         
         function resetMapView() {
@@ -312,55 +670,116 @@
         // Update map name when page loads
         document.addEventListener('DOMContentLoaded', function() {
             updateMapName();
+            initializeSidebarTabs();
         });
         
         // Make functions globally accessible
         window.toggleSidebar = toggleSidebar;
+        window.openSidebar = openSidebar;
+        window.closeSidebar = closeSidebar;
         window.resetMapView = resetMapView;
         window.updateMapName = updateMapName;
         
-        // Simple function to open sidebar
-        function openSidebar() {
-            var sidebar = document.getElementById('sidebar');
-            if (sidebar.classList.contains('collapsed')) {
-                sidebar.classList.remove('collapsed');
-            }
-        }
-        
-        // Update expand button icon based on sidebar state
-        function updateExpandButton() {
-            var sidebar = document.getElementById('sidebar');
-            var expandBtn = document.querySelector('.sidebar-expand-btn i');
-            if (expandBtn) {
-                if (sidebar.classList.contains('collapsed')) {
-                    expandBtn.className = 'fas fa-chevron-right';
-                } else {
-                    expandBtn.className = 'fas fa-chevron-left';
+        // Modern Sidebar Tab Functionality
+        function initializeSidebarTabs() {
+            const tabLinks = document.querySelectorAll('.leaflet-sidebar-tabs a[role="tab"]');
+            const tabPanes = document.querySelectorAll('.leaflet-sidebar-pane');
+            const sidebar = document.getElementById('sidebar');
+            
+            // Function to show a specific tab
+            function showTab(targetId) {
+                // Hide all panes
+                tabPanes.forEach(pane => {
+                    pane.classList.remove('active');
+                });
+                
+                // Remove active class from all tabs
+                tabLinks.forEach(link => {
+                    link.parentElement.classList.remove('active');
+                });
+                
+                // Show target pane
+                const targetPane = document.getElementById(targetId);
+                if (targetPane) {
+                    targetPane.classList.add('active');
+                }
+                
+                // Add active class to clicked tab
+                const activeTab = document.querySelector(`a[href="#${targetId}"]`);
+                if (activeTab) {
+                    activeTab.parentElement.classList.add('active');
+                }
+                
+                // Open sidebar when tab is clicked
+                if (sidebar && sidebar.classList.contains('collapsed')) {
+                    openSidebar();
                 }
             }
-        }
-        
-        // Watch for sidebar state changes
-        if (window.MutationObserver) {
-            var observer = new MutationObserver(function(mutations) {
-                mutations.forEach(function(mutation) {
-                    if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-                        updateExpandButton();
-                    }
+            
+            // Add click event listeners to tabs
+            tabLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const href = this.getAttribute('href');
+                    const targetId = href.substring(1); // Remove the # symbol
+                    showTab(targetId);
                 });
             });
             
-            document.addEventListener('DOMContentLoaded', function() {
-                var sidebar = document.getElementById('sidebar');
-                if (sidebar) {
-                    observer.observe(sidebar, {
-                        attributes: true,
-                        attributeFilter: ['class']
-                    });
-                    updateExpandButton();
-                }
+            // Add click event listeners to close buttons
+            document.querySelectorAll('.leaflet-sidebar-close').forEach(closeBtn => {
+                closeBtn.addEventListener('click', function() {
+                    closeSidebar();
+                });
             });
+            
+            // Set up first tab as active by default
+            if (tabLinks.length > 0) {
+                const firstTabHref = tabLinks[0].getAttribute('href');
+                const firstTabId = firstTabHref.substring(1);
+                
+                // Set up first tab as active
+                tabPanes.forEach(pane => pane.classList.remove('active'));
+                tabLinks.forEach(link => link.parentElement.classList.remove('active'));
+                
+                const targetPane = document.getElementById(firstTabId);
+                if (targetPane) {
+                    targetPane.classList.add('active');
+                }
+                
+                const activeTab = document.querySelector(`a[href="#${firstTabId}"]`);
+                if (activeTab) {
+                    activeTab.parentElement.classList.add('active');
+                }
+            }
+            
+            // Start with sidebar collapsed on mobile, expanded on desktop
+            if (sidebar) {
+                if (window.innerWidth <= 767) {
+                    sidebar.classList.add('collapsed');
+                } else {
+                    sidebar.classList.remove('collapsed');
+                }
+            }
         }
+        // Global function access
+        window.toggleSidebar = toggleSidebar;
+        window.openSidebar = openSidebar;
+        window.closeSidebar = closeSidebar;
+        window.resetMapView = resetMapView;
+        window.updateMapName = updateMapName;
+        
+        // Handle window resize for responsive behavior
+        window.addEventListener('resize', function() {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) {
+                // Auto-collapse on mobile
+                if (window.innerWidth <= 767) {
+                    sidebar.classList.add('collapsed');
+                }
+                adjustMapControls();
+            }
+        });
     </script>
 </body>
 
