@@ -96,9 +96,9 @@ body {
 .current-page-info {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
     background: var(--bg-panel);
-    padding: 8px 16px;
+    padding: 4px 16px;
     border-radius: 20px;
     border: 1px solid var(--border-color);
 }
@@ -119,6 +119,61 @@ body {
     font-size: 14px;
     font-weight: 600;
     text-transform: capitalize;
+}
+
+/* Map Dropdown Styling */
+.map-dropdown {
+    background: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-primary);
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 140px;
+}
+
+.map-dropdown:hover,
+.map-dropdown:focus {
+    border-color: var(--border-accent);
+    background: var(--bg-panel);
+    outline: none;
+}
+
+.map-dropdown option {
+    background: var(--bg-panel);
+    color: var(--text-primary);
+    padding: 8px 12px;
+}
+
+/* Difficulty Dropdown in Nav Actions */
+.difficulty-dropdown.nav-dropdown {
+    background: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-secondary);
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 100px;
+}
+
+.difficulty-dropdown.nav-dropdown:hover,
+.difficulty-dropdown.nav-dropdown:focus {
+    background: var(--bg-panel);
+    border-color: var(--border-accent);
+    color: var(--text-primary);
+    outline: none;
+}
+
+.difficulty-dropdown.nav-dropdown option {
+    background: var(--bg-panel);
+    color: var(--text-primary);
+    padding: 6px 12px;
 }
 
 .nav-actions {
@@ -172,6 +227,23 @@ body {
     .page-indicator,
     .map-name-indicator {
         font-size: 12px;
+    }
+    
+    /* Mobile dropdown adjustments */
+    .map-dropdown {
+        min-width: 120px;
+        font-size: 12px;
+        padding: 4px 8px;
+    }
+    
+    .difficulty-dropdown.nav-dropdown {
+        min-width: 80px;
+        font-size: 11px;
+        padding: 6px 8px;
+    }
+    
+    .nav-btn span {
+        display: none; /* Hide text on mobile, show only icons */
     }
     
     .nav-btn span {
@@ -1390,7 +1462,7 @@ input[type="checkbox"] {
     right: 190px !important;
     z-index: 1000;
     pointer-events: auto;
-    transition: right 0.3s ease;1
+    transition: right 0.3s ease;
 }
 
 /* Dynamic positioning based on floor count */

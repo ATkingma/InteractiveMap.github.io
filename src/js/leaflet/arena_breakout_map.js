@@ -80,6 +80,18 @@ try {
                 window.markerSystem.loadMapData(selectedMap).then(() => {
                     console.log(`${selectedMap} marker data loaded successfully!`);
                     
+                    // Check for saved difficulty and apply it
+                    const savedDifficulty = sessionStorage.getItem('selectedDifficulty');
+                    if (savedDifficulty && window.mapDataManager.mapData) {
+                        console.log('Applying saved difficulty:', savedDifficulty);
+                        window.mapDataManager.currentDifficulty = savedDifficulty;
+                        
+                        // Update enabled types for the saved difficulty
+                        if (typeof window.mapDataManager.mapData.getAllTypes === 'function') {
+                            window.mapDataManager.enabledTypes = new Set(window.mapDataManager.mapData.getAllTypes(savedDifficulty));
+                        }
+                    }
+                    
                     // Update navigation bar with loaded map name
                     if (window.mapDataManager && window.mapDataManager.mapData) {
                         const mapNameElement = document.getElementById('current-map-name');
