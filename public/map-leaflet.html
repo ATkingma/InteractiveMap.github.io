@@ -672,6 +672,61 @@
 
         // ==================== DROPDOWN FUNCTIONALITY ====================
         
+        // Protect against dropdown clearing by overriding innerHTML setter
+        function protectDropdownFromClearing() {
+            console.log('🛡️ Setting up dropdown innerHTML protection...');
+            
+            const difficultySelector = document.getElementById('difficulty-selector');
+            if (!difficultySelector) return;
+            
+            // Store the original innerHTML setter
+            const originalInnerHTMLSetter = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML').set;
+            
+            // Override the innerHTML setter specifically for this element
+            Object.defineProperty(difficultySelector, 'innerHTML', {
+                set: function(value) {
+                    // If someone tries to clear the dropdown, log it and potentially prevent it
+                    if (value === '' || value === '<option value="">Loading...</option>') {
+                        console.warn('🚨 Attempt to clear difficulty dropdown detected!');
+                        console.trace('Stack trace of clearing attempt');
+                        
+                        // If we have protected options, restore them instead
+                        if (window.protectedDifficultyOptions && window.protectedDifficultyOptions.length > 0) {
+                            console.log('🔄 Preventing clear and restoring options instead');
+                            
+                            // Use the original setter to clear first
+                            originalInnerHTMLSetter.call(this, '');
+                            
+                            // Then add our protected options back
+                            window.protectedDifficultyOptions.forEach(optionData => {
+                                const option = document.createElement('option');
+                                option.value = optionData.value;
+                                option.textContent = optionData.text;
+                                this.appendChild(option);
+                            });
+                            
+                            // Restore saved value
+                            const savedDifficulty = sessionStorage.getItem('selectedDifficulty');
+                            if (savedDifficulty && this.querySelector(`option[value="${savedDifficulty}"]`)) {
+                                this.value = savedDifficulty;
+                            }
+                            
+                            return; // Don't execute the clearing
+                        }
+                    }
+                    
+                    // For any other content, use the original setter
+                    originalInnerHTMLSetter.call(this, value);
+                },
+                get: function() {
+                    return this.innerHTML;
+                },
+                configurable: true
+            });
+            
+            console.log('✅ Dropdown innerHTML protection activated');
+        }
+        
         // Utility functions for formatting
         function formatMapName(mapName) {
             return mapName
@@ -695,7 +750,7 @@
             notification.className = `notification notification-${type}`;
             notification.textContent = message;
             
-            // Style the notification
+            // Style the notification - positioned at top right
             notification.style.cssText = `
                 position: fixed;
                 top: 80px;
@@ -705,10 +760,11 @@
                 padding: 12px 20px;
                 border-radius: 6px;
                 box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-                z-index: 10000;
+                z-index: 20000;
                 font-weight: bold;
                 max-width: 300px;
                 word-wrap: break-word;
+                border: 2px solid ${type === 'error' ? '#ff6666' : type === 'success' ? '#66ff66' : '#ffb347'};
             `;
             
             document.body.appendChild(notification);
@@ -843,6 +899,17 @@
                         sessionStorage.setItem('selectedDifficulty', targetDifficulty);
                     }
                     
+                    // Store the options globally for protection
+                    window.protectedDifficultyOptions = difficultyKeys.map(key => ({
+                        value: key,
+                        text: formatDifficultyName(key)
+                    }));
+                    
+                    // Setup protection after a delay
+                    setTimeout(() => {
+                        protectDifficultyDropdown();
+                    }, 500);
+                    
                 } else {
                     console.log('No difficulties found in map data, using defaults');
                     // Fallback to default difficulties if none specified in JSON
@@ -857,6 +924,17 @@
                     
                     difficultySelector.value = 'normal';
                     sessionStorage.setItem('selectedDifficulty', 'normal');
+                    
+                    // Store the options globally for protection
+                    window.protectedDifficultyOptions = defaultDifficulties.map(diff => ({
+                        value: diff,
+                        text: formatDifficultyName(diff)
+                    }));
+                    
+                    // Setup protection
+                    setTimeout(() => {
+                        protectDifficultyDropdown();
+                    }, 500);
                 }
                 
                 console.log('Difficulty selector populated with', difficultySelector.options.length, 'options');
@@ -883,10 +961,109 @@
                     
                     difficultySelector.value = 'normal';
                     sessionStorage.setItem('selectedDifficulty', 'normal');
+                    
+                    // Store the options globally for protection
+                    window.protectedDifficultyOptions = defaultDifficulties.map(diff => ({
+                        value: diff,
+                        text: formatDifficultyName(diff)
+                    }));
+                    
+                    // Setup protection
+                    setTimeout(() => {
+                        protectDifficultyDropdown();
+                    }, 500);
                 }
                 
                 return {};
             }
+        }
+        
+        // Protection function to prevent other scripts from clearing the dropdown
+        function protectDifficultyDropdown() {
+            const difficultySelector = document.getElementById('difficulty-selector');
+            if (!difficultySelector || !window.protectedDifficultyOptions) {
+                console.log('Protection not set up - missing selector or options');
+                return;
+            }
+            
+            console.log('Setting up dropdown protection for', window.protectedDifficultyOptions.length, 'options');
+            
+            // Create a MutationObserver to watch for changes
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'childList') {
+                        // Check if the dropdown was cleared or has only loading text
+                        if (difficultySelector.options.length === 0 || 
+                            (difficultySelector.options.length === 1 && 
+                             (difficultySelector.options[0].textContent === 'Loading...' || 
+                              difficultySelector.options[0].value === ''))) {
+                            
+                            console.warn('🚨 Difficulty dropdown was cleared! Restoring options...');
+                            console.trace('Stack trace of clearing operation');
+                            
+                            // Restore the options immediately
+                            difficultySelector.innerHTML = '';
+                            window.protectedDifficultyOptions.forEach(optionData => {
+                                const option = document.createElement('option');
+                                option.value = optionData.value;
+                                option.textContent = optionData.text;
+                                difficultySelector.appendChild(option);
+                            });
+                            
+                            // Restore the selected value
+                            const savedDifficulty = sessionStorage.getItem('selectedDifficulty');
+                            if (savedDifficulty && difficultySelector.querySelector(`option[value="${savedDifficulty}"]`)) {
+                                difficultySelector.value = savedDifficulty;
+                                console.log('✅ Restored dropdown with', difficultySelector.options.length, 'options and selected:', savedDifficulty);
+                            } else if (difficultySelector.options.length > 0) {
+                                difficultySelector.value = difficultySelector.options[0].value;
+                                console.log('✅ Restored dropdown with', difficultySelector.options.length, 'options and selected first option');
+                            }
+                        }
+                    }
+                });
+            });
+            
+            // Start observing
+            observer.observe(difficultySelector, {
+                childList: true,
+                subtree: true
+            });
+            
+            // Also set up a periodic check as backup
+            const intervalId = setInterval(() => {
+                if (difficultySelector.options.length === 0 || 
+                    (difficultySelector.options.length === 1 && 
+                     (difficultySelector.options[0].textContent === 'Loading...' || 
+                      difficultySelector.options[0].value === ''))) {
+                    
+                    console.warn('⏰ Periodic check: Difficulty dropdown is empty! Restoring...');
+                    
+                    if (window.protectedDifficultyOptions) {
+                        difficultySelector.innerHTML = '';
+                        window.protectedDifficultyOptions.forEach(optionData => {
+                            const option = document.createElement('option');
+                            option.value = optionData.value;
+                            option.textContent = optionData.text;
+                            difficultySelector.appendChild(option);
+                        });
+                        
+                        const savedDifficulty = sessionStorage.getItem('selectedDifficulty');
+                        if (savedDifficulty && difficultySelector.querySelector(`option[value="${savedDifficulty}"]`)) {
+                            difficultySelector.value = savedDifficulty;
+                        } else if (difficultySelector.options.length > 0) {
+                            difficultySelector.value = difficultySelector.options[0].value;
+                        }
+                        
+                        console.log('✅ Periodic restore completed with', difficultySelector.options.length, 'options');
+                    }
+                }
+            }, 1000); // Check every second
+            
+            // Store the interval ID so we can clear it later if needed
+            window.protectionIntervalId = intervalId;
+            
+            console.log('✅ Dropdown protection system activated');
         }
         
         // Initialize map and difficulty selectors
@@ -967,24 +1144,36 @@
             if (difficultySelector) {
                 difficultySelector.addEventListener('change', async function() {
                     const selectedDifficulty = this.value;
+                    console.log('=== DIFFICULTY CHANGE EVENT ===');
                     console.log('Difficulty changed to:', selectedDifficulty);
                     sessionStorage.setItem('selectedDifficulty', selectedDifficulty);
                     
                     showNotification(`Switching to ${formatDifficultyName(selectedDifficulty)}...`);
                     
-                    // Apply difficulty settings and reload markers
-                    applyDifficultySettings(selectedDifficulty);
-                    
-                    // Add a small delay to ensure all systems are ready
+                    // Add a longer delay to ensure all systems are ready and force a complete reload
                     setTimeout(async () => {
                         try {
+                            console.log('Starting difficulty change process...');
+                            
+                            // Force complete marker reload (without applyDifficultySettings to avoid interference)
                             await reloadMarkersForDifficulty(selectedDifficulty);
+                            
+                            // Additional safety check - force another update
+                            setTimeout(() => {
+                                if (window.markerSystem && typeof window.markerSystem.updateMarkers === 'function') {
+                                    console.log('Safety update - forcing final marker refresh...');
+                                    window.markerSystem.updateMarkers();
+                                }
+                            }, 500);
+                            
                             showNotification(`Difficulty set to ${formatDifficultyName(selectedDifficulty)}`, 'success');
+                            console.log('=== DIFFICULTY CHANGE COMPLETED ===');
+                            
                         } catch (error) {
-                            console.error('Error reloading markers:', error);
+                            console.error('=== ERROR IN DIFFICULTY CHANGE ===', error);
                             showNotification(`Error loading ${formatDifficultyName(selectedDifficulty)} markers`, 'error');
                         }
-                    }, 300);
+                    }, 100); // Reduced delay for faster response
                 });
             }
             
@@ -1023,9 +1212,10 @@
         }
         
         // Reload markers for difficulty
+        // Reload markers for difficulty - simplified and safe approach
         async function reloadMarkersForDifficulty(difficulty) {
             try {
-                console.log('=== Starting full marker reload for difficulty:', difficulty, '===');
+                console.log('=== Reloading markers for difficulty:', difficulty, '===');
                 
                 // Wait for marker system to be ready
                 await waitForMarkerSystem();
@@ -1034,67 +1224,52 @@
                 sessionStorage.setItem('selectedDifficulty', difficulty);
                 console.log('Stored difficulty in sessionStorage:', difficulty);
                 
-                // Get current map name
-                const currentMap = sessionStorage.getItem('selectedMap') || 'arena-breakout';
-                console.log('Current map:', currentMap);
-                
-                // Step 1: Clear all existing markers
-                console.log('Step 1: Clearing existing markers...');
-                window.markerSystem.clearMarkers();
-                console.log('Markers cleared successfully');
-                
-                // Step 2: Set the difficulty in the map data manager
-                console.log('Step 2: Setting difficulty to:', difficulty);
-                window.mapDataManager.currentDifficulty = difficulty;
-                
-                // Step 3: Update enabled marker types for the new difficulty
-                console.log('Step 3: Updating enabled marker types...');
-                window.mapDataManager.enabledTypes = new Set(window.mapDataManager.mapData.getAllTypes(difficulty));
-                console.log('Enabled types for', difficulty, ':', Array.from(window.mapDataManager.enabledTypes));
-                
-                // Step 4: Force update markers using the marker system
-                console.log('Step 4: Updating markers...');
-                window.markerSystem.updateMarkers();
-                console.log('Markers updated successfully');
-                
-                // Step 5: Update difficulty controls in the UI
-                console.log('Step 5: Updating difficulty controls...');
-                if (typeof window.markerSystem.updateDifficultyControls === 'function') {
-                    window.markerSystem.updateDifficultyControls();
+                // Use the marker system's built-in setDifficulty method
+                if (window.markerSystem && typeof window.markerSystem.setDifficulty === 'function') {
+                    console.log('Using marker system setDifficulty method...');
+                    window.markerSystem.setDifficulty(difficulty);
+                    console.log('✅ Marker system updated for difficulty:', difficulty);
+                } else {
+                    console.log('setDifficulty not available, using manual approach...');
+                    
+                    // Fallback: Update map data manager
+                    if (window.mapDataManager) {
+                        if (typeof window.mapDataManager.setDifficulty === 'function') {
+                            window.mapDataManager.setDifficulty(difficulty);
+                        } else {
+                            window.mapDataManager.currentDifficulty = difficulty;
+                            if (window.mapDataManager.mapData && typeof window.mapDataManager.mapData.getAllTypes === 'function') {
+                                window.mapDataManager.enabledTypes = new Set(window.mapDataManager.mapData.getAllTypes(difficulty));
+                            }
+                        }
+                        console.log('✅ Map data manager updated for difficulty:', difficulty);
+                    }
+                    
+                    // Update floor control
+                    if (window.floorControl && typeof window.floorControl.setDifficulty === 'function') {
+                        window.floorControl.setDifficulty(difficulty);
+                        console.log('✅ Floor control updated for difficulty:', difficulty);
+                    }
+                    
+                    // Update markers
+                    if (window.markerSystem && typeof window.markerSystem.updateMarkers === 'function') {
+                        window.markerSystem.updateMarkers();
+                        console.log('✅ Markers updated for difficulty:', difficulty);
+                    }
                 }
                 
-                // Step 6: Update filter controls
-                console.log('Step 6: Updating filter controls...');
-                if (typeof window.markerSystem.updateFilterControls === 'function') {
-                    window.markerSystem.updateFilterControls();
-                }
+                // Force map refresh
+                setTimeout(() => {
+                    if (window.interactive_map && window.interactive_map.getMap()) {
+                        window.interactive_map.getMap().invalidateSize();
+                    }
+                }, 100);
                 
-                // Step 7: Update floor control to show correct floors for this difficulty
-                console.log('Step 7: Updating floor control...');
-                if (window.floorControl && typeof window.floorControl.updateFloors === 'function') {
-                    window.floorControl.updateFloors();
-                    console.log('Floor control updated');
-                }
-                
-                console.log('=== Successfully reloaded all markers for difficulty:', difficulty, '===');
-                
-                // Apply difficulty-specific visual settings
-                applyDifficultySettings(difficulty);
+                console.log('=== ✅ Markers successfully reloaded for difficulty:', difficulty, '===');
                 
             } catch (error) {
-                console.error('=== Error fully reloading markers for difficulty:', error, '===');
+                console.error('=== ❌ Error reloading markers for difficulty:', error, '===');
                 showNotification(`Error loading ${difficulty} markers: ${error.message}`, 'error');
-                
-                // If there's an error, try a fallback approach
-                console.log('Attempting fallback approach...');
-                try {
-                    if (window.markerSystem && typeof window.markerSystem.setDifficulty === 'function') {
-                        window.markerSystem.setDifficulty(difficulty);
-                        console.log('Fallback approach successful');
-                    }
-                } catch (fallbackError) {
-                    console.error('Fallback approach also failed:', fallbackError);
-                }
             }
         }
         
@@ -1127,52 +1302,57 @@
             if (window.interactive_map && window.interactive_map.getMap()) {
                 const map = window.interactive_map.getMap();
                 
+                // Log the difficulty being applied
+                console.log(`Applying ${difficulty} difficulty settings...`);
+                
+                // Update any difficulty-specific UI elements or features
                 switch(difficulty) {
                     case 'normal':
-                        // Show all markers and features
-                        if (window.markerSystem) {
-                            window.markerSystem.setMarkerOpacity(1.0);
-                        }
+                        // Normal mode - all features available
+                        console.log('Normal mode: All markers and features visible');
                         break;
                     case 'hard':
-                        // Reduce marker visibility slightly
-                        if (window.markerSystem) {
-                            window.markerSystem.setMarkerOpacity(0.8);
-                        }
+                        // Hard mode - reduced assistance
+                        console.log('Hard mode: Reduced marker assistance');
                         break;
                     case 'nightmare':
-                        // Further reduce marker visibility
-                        if (window.markerSystem) {
-                            window.markerSystem.setMarkerOpacity(0.6);
-                        }
+                        // Nightmare mode - minimal assistance
+                        console.log('Nightmare mode: Minimal marker assistance');
                         break;
                     case 'lockdown':
-                        // Special lockdown mode settings
-                        if (window.markerSystem) {
-                            window.markerSystem.setMarkerOpacity(0.9);
-                        }
+                        // Lockdown mode - special restrictions
+                        console.log('Lockdown mode: Special restrictions applied');
                         break;
                     case 'forbidden':
-                        // Forbidden zone settings
-                        if (window.markerSystem) {
-                            window.markerSystem.setMarkerOpacity(0.7);
-                        }
+                        // Forbidden zone - maximum difficulty
+                        console.log('Forbidden mode: Maximum difficulty settings');
                         break;
                     default:
                         // Default settings
-                        if (window.markerSystem) {
-                            window.markerSystem.setMarkerOpacity(1.0);
-                        }
+                        console.log('Default difficulty settings applied');
                         break;
                 }
                 
-                console.log(`Applied ${difficulty} difficulty settings`);
+                // Future: Add difficulty-specific features here
+                // For now, we'll just ensure the markers are properly loaded for the difficulty
+                if (window.markerSystem && typeof window.markerSystem.updateMarkers === 'function') {
+                    // Ensure markers are updated for the current difficulty
+                    setTimeout(() => {
+                        window.markerSystem.updateMarkers();
+                        console.log(`Markers updated for ${difficulty} difficulty`);
+                    }, 100);
+                }
+                
+                console.log(`✅ ${difficulty} difficulty settings applied successfully`);
             }
         }
         
         // Update map name when page loads
         document.addEventListener('DOMContentLoaded', async function() {
-            console.log('DOM loaded, initializing selectors...');
+            console.log('🚀 DOM loaded, initializing selectors...');
+            
+            // Set up protection immediately
+            protectDropdownFromClearing();
             
             // Initialize selectors with error handling
             try {
@@ -1181,28 +1361,37 @@
                 initializeSidebarTabs();
                 
                 // Wait for marker system to be ready
+                console.log('⏳ Waiting for marker system to be ready...');
                 await waitForMarkerSystem();
                 
-                // Only call initializeDifficultySelector if the dropdown wasn't already populated
+                // Verify dropdown is still populated after all initialization
                 const difficultySelector = document.getElementById('difficulty-selector');
+                console.log('🔍 Final check - Difficulty dropdown has', difficultySelector?.options.length || 0, 'options');
+                
                 if (difficultySelector && difficultySelector.options.length > 0) {
-                    console.log('Difficulty selector already populated, applying saved settings');
+                    console.log('✅ Difficulty selector populated, setting initial difficulty');
                     const savedDifficulty = sessionStorage.getItem('selectedDifficulty');
                     if (savedDifficulty && difficultySelector.querySelector(`option[value="${savedDifficulty}"]`)) {
                         difficultySelector.value = savedDifficulty;
-                        applyDifficultySettings(savedDifficulty);
-                        // Ensure markers are loaded for the saved difficulty
-                        setTimeout(() => {
-                            reloadMarkersForDifficulty(savedDifficulty);
-                        }, 300);
+                        console.log('Set difficulty selector to saved:', savedDifficulty);
+                        // Don't apply difficulty settings during initialization - let the marker system handle it naturally
                     } else if (difficultySelector.options.length > 0) {
                         difficultySelector.value = difficultySelector.options[0].value;
-                        applyDifficultySettings(difficultySelector.options[0].value);
+                        console.log('Set difficulty selector to default:', difficultySelector.options[0].value);
+                        // Don't apply difficulty settings during initialization
                     }
+                } else {
+                    console.warn('⚠️ Difficulty dropdown is empty after initialization!');
+                    // Try to reinitialize
+                    const currentMap = sessionStorage.getItem('selectedMap') || 'arena-breakout';
+                    console.log('🔄 Attempting to reload difficulties for:', currentMap);
+                    await loadDifficultiesForMap(currentMap);
                 }
                 
+                console.log('✅ Initialization complete');
+                
             } catch (error) {
-                console.error('Error during initialization:', error);
+                console.error('❌ Error during initialization:', error);
             }
         });
         

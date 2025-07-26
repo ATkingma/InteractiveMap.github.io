@@ -640,6 +640,7 @@ body {
     color: var(--text-primary);
     border: 1px solid var(--primary-color);
     border-radius: 8px;
+    z-index: 5000 !important;
 }
 
 .leaflet-popup-content {
@@ -650,6 +651,15 @@ body {
 .leaflet-popup-tip {
     background: var(--bg-panel);
     border: 1px solid var(--primary-color);
+}
+
+/* Ensure popup container has proper z-index */
+.leaflet-popup {
+    z-index: 5000 !important;
+}
+
+.leaflet-popup-pane {
+    z-index: 5000 !important;
 }
 
 /* Sidebar list styles */
