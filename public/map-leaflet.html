@@ -764,7 +764,7 @@
                 font-weight: bold;
                 max-width: 300px;
                 word-wrap: break-word;
-                border: 2px solid ${type === 'error' ? '#ff6666' : type === 'success' ? '#ffb347' : '#ffb347'};
+                border: 2px solid ${type === 'error' ? '#ff6666' : type === 'success' ? '#ffb3475' : '#ffb347'};
             `;
             
             document.body.appendChild(notification);
@@ -1402,14 +1402,20 @@
         window.resetMapView = resetMapView;
         window.updateMapName = updateMapName;
         
-        // Modern Sidebar Tab Functionality
+        // Modern Sidebar Tab Functionality with Auto-Collapse
         function initializeSidebarTabs() {
             const tabLinks = document.querySelectorAll('.leaflet-sidebar-tabs a[role="tab"]');
             const tabPanes = document.querySelectorAll('.leaflet-sidebar-pane');
             const sidebar = document.getElementById('sidebar');
+            let autoCollapseTimeout = null;
             
             // Function to show a specific tab
             function showTab(targetId) {
+                // Clear any existing timeout
+                if (autoCollapseTimeout) {
+                    clearTimeout(autoCollapseTimeout);
+                }
+                
                 // Hide all panes
                 tabPanes.forEach(pane => {
                     pane.classList.remove('active');
@@ -1436,6 +1442,30 @@
                 if (sidebar && sidebar.classList.contains('collapsed')) {
                     openSidebar();
                 }
+                
+                // Auto-collapse after a delay (unless user is interacting with sidebar)
+                autoCollapseTimeout = setTimeout(() => {
+                    if (sidebar && !sidebar.classList.contains('collapsed')) {
+                        closeSidebar();
+                    }
+                }, 4000); // 4 second delay
+            }
+            
+            // Prevent auto-collapse when user is hovering over or interacting with sidebar
+            if (sidebar) {
+                sidebar.addEventListener('mouseenter', () => {
+                    if (autoCollapseTimeout) {
+                        clearTimeout(autoCollapseTimeout);
+                    }
+                });
+                
+                sidebar.addEventListener('mouseleave', () => {
+                    if (!sidebar.classList.contains('collapsed')) {
+                        autoCollapseTimeout = setTimeout(() => {
+                            closeSidebar();
+                        }, 2000); // Shorter delay when mouse leaves
+                    }
+                });
             }
             
             // Add click event listeners to tabs
@@ -1475,13 +1505,9 @@
                 }
             }
             
-            // Start with sidebar collapsed on mobile, expanded on desktop
+            // Always start with sidebar collapsed for clean look
             if (sidebar) {
-                if (window.innerWidth <= 767) {
-                    sidebar.classList.add('collapsed');
-                } else {
-                    sidebar.classList.remove('collapsed');
-                }
+                sidebar.classList.add('collapsed');
             }
         }
         // Global function access
@@ -1495,10 +1521,8 @@
         window.addEventListener('resize', function() {
             const sidebar = document.getElementById('sidebar');
             if (sidebar) {
-                // Auto-collapse on mobile
-                if (window.innerWidth <= 767) {
-                    sidebar.classList.add('collapsed');
-                }
+                // Always keep collapsed on resize for consistency
+                sidebar.classList.add('collapsed');
                 adjustMapControls();
             }
         });
