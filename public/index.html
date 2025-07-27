@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Arena Breakout - Interactive Maps</title>
     
     <!-- Note: Security headers should be set at server level (see .htaccess or nginx.conf) -->
@@ -26,15 +26,15 @@
                 <div class="nav-brand">
                     <a href="index.html" class="brand-text">Arena Breakout Maps</a>
                 </div>
-                <div class="nav-links">
+                <div class="nav-links" id="navLinks">
                     <a href="#maps" class="nav-link">Maps</a>
                     <a href="#features" class="nav-link">Features</a>
                     <a href="privacy-policy.html" class="nav-link">Privacy</a>
                     <a href="gdpr.html" class="nav-link">GDPR</a>
                     <!-- <a href="#ratspots" class="nav-link">ratspots</a> -->
-                    <button class="nav-cta">Map</button>
+                    <button class="nav-cta" onclick="scrollToMaps()">Map</button>
                 </div>
-                <button class="mobile-menu-btn">
+                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle mobile menu">
                     <span></span>
                     <span></span>
                     <span></span>

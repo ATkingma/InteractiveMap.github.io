@@ -185,6 +185,15 @@
               "description": "Primary spawn location for team Alpha",
               "position": { "x": 400, "y": 300 },
               "scale": 4
+            },
+             {
+              "name": "Spawn Point Alpha",
+              "type": "spawn",
+              "color": "#1900ff",
+              "fallbackColor": "#008800",
+              "description": "Primary spawn location for team Alpha",
+              "position": { "x": 700, "y": 300 },
+              "scale": 20
             }
           ]
         }

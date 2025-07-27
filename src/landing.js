@@ -1,5 +1,66 @@
 // Landing page functionality
 
+// Mobile menu functionality
+function initMobileMenu() {
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const navLinks = document.getElementById('navLinks');
+    const navLinksItems = navLinks.querySelectorAll('.nav-link, .nav-cta');
+    
+    if (!mobileMenuBtn || !navLinks) return;
+    
+    // Create and add overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'nav-overlay';
+    document.body.appendChild(overlay);
+    
+    // Toggle mobile menu
+    const toggleMenu = (isOpen) => {
+        mobileMenuBtn.classList.toggle('active', isOpen);
+        navLinks.classList.toggle('active', isOpen);
+        overlay.classList.toggle('active', isOpen);
+        
+        // Prevent scrolling when menu is open
+        document.body.style.overflow = isOpen ? 'hidden' : '';
+        
+        // Update aria attributes
+        mobileMenuBtn.setAttribute('aria-expanded', isOpen);
+        navLinks.setAttribute('aria-hidden', !isOpen);
+    };
+    
+    mobileMenuBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = !mobileMenuBtn.classList.contains('active');
+        toggleMenu(isOpen);
+    });
+    
+    // Close menu when clicking on nav links
+    navLinksItems.forEach(link => {
+        link.addEventListener('click', () => toggleMenu(false));
+    });
+    
+    // Close menu when clicking overlay
+    overlay.addEventListener('click', () => toggleMenu(false));
+    
+    // Close menu on escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && mobileMenuBtn.classList.contains('active')) {
+            toggleMenu(false);
+        }
+    });
+    
+    // Handle window resize
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+            toggleMenu(false);
+        }
+    });
+    
+    // Initialize accessibility attributes
+    mobileMenuBtn.setAttribute('aria-expanded', 'false');
+    mobileMenuBtn.setAttribute('aria-controls', 'navLinks');
+    navLinks.setAttribute('aria-hidden', 'true');
+}
+
 // Animated counter function with easing
 function animateCounter(element, target, duration = 2000, suffix = '') {
     const start = 0;
@@ -103,6 +164,9 @@ function openMap(mapName) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize mobile menu
+    initMobileMenu();
+    
     // Initialize animated counters
     initializeCounters();
     
@@ -114,7 +178,12 @@ document.addEventListener('DOMContentLoaded', function() {
             const targetId = this.getAttribute('href');
             const targetElement = document.querySelector(targetId);
             if (targetElement) {
-                targetElement.scrollIntoView({
+                const headerOffset = 80; // Account for fixed header
+                const elementPosition = targetElement.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                window.scrollTo({
+                    top: offsetPosition,
                     behavior: 'smooth'
                 });
             }
@@ -144,17 +213,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Mobile menu toggle
-    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-    const navLinks2 = document.querySelector('.nav-links');
-    
-    if (mobileMenuBtn && navLinks2) {
-        mobileMenuBtn.addEventListener('click', function() {
-            navLinks2.classList.toggle('active');
-            this.classList.toggle('active');
-        });
-    }
-
     // "Get Started" button
     const navCta = document.querySelector('.nav-cta');
     if (navCta) {
@@ -180,6 +238,28 @@ document.addEventListener('DOMContentLoaded', function() {
     // Observe all cards and sections
     const animateElements = document.querySelectorAll('.map-card, .feature-card, .hero-content, .hero-stats');
     animateElements.forEach(el => observer.observe(el));
+    
+    // Navbar background on scroll
+    let lastScrollTop = 0;
+    const navbar = document.querySelector('.navbar');
+    
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        // Add/remove scrolled class based on scroll position
+        if (scrollTop > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+        
+        lastScrollTop = scrollTop;
+    });
+    
+    // Add touch improvements for mobile
+    if ('ontouchstart' in window) {
+        document.body.classList.add('touch-device');
+    }
 });
 
 // Test function for GDPR popup

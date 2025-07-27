@@ -88,6 +88,24 @@ body {
     color: var(--text-primary);
     line-height: 1.6;
     overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+}
+
+/* Touch device optimizations */
+.touch-device .map-container {
+    touch-action: pan-x pan-y;
+}
+
+.touch-device .leaflet-container {
+    -webkit-tap-highlight-color: transparent;
 }
 
 .app-container {
@@ -2658,4 +2676,94 @@ footer a:hover {
 .map-container .map-canvas {
     display: block;
     margin: auto;
+}
+
+/* Mobile navigation compact mode for landscape */
+.mobile-nav.compact {
+    padding: 0.25rem 0;
+}
+
+.mobile-nav.compact .mobile-nav-item {
+    min-height: 36px;
+    font-size: 0.65rem;
+    padding: 0.25rem;
+}
+
+.mobile-nav.compact .mobile-nav-item svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* Touch interaction feedback */
+@media (hover: none) and (pointer: coarse) {
+    .mobile-nav-item:active,
+    .filter-btn:active,
+    .map-controls .btn:active {
+        background-color: rgba(255, 140, 0, 0.1);
+        transform: scale(0.95);
+        transition: all 0.1s ease;
+    }
+    
+    .marker-item:active,
+    .action-item:active {
+        background-color: rgba(255, 140, 0, 0.05);
+        transform: scale(0.98);
+        transition: all 0.1s ease;
+    }
+    
+    .panel-close:active {
+        background-color: rgba(255, 140, 0, 0.3);
+        transform: scale(0.9);
+    }
+}
+
+/* Improve scrolling performance on mobile */
+.panel-content,
+.recent-markers {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}
+
+/* PWA status bar adjustments */
+.standalone .app-container {
+    padding-top: 20px; /* Status bar height */
+}
+
+/* Keyboard open adjustments */
+.keyboard-open .map-container {
+    transition: height 0.3s ease;
+}
+
+.keyboard-open .mobile-nav {
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+}
+
+/* Accessibility improvements for mobile */
+.touch-target {
+    min-height: 44px;
+    min-width: 44px;
+    touch-action: manipulation;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .map-marker {
+        border-width: 3px;
+        border-color: #000000;
+    }
+    
+    .custom-marker-icon {
+        border-width: 3px !important;
+        border-color: #000000 !important;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
 }

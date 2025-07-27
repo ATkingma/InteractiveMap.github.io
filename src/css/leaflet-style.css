@@ -210,8 +210,69 @@ body {
     font-size: 14px;
 }
 
+/* Mobile Navigation Button (Hidden by default) */
+.mobile-nav-btn {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 44px;
+    height: 44px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    gap: 4px;
+    padding: 8px;
+}
+
+.mobile-nav-btn:hover {
+    background: var(--bg-light);
+    border-color: var(--border-accent);
+}
+
+.hamburger-line {
+    width: 20px;
+    height: 2px;
+    background: var(--text-primary);
+    transition: all 0.3s ease;
+    border-radius: 1px;
+}
+
+.mobile-nav-btn.active .hamburger-line:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+
+.mobile-nav-btn.active .hamburger-line:nth-child(2) {
+    opacity: 0;
+}
+
+.mobile-nav-btn.active .hamburger-line:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Mobile Navigation Overlay */
+.mobile-nav-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 9997;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.mobile-nav-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
 /* Responsive Navigation */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .nav-container {
         padding: 10px 15px;
     }
@@ -229,35 +290,104 @@ body {
         font-size: 12px;
     }
     
-    /* Mobile dropdown adjustments */
-    .map-dropdown {
-        min-width: 120px;
-        font-size: 12px;
-        padding: 4px 8px;
+    /* Mobile navigation layout - difficulty on left, hamburger on right */
+    .nav-actions {
+        position: static;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        order: 3;
     }
     
-    .difficulty-dropdown.nav-dropdown {
-        min-width: 80px;
-        font-size: 11px;
-        padding: 6px 8px;
+    /* Show only difficulty dropdown and mobile button in navbar */
+    .nav-actions .nav-btn:not(.sidebar-toggle-btn) {
+        display: none !important;
     }
     
-    .nav-btn span {
-        display: none; /* Hide text on mobile, show only icons */
+    .nav-actions .difficulty-dropdown {
+        display: block !important;
+        min-width: 80px !important;
+        font-size: 12px !important;
+        padding: 6px 8px !important;
+        order: 1;
     }
     
-    .nav-btn span {
-        display: none;
+    /* Show mobile navigation button */
+    .mobile-nav-btn {
+        display: flex;
+        order: 2;
     }
     
-    .nav-btn {
-        padding: 8px;
-        min-width: 36px;
-        justify-content: center;
+    /* Hide sidebar toggle button for mobile and tablets */
+    .sidebar-toggle-btn {
+        display: none !important;
     }
     
     .brand-text {
         display: none;
+    }
+    
+    /* COMPLETELY HIDE SIDEBAR FOR MOBILE AND TABLETS */
+    .leaflet-sidebar,
+    #sidebar,
+    .sidebar-close-control,
+    .sidebar-expand-btn,
+    .mobile-sidebar-overlay {
+        display: none !important;
+    }
+    
+    /* Ensure map container takes full width */
+    #map {
+        width: 100vw !important;
+        height: calc(100vh - 60px) !important;
+        margin-left: 0 !important;
+        position: relative !important;
+    }
+    
+    /* Fix main content layout for full-width */
+    #main-content {
+        width: 100vw !important;
+        margin-left: 0 !important;
+        height: calc(100vh - 60px) !important;
+        display: block !important;
+    }
+}
+
+/* Mobile Navigation Panel (opened via hamburger) */
+@media (max-width: 1024px) {
+    .mobile-nav-panel {
+        position: fixed;
+        top: 60px;
+        right: -100%;
+        width: 280px;
+        max-width: 90vw;
+        height: auto;
+        max-height: calc(100vh - 120px);
+        background: var(--gradient-dark);
+        border: 2px solid var(--border-accent);
+        border-radius: 0 0 0 12px;
+        padding: 20px;
+        transition: right 0.3s ease;
+        z-index: 500001;
+        box-shadow: -4px 4px 20px rgba(0, 0, 0, 0.4);
+        overflow-y: auto;
+    }
+    
+    .mobile-nav-panel.active {
+        right: 0;
+    }
+    
+    .mobile-nav-panel .nav-btn {
+        width: 100%;
+        justify-content: flex-start;
+        padding: 12px 16px;
+        font-size: 16px;
+        border-radius: 8px;
+        margin-bottom: 12px;
+    }
+    
+    .mobile-nav-panel .nav-btn span {
+        display: inline;
     }
 }
 
@@ -268,8 +398,58 @@ body {
         padding: 6px 10px;
     }
     
+    /* Adjust mobile navigation for small screens */
     .nav-actions {
-        gap: 4px;
+        gap: 6px !important;
+    }
+    
+    .nav-actions .difficulty-dropdown {
+        min-width: 70px !important;
+        font-size: 11px !important;
+        padding: 4px 6px !important;
+    }
+    
+    .mobile-nav-btn {
+        width: 36px !important;
+        height: 36px !important;
+    }
+    
+    .hamburger-line {
+        width: 18px !important;
+    }
+    
+    /* Ensure mobile nav panel fits small screens */
+    .mobile-nav-panel {
+        width: 260px !important;
+        max-width: 85vw !important;
+    }
+    
+    /* COMPLETELY HIDE SIDEBAR ON SMALL MOBILE */
+    .leaflet-sidebar,
+    #sidebar,
+    .sidebar-close-control,
+    .sidebar-expand-btn,
+    .mobile-sidebar-overlay,
+    .sidebar-toggle-btn {
+        display: none !important;
+    }
+    
+    /* Ensure full-width map on small mobile */
+    #map {
+        width: 100vw !important;
+        height: calc(100vh - 60px) !important;
+        margin-left: 0 !important;
+    }
+    
+    #main-content {
+        width: 100vw !important;
+        margin-left: 0 !important;
+        display: block !important;
+    }
+    
+    /* Hide top ad on small mobile portraits too */
+    .top-ad {
+        display: none !important;
     }
 }
 
@@ -995,6 +1175,212 @@ body {
     /* Mobile main content adjustment */
     #main-content {
         height: calc(100vh - 130px) !important; /* Account for mobile layout */
+    }
+}
+
+/* Mobile Portrait Orientation - Hide position panel and adjust top banner */
+@media (max-width: 1024px) and (orientation: portrait) {
+    /* COMPLETELY HIDE SIDEBAR ON MOBILE AND TABLETS */
+    .leaflet-sidebar,
+    #sidebar,
+    .sidebar-close-control,
+    .sidebar-expand-btn,
+    .mobile-sidebar-overlay {
+        display: none !important;
+    }
+    
+    /* Hide sidebar toggle button in navigation */
+    .sidebar-toggle-btn {
+        display: none !important;
+    }
+    
+    /* Hide position/coordinate displays in portrait */
+    .grid-display-container:not(.leaflet-control),
+    #current-position,
+    .coordinate-display,
+    .position-control {
+        display: none !important;
+    }
+    
+    /* HIDE TOP AD BANNER IN PORTRAIT MODE */
+    .top-ad {
+        display: none !important;
+    }
+    
+    /* Adjust layout heights for full-width map without top ad */
+    #map {
+        width: 100vw !important;
+        height: calc(100vh - 60px) !important; /* Only navbar height */
+        margin-left: 0 !important;
+        position: relative !important;
+    }
+    
+    #main-content {
+        width: 100vw !important;
+        margin-left: 0 !important;
+        height: calc(100vh - 60px) !important; /* Only navbar height */
+        display: block !important;
+    }
+    
+    /* Position mobile nav panel above any remaining ads */
+    .nav-actions {
+        z-index: 10001 !important; /* Above ad banners */
+    }
+}
+
+/* Mobile Landscape Orientation - Hide bottom ad and position panel */
+@media (max-width: 1024px) and (orientation: landscape), 
+       (max-height: 600px) and (max-width: 1200px) {
+    /* COMPLETELY HIDE SIDEBAR ON MOBILE AND TABLETS */
+    .leaflet-sidebar,
+    #sidebar,
+    .sidebar-close-control,
+    .sidebar-expand-btn,
+    .mobile-sidebar-overlay {
+        display: none !important;
+    }
+    
+    /* Hide sidebar toggle button in navigation */
+    .sidebar-toggle-btn {
+        display: none !important;
+    }
+    
+    /* Hide bottom ad panel in landscape */
+    .bottom-ad {
+        display: none !important;
+    }
+    
+    /* Hide position/coordinate displays in landscape */
+    .grid-display-container:not(.leaflet-control),
+    #current-position,
+    .coordinate-display,
+    .position-control {
+        display: none !important;
+    }
+    
+    /* Adjust layout heights without bottom ad */
+    #map {
+        width: 100vw !important;
+        height: calc(100vh - 60px) !important;
+        margin-left: 0 !important;
+        position: relative !important;
+    }
+    
+    #main-content {
+        width: 100vw !important;
+        margin-left: 0 !important;
+        height: calc(100vh - 60px) !important;
+        display: block !important;
+    }
+    
+    /* Adjust floor controls to bottom without ad spacing */
+    .floor-control-container:not(.leaflet-control) {
+        bottom: 10px !important;
+        right: 10px !important;
+    }
+    
+    /* Reduce top ad size in landscape for more map space */
+    .top-ad {
+        padding: 6px 0 !important;
+    }
+    
+    .top-ad .ad-content h3 {
+        font-size: 12px !important;
+        margin-bottom: 2px !important;
+    }
+    
+    .top-ad .ad-content p {
+        font-size: 10px !important;
+    }
+}
+
+/* Additional tablet-specific rules */
+@media (min-width: 768px) and (max-width: 1024px) {
+    /* COMPLETELY HIDE SIDEBAR ON TABLETS */
+    .leaflet-sidebar,
+    #sidebar,
+    .sidebar-close-control,
+    .sidebar-expand-btn,
+    .mobile-sidebar-overlay {
+        display: none !important;
+    }
+    
+    /* Hide sidebar toggle button in navigation */
+    .sidebar-toggle-btn {
+        display: none !important;
+    }
+    
+    /* Full-width layout for tablets */
+    #map {
+        width: 100vw !important;
+        margin-left: 0 !important;
+    }
+    
+    #main-content {
+        width: 100vw !important;
+        margin-left: 0 !important;
+        display: block !important;
+    }
+}
+
+/* Desktop layout - show sidebar and normal layout */
+@media (min-width: 1025px) {
+    /* Hide mobile navigation elements on desktop */
+    .mobile-nav-btn,
+    .mobile-nav-panel {
+        display: none !important;
+    }
+    
+    /* Show sidebar on desktop */
+    .leaflet-sidebar,
+    #sidebar,
+    .sidebar-close-control,
+    .sidebar-toggle-btn {
+        display: block !important;
+    }
+    
+    /* Normal desktop navigation layout */
+    .nav-actions {
+        position: static !important;
+        flex-direction: row !important;
+        width: auto !important;
+        height: auto !important;
+        background: transparent !important;
+        border: none !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+        gap: 8px !important;
+        box-shadow: none !important;
+        transition: none !important;
+        order: initial !important;
+    }
+    
+    .nav-actions .nav-btn {
+        display: flex !important;
+        width: auto !important;
+        justify-content: center !important;
+        padding: 8px 12px !important;
+        font-size: 13px !important;
+        border-radius: 6px !important;
+        order: initial !important;
+    }
+    
+    .nav-actions .difficulty-dropdown {
+        display: block !important;
+        width: auto !important;
+        padding: 8px 12px !important;
+        font-size: 13px !important;
+        border-radius: 6px !important;
+        order: initial !important;
+    }
+    
+    .brand-text {
+        display: inline !important;
+    }
+    
+    /* Show top ad on desktop */
+    .top-ad {
+        display: block !important;
     }
 }
 
