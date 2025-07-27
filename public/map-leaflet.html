@@ -1425,6 +1425,16 @@
             
             // Function to show a specific tab
             function showTab(targetId) {
+                // Check if the clicked tab is already active
+                const clickedTab = document.querySelector(`a[href="#${targetId}"]`);
+                const isAlreadyActive = clickedTab && clickedTab.parentElement.classList.contains('active');
+                
+                // If tab is already active and sidebar is open, close the sidebar
+                if (isAlreadyActive && sidebar && !sidebar.classList.contains('collapsed')) {
+                    closeSidebar();
+                    return;
+                }
+                
                 // Hide all panes
                 tabPanes.forEach(pane => {
                     pane.classList.remove('active');
