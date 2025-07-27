@@ -83,6 +83,11 @@ function addArmoryLoot(interactive_map) {
                             popupAnchor: [0, -10]
                         }),
                         riseOnHover: true
+                    }).bindTooltip(feature.properties.name || feature.properties.loot_type || 'Loot', {
+                        permanent: false,
+                        direction: 'top',
+                        offset: [0, -10],
+                        className: 'marker-tooltip'
                     });
                 }
             });

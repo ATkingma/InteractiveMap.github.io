@@ -662,6 +662,34 @@ body {
     z-index: 5000 !important;
 }
 
+/* Marker Tooltip Styles */
+.leaflet-tooltip {
+    background: var(--bg-panel) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--primary-color) !important;
+    border-radius: 6px !important;
+    box-shadow: var(--shadow-orange) !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    padding: 6px 10px !important;
+    white-space: nowrap !important;
+    backdrop-filter: blur(10px) !important;
+    z-index: 6000 !important;
+}
+
+.leaflet-tooltip::before {
+    border-top-color: var(--primary-color) !important;
+}
+
+.marker-tooltip {
+    background: var(--bg-panel) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--primary-color) !important;
+    border-radius: 6px !important;
+    box-shadow: var(--shadow-orange) !important;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+}
+
 /* Sidebar list styles */
 .collectibles_list {
     display: grid;
@@ -1393,7 +1421,6 @@ input[type="checkbox"] {
 #main-content {
     position: relative;
     height: calc(100vh - 120px); /* Account for navbar (60px) + bottom ad (60px) */
-    margin-top: 60px;
     display: flex;
 }
 

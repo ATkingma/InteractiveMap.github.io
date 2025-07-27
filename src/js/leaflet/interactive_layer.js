@@ -39,10 +39,21 @@ class InteractiveLayer {
 
     #default_onEachFeature = function (feature, layer) { };
     #default_pointToLayer = function (feature, latlng) {
-        return L.marker(latlng, {
+        const marker = L.marker(latlng, {
             icon: Utils.getCustomIcon(this.id),
             riseOnHover: true
         });
+        
+        // Add tooltip with feature name
+        const tooltipText = feature.properties?.name || feature.properties?.title || this.id || 'Marker';
+        marker.bindTooltip(tooltipText, {
+            permanent: false,
+            direction: 'top',
+            offset: [0, -10],
+            className: 'marker-tooltip'
+        });
+        
+        return marker;
     };
     #default_polygon_style = function (feature) { return {}; };
     #default_polygon_style_highlight = function () {

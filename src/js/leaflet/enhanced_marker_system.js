@@ -261,6 +261,15 @@ class EnhancedMarkerSystem {
         const popupContent = this.createMarkerPopup(markerData);
         marker.bindPopup(popupContent);
 
+        // Add tooltip with marker name on hover
+        const tooltipText = markerData.name || markerData.type || 'Marker';
+        marker.bindTooltip(tooltipText, {
+            permanent: false,
+            direction: 'top',
+            offset: [0, -10],
+            className: 'marker-tooltip'
+        });
+
         // Handle drag events for user markers
         if (markerData.isUserCreated) {
             marker.on('dragend', (e) => {
