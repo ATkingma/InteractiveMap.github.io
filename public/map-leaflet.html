@@ -572,6 +572,13 @@
 
         <div id="map"></div>
         
+        <!-- Independent Sidebar Close Control -->
+        <div id="sidebar-close-control" class="sidebar-close-control">
+            <a href="#" class="sidebar-close-btn" onclick="closeSidebar(); return false;" title="Close Sidebar">
+                <i class="fas fa-times"></i>
+            </a>
+        </div>
+        
         <!-- Bottom Ad Space -->
         <div id="bottom-ad" class="ad-space bottom-ad">
             <div class="ad-content">
@@ -611,17 +618,25 @@
         
         function openSidebar() {
             var sidebar = document.getElementById('sidebar');
+            var closeControl = document.getElementById('sidebar-close-control');
             if (sidebar) {
                 sidebar.classList.remove('collapsed');
                 adjustMapControls();
+            }
+            if (closeControl) {
+                closeControl.classList.add('visible');
             }
         }
         
         function closeSidebar() {
             var sidebar = document.getElementById('sidebar');
+            var closeControl = document.getElementById('sidebar-close-control');
             if (sidebar) {
                 sidebar.classList.add('collapsed');
                 adjustMapControls();
+            }
+            if (closeControl) {
+                closeControl.classList.remove('visible');
             }
         }
         
@@ -1402,20 +1417,14 @@
         window.resetMapView = resetMapView;
         window.updateMapName = updateMapName;
         
-        // Modern Sidebar Tab Functionality with Auto-Collapse
+        // Modern Sidebar Tab Functionality
         function initializeSidebarTabs() {
             const tabLinks = document.querySelectorAll('.leaflet-sidebar-tabs a[role="tab"]');
             const tabPanes = document.querySelectorAll('.leaflet-sidebar-pane');
             const sidebar = document.getElementById('sidebar');
-            let autoCollapseTimeout = null;
             
             // Function to show a specific tab
             function showTab(targetId) {
-                // Clear any existing timeout
-                if (autoCollapseTimeout) {
-                    clearTimeout(autoCollapseTimeout);
-                }
-                
                 // Hide all panes
                 tabPanes.forEach(pane => {
                     pane.classList.remove('active');
@@ -1442,30 +1451,6 @@
                 if (sidebar && sidebar.classList.contains('collapsed')) {
                     openSidebar();
                 }
-                
-                // Auto-collapse after a delay (unless user is interacting with sidebar)
-                autoCollapseTimeout = setTimeout(() => {
-                    if (sidebar && !sidebar.classList.contains('collapsed')) {
-                        closeSidebar();
-                    }
-                }, 4000); // 4 second delay
-            }
-            
-            // Prevent auto-collapse when user is hovering over or interacting with sidebar
-            if (sidebar) {
-                sidebar.addEventListener('mouseenter', () => {
-                    if (autoCollapseTimeout) {
-                        clearTimeout(autoCollapseTimeout);
-                    }
-                });
-                
-                sidebar.addEventListener('mouseleave', () => {
-                    if (!sidebar.classList.contains('collapsed')) {
-                        autoCollapseTimeout = setTimeout(() => {
-                            closeSidebar();
-                        }, 2000); // Shorter delay when mouse leaves
-                    }
-                });
             }
             
             // Add click event listeners to tabs

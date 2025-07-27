@@ -563,6 +563,51 @@ body {
     border-left: 2px solid var(--primary-color);
 }
 
+/* Independent Sidebar Close Control - Slides with Sidebar */
+.sidebar-close-control {
+    position: fixed;
+    top: 50%;
+    left: 60px; /* Start at sidebar collapsed width */
+    transform: translateY(-50%);
+    z-index: 1003;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: auto;
+}
+
+.sidebar-close-control.visible {
+    opacity: 1;
+    visibility: visible;
+    left: 460px; /* Move to right edge of expanded sidebar (450px + 10px) */
+}
+
+.sidebar-close-btn {
+    width: 36px;
+    height: 36px;
+    background: var(--bg-panel) !important;
+    border: 2px solid var(--primary-color) !important;
+    border-radius: 6px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    color: var(--primary-color) !important;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-orange) !important;
+    backdrop-filter: blur(10px);
+    text-decoration: none;
+    line-height: 1;
+}
+
+.sidebar-close-btn:hover {
+    background: rgba(255, 140, 0, 0.1) !important;
+    color: var(--accent-color) !important;
+    border-color: var(--accent-color) !important;
+    transform: scale(1.05);
+}
+
 .leaflet-sidebar:not(.collapsed) .leaflet-sidebar-content {
     opacity: 1 !important;
     visibility: visible !important;
@@ -865,6 +910,24 @@ body {
         width: 100vw !important;
         border-radius: 0 !important;
         box-shadow: 0 0 30px rgba(0, 0, 0, 0.5) !important;
+    }
+    
+    /* Mobile close button positioning - slides with sidebar */
+    .sidebar-close-control {
+        left: 50px !important; /* Start at mobile sidebar collapsed width */
+    }
+    
+    .sidebar-close-control.visible {
+        left: calc(100vw - 46px) !important; /* Right edge of full-width mobile sidebar */
+        top: 15px !important; /* Move to top area on mobile */
+        transform: none !important;
+    }
+    
+    .sidebar-close-btn {
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 16px !important;
+        border-radius: 4px !important;
     }
     
     .leaflet-sidebar-tabs {
@@ -1272,26 +1335,7 @@ body {
 }
 
 .leaflet-sidebar-header .leaflet-sidebar-close {
-    cursor: pointer;
-    font-size: 20px;
-    color: var(--primary-color);
-    transition: all 0.3s ease;
-    padding: 8px;
-    border-radius: 50%;
-    width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    border: 1px solid transparent;
-}
-
-.leaflet-sidebar-header .leaflet-sidebar-close:hover {
-    color: var(--accent-color);
-    background: rgba(255, 140, 0, 0.1);
-    border-color: var(--accent-color);
-    transform: scale(1.1);
+    display: none !important; /* Hide the close button completely */
 }
 
 .leaflet-sidebar-pane > div {
