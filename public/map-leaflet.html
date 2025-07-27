@@ -96,7 +96,6 @@
                     <li><a href="#custom-markers" role="tab" data-tooltip="Custom Markers"><i class="fas fa-map-marker-alt"></i></a></li>
                     <li><a href="#drawing" role="tab" data-tooltip="Drawing Tools"><i class="fas fa-pencil-alt"></i></a></li>
                     <li><a href="#info" role="tab" data-tooltip="About & Info"><i class="fas fa-info-circle"></i></a></li>
-                    <li><a href="#coordinates" role="tab" data-tooltip="Coordinates"><i class="fas fa-crosshairs"></i></a></li>
                     <li><a href="#github" role="tab" data-tooltip="GitHub Repository"><i class="fab fa-github"></i></a></li>
                     <li><a href="#discord" role="tab" data-tooltip="Discord Community"><i class="fab fa-discord"></i></a></li>
                     <li><a href="#settings" role="tab" data-tooltip="Settings & Actions"><i class="fas fa-cog"></i></a></li>
@@ -158,68 +157,73 @@
                         <span class="leaflet-sidebar-close"><i class="fas fa-caret-left"></i></span>
                     </h1>
                     <div class="custom-markers-container">
-                        <div class="marker-creation">
-                            <h3>Create New Marker</h3>
+                        <div class="marker-creation-section">
+                            <div class="create-instructions">
+                                <p><i class="fas fa-info-circle"></i> Click the "Place Marker" button, then click anywhere on the map to add your custom marker.</p>
+                                <div class="current-floor-indicator">
+                                    <i class="fas fa-building"></i> 
+                                    <span>Creating on: <strong id="current-floor-indicator">Ground Floor</strong></span>
+                                </div>
+                            </div>
+                            
                             <div class="marker-form">
-                                <div class="form-group">
-                                    <label for="marker-name">Name:</label>
-                                    <input type="text" id="marker-name" placeholder="Enter marker name">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="marker-name">Marker Name</label>
+                                        <input type="text" id="marker-name" placeholder="Enter marker name" maxlength="50">
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="marker-description">Description:</label>
-                                    <textarea id="marker-description" placeholder="Enter marker description" rows="3"></textarea>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="marker-description">Description (Optional)</label>
+                                        <textarea id="marker-description" placeholder="Enter description..." rows="2" maxlength="200"></textarea>
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="marker-color">Color:</label>
-                                    <div class="color-picker-container">
+                                
+                                <div class="form-row">
+                                    <div class="form-group half-width">
+                                        <label for="marker-type">Type</label>
+                                        <select id="marker-type">
+                                            <option value="custom">Custom</option>
+                                            <option value="objective">Objective</option>
+                                            <option value="loot">Loot</option>
+                                            <option value="danger">Danger</option>
+                                            <option value="note">Note</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group half-width">
+                                        <label for="marker-color">Color</label>
                                         <input type="color" id="marker-color" value="#ff6b35">
-                                        <div class="color-presets">
-                                            <button class="color-preset" data-color="#ff6b35" style="background-color: #ff6b35;"></button>
-                                            <button class="color-preset" data-color="#ff0000" style="background-color: #ff0000;"></button>
-                                            <button class="color-preset" data-color="#00ff00" style="background-color: #00ff00;"></button>
-                                            <button class="color-preset" data-color="#0000ff" style="background-color: #0000ff;"></button>
-                                            <button class="color-preset" data-color="#ffff00" style="background-color: #ffff00;"></button>
-                                            <button class="color-preset" data-color="#ff00ff" style="background-color: #ff00ff;"></button>
-                                            <button class="color-preset" data-color="#00ffff" style="background-color: #00ffff;"></button>
-                                            <button class="color-preset" data-color="#ffffff" style="background-color: #ffffff;"></button>
-                                        </div>
                                     </div>
                                 </div>
-                                <div class="form-group position-group">
-                                    <h4>Position</h4>
-                                    <div class="position-options">
-                                        <button id="click-to-place" class="control-btn primary">
-                                            <i class="fas fa-mouse-pointer"></i> Click on Map
-                                        </button>
-                                        <div class="coordinate-inputs">
-                                            <div class="coord-input">
-                                                <label for="marker-x">X:</label>
-                                                <input type="number" id="marker-x" placeholder="X coordinate">
-                                            </div>
-                                            <div class="coord-input">
-                                                <label for="marker-y">Y:</label>
-                                                <input type="number" id="marker-y" placeholder="Y coordinate">
-                                            </div>
-                                        </div>
-                                    </div>
+                                
+                                <div class="marker-actions">
+                                    <button id="place-marker-btn" class="control-btn primary">
+                                        <i class="fas fa-map-marker-alt"></i> Place Marker on Map
+                                    </button>
+                                    <button id="cancel-marker-btn" class="control-btn secondary" style="display: none;">
+                                        <i class="fas fa-times"></i> Cancel
+                                    </button>
                                 </div>
-                                <button id="create-marker" class="control-btn primary">
-                                    <i class="fas fa-plus"></i> Create Marker
-                                </button>
                             </div>
                         </div>
+                        
                         <div class="custom-markers-list">
-                            <h3>Your Markers</h3>
-                            <div id="custom-markers-container">
-                                <p class="no-markers">No custom markers created yet</p>
+                            <div class="list-header">
+                                <h3>Your Markers (<span id="marker-count">0</span>)</h3>
+                                <div class="list-actions">
+                                    <button id="delete-all-markers" class="control-btn danger small">
+                                        <i class="fas fa-trash-alt"></i> Clear All
+                                    </button>
+                                </div>
                             </div>
-                            <div class="marker-list-actions">
-                                <button id="delete-selected-markers" class="control-btn danger">
-                                    <i class="fas fa-trash"></i> Delete Selected
-                                </button>
-                                <button id="delete-all-markers" class="control-btn danger">
-                                    <i class="fas fa-trash-alt"></i> Delete All
-                                </button>
+                            <div id="custom-markers-list" class="markers-list">
+                                <div class="no-markers">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <p>No custom markers yet</p>
+                                    <small>Create your first marker by clicking "Place Marker on Map"</small>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -315,58 +319,6 @@
                                 <p><strong>Last Updated:</strong> December 2024</p>
                                 <p><strong>Map Data:</strong> Community sourced and verified</p>
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Coordinates Panel -->
-                <div class="leaflet-sidebar-pane" id="coordinates">
-                    <h1 class="leaflet-sidebar-header">
-                        <i class="fas fa-crosshairs"></i> Coordinates & Position
-                        <span class="leaflet-sidebar-close"><i class="fas fa-caret-left"></i></span>
-                    </h1>
-                    <div class="coordinates-container">
-                        <div class="coordinate-display">
-                            <h3>Current Mouse Position</h3>
-                            <div class="coord-info">
-                                <div class="coord-item">
-                                    <label>X:</label>
-                                    <span id="current-x">0</span>
-                                </div>
-                                <div class="coord-item">
-                                    <label>Y:</label>
-                                    <span id="current-y">0</span>
-                                </div>
-                                <div class="coord-item">
-                                    <label>Grid:</label>
-                                    <span id="current-grid">A1</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="coordinate-tools">
-                            <h3>Go to Coordinates</h3>
-                            <div class="goto-coords">
-                                <input type="number" id="goto-x" placeholder="X coordinate">
-                                <input type="number" id="goto-y" placeholder="Y coordinate">
-                                <button id="goto-button" class="control-btn primary">
-                                    <i class="fas fa-location-arrow"></i> Go to Position
-                                </button>
-                            </div>
-                        </div>
-                        <div class="coordinate-info">
-                            <h3>Selected Marker</h3>
-                            <div id="selected-marker-coords">
-                                <p>Click on a marker to see its coordinates</p>
-                            </div>
-                        </div>
-                        <div class="coordinate-export">
-                            <h3>Export Tools</h3>
-                            <button id="copy-coords" class="control-btn secondary">
-                                <i class="fas fa-copy"></i> Copy Current Position
-                            </button>
-                            <button id="export-json" class="control-btn secondary">
-                                <i class="fas fa-download"></i> Export Markers as JSON
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -504,29 +456,11 @@
                         <span class="leaflet-sidebar-close"><i class="fas fa-caret-left"></i></span>
                     </h1>
                     <div class="settings-container">
-                        <div class="settings-section">
-                            <h3>Map Settings</h3>
-                            <div class="setting-item">
-                                <label for="grid-toggle">Show Grid:</label>
-                                <input type="checkbox" id="grid-toggle">
-                            </div>
-                            <div class="setting-item">
-                                <label for="grid-size-setting">Grid Size:</label>
-                                <select id="grid-size-setting">
-                                    <option value="100">100px</option>
-                                    <option value="200" selected>200px</option>
-                                    <option value="400">400px</option>
-                                </select>
-                            </div>
-                            <div class="setting-item">
-                                <label for="marker-scale">Marker Scale:</label>
-                                <input type="range" id="marker-scale" min="0.5" max="2" step="0.1" value="1">
-                                <span id="scale-value">100%</span>
-                            </div>
-                        </div>
-
                         <div class="actions-section">
-                            <h3>Data Actions</h3>
+                            <h3>Data Management</h3>
+                            <div class="data-info">
+                                <p>Export your custom markers and settings, or import previously saved data.</p>
+                            </div>
                             <div class="action-buttons">
                                 <button id="export-all-data" class="control-btn primary">
                                     <i class="fas fa-download"></i> Export All Data
@@ -536,33 +470,34 @@
                                 </button>
                                 <input type="file" id="import-file" accept=".json" style="display: none;">
                             </div>
+                            <div class="data-stats">
+                                <div class="stat-row">
+                                    <span class="stat-label">Custom Markers:</span>
+                                    <span class="stat-value" id="stats-markers">0</span>
+                                </div>
+                                <div class="stat-row">
+                                    <span class="stat-label">Storage Used:</span>
+                                    <span class="stat-value" id="stats-storage">0 KB</span>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="danger-section">
                             <h3>Danger Zone</h3>
                             <div class="danger-actions">
                                 <button id="hard-delete" class="control-btn danger">
-                                    <i class="fas fa-trash"></i> Hard Delete All Custom Data
+                                    <i class="fas fa-trash"></i> Delete All Custom Data
                                 </button>
                                 <button id="hard-reset" class="control-btn danger">
-                                    <i class="fas fa-undo"></i> Hard Reset Map
+                                    <i class="fas fa-undo"></i> Reset Map View
                                 </button>
                             </div>
                             <div class="danger-warning">
                                 <p><strong>⚠️ Warning:</strong> These actions cannot be undone!</p>
                                 <ul>
-                                    <li><strong>Hard Delete:</strong> Removes all custom markers and drawings</li>
-                                    <li><strong>Hard Reset:</strong> Resets map to initial state (position, zoom, filters)</li>
+                                    <li><strong>Delete All:</strong> Removes all custom markers and saved data</li>
+                                    <li><strong>Reset Map:</strong> Resets map to initial position and zoom</li>
                                 </ul>
-                            </div>
-                        </div>
-
-                        <div class="about-section">
-                            <h3>About</h3>
-                            <div class="version-info">
-                                <p><strong>Version:</strong> 2.0.0</p>
-                                <p><strong>Build:</strong> 2024.12.25</p>
-                                <p><strong>Engine:</strong> Leaflet.js</p>
                             </div>
                         </div>
                     </div>
@@ -1522,6 +1457,1198 @@
             }
         });
     </script>
+
+    <!-- Enhanced Sidebar Features Implementation -->
+    <script>
+        // Global variables for sidebar features
+        let customMarkers = [];
+        let drawingLayers = [];
+        let isPlacingMarker = false;
+        let tempMarkerIcon = null;
+        let currentFloor = 0; // Use numeric floor values to match main floor control
+        let availableFloors = [];
+        let sidebarFeaturesInitialized = false; // Prevent multiple initializations
+
+        // Initialize all sidebar features
+        function initializeSidebarFeatures() {
+            // Prevent multiple initializations
+            if (sidebarFeaturesInitialized) {
+                console.log('Sidebar features already initialized, skipping...');
+                return;
+            }
+            
+            console.log('Initializing sidebar features...');
+            sidebarFeaturesInitialized = true;
+            
+            initializeCustomMarkers();
+            initializeFloorSelection();
+            initializeDrawingTools();
+            initializeSettingsTab();
+        }
+
+        // ===============================
+        // CUSTOM MARKERS IMPLEMENTATION
+        // ===============================
+        
+        function initializeCustomMarkers() {
+            console.log('Initializing custom markers...');
+            
+            const placeBtn = document.getElementById('place-marker-btn');
+            const cancelBtn = document.getElementById('cancel-marker-btn');
+            const deleteAllBtn = document.getElementById('delete-all-markers');
+            
+            if (placeBtn) {
+                placeBtn.addEventListener('click', startPlacingMarker);
+            }
+            
+            if (cancelBtn) {
+                cancelBtn.addEventListener('click', cancelPlacingMarker);
+            }
+            
+            if (deleteAllBtn) {
+                deleteAllBtn.addEventListener('click', deleteAllCustomMarkers);
+            }
+
+            // Clear any existing markers before loading to prevent duplicates
+            clearAllMarkersFromMap();
+            customMarkers = [];
+            
+            // Load existing markers on init
+            loadCustomMarkers();
+            updateMarkerCount();
+        }
+
+        function clearAllMarkersFromMap() {
+            // Remove all custom markers from the map
+            if (window.interactive_map && window.interactive_map.getMap()) {
+                const map = window.interactive_map.getMap();
+                customMarkers.forEach(markerData => {
+                    if (markerData.marker) {
+                        map.removeLayer(markerData.marker);
+                    }
+                });
+            }
+        }
+
+        function startPlacingMarker() {
+            const nameInput = document.getElementById('marker-name');
+            const name = nameInput?.value?.trim();
+            
+            if (!name) {
+                alert('Please enter a marker name first');
+                nameInput?.focus();
+                return;
+            }
+
+            isPlacingMarker = true;
+            const placeBtn = document.getElementById('place-marker-btn');
+            const cancelBtn = document.getElementById('cancel-marker-btn');
+            
+            // Update UI
+            if (placeBtn) {
+                placeBtn.style.display = 'none';
+            }
+            if (cancelBtn) {
+                cancelBtn.style.display = 'inline-flex';
+            }
+
+            // Add map click listener
+            if (window.interactive_map && window.interactive_map.getMap()) {
+                const map = window.interactive_map.getMap();
+                map.on('click', onMapClickForMarker);
+                map.getContainer().style.cursor = 'crosshair';
+            }
+
+            // Show instruction
+            showNotification('Click anywhere on the map to place your marker', 'info');
+        }
+
+        function cancelPlacingMarker() {
+            isPlacingMarker = false;
+            const placeBtn = document.getElementById('place-marker-btn');
+            const cancelBtn = document.getElementById('cancel-marker-btn');
+            
+            // Update UI
+            if (placeBtn) {
+                placeBtn.style.display = 'inline-flex';
+            }
+            if (cancelBtn) {
+                cancelBtn.style.display = 'none';
+            }
+
+            // Remove map click listener
+            if (window.interactive_map && window.interactive_map.getMap()) {
+                const map = window.interactive_map.getMap();
+                map.off('click', onMapClickForMarker);
+                map.getContainer().style.cursor = '';
+            }
+        }
+
+        function onMapClickForMarker(e) {
+            if (!isPlacingMarker) return;
+
+            const latlng = e.latlng;
+            createCustomMarker(latlng.lat, latlng.lng);
+            cancelPlacingMarker();
+        }
+
+        function createCustomMarker(lat, lng) {
+            const nameInput = document.getElementById('marker-name');
+            const descInput = document.getElementById('marker-description');
+            const typeSelect = document.getElementById('marker-type');
+            const colorInput = document.getElementById('marker-color');
+
+            const name = nameInput?.value?.trim() || 'Custom Marker';
+            const description = descInput?.value?.trim() || '';
+            const type = typeSelect?.value || 'custom';
+            const color = colorInput?.value || '#ff6b35';
+
+            // Get current floor name for display
+            const currentFloorName = availableFloors.find(f => f.id === currentFloor)?.name || currentFloor;
+
+            // Create marker object
+            const markerId = Date.now().toString();
+            const markerData = {
+                id: markerId,
+                name: name,
+                description: description,
+                type: type,
+                color: color,
+                lat: lat,
+                lng: lng,
+                floor: currentFloor,
+                floorName: currentFloorName,
+                created: new Date().toISOString()
+            };
+
+            // Add to map
+            const marker = addMarkerToMap(markerData);
+            if (marker) {
+                customMarkers.push({...markerData, marker: marker});
+                saveCustomMarkers();
+                updateMarkersList();
+                updateMarkerCount();
+                updateDataStats();
+
+                // Clear form
+                if (nameInput) nameInput.value = '';
+                if (descInput) descInput.value = '';
+                
+                showNotification(`Marker "${name}" created on ${currentFloorName}!`, 'success');
+            }
+        }
+
+        function addMarkerToMap(markerData) {
+            if (!window.interactive_map || !window.interactive_map.getMap()) {
+                return null;
+            }
+
+            const map = window.interactive_map.getMap();
+            
+            // Create custom marker icon
+            const markerIcon = L.divIcon({
+                html: `<div class="custom-marker-icon" style="background-color: ${markerData.color}; border: 3px solid white; border-radius: 50%; width: 20px; height: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.4);"></div>`,
+                className: 'custom-marker',
+                iconSize: [20, 20],
+                iconAnchor: [10, 10]
+            });
+
+            // Create marker
+            const marker = L.marker([markerData.lat, markerData.lng], {
+                icon: markerIcon
+            }).addTo(map);
+
+            // Add popup
+            const popupContent = `
+                <div class="custom-marker-popup">
+                    <h4>${markerData.name}</h4>
+                    ${markerData.description ? `<p>${markerData.description}</p>` : ''}
+                    <div class="marker-meta">
+                        <span class="marker-type-badge">${markerData.type}</span>
+                        <span class="marker-floor-badge">Floor: ${markerData.floorName || markerData.floor}</span>
+                        <small>Created: ${new Date(markerData.created).toLocaleDateString()}</small>
+                    </div>
+                    <button onclick="deleteCustomMarker('${markerData.id}')" class="delete-marker-btn">
+                        <i class="fas fa-trash"></i> Delete Marker
+                    </button>
+                </div>
+            `;
+
+            marker.bindPopup(popupContent);
+            marker.bindTooltip(markerData.name, {
+                direction: 'top',
+                offset: [0, -10],
+                className: 'marker-tooltip'
+            });
+
+            return marker;
+        }
+
+        function updateMarkersList() {
+            const listContainer = document.getElementById('custom-markers-list');
+            if (!listContainer) return;
+
+            if (customMarkers.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="no-markers">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <p>No custom markers yet</p>
+                        <small>Create your first marker by clicking "Place Marker on Map"</small>
+                    </div>
+                `;
+                return;
+            }
+
+            const html = customMarkers.map(markerData => `
+                <div class="marker-item" data-id="${markerData.id}">
+                    <div class="marker-icon-preview" style="border-color: ${markerData.color}; background-color: ${markerData.color}20;">
+                        <i class="fas fa-map-marker-alt" style="color: ${markerData.color};"></i>
+                    </div>
+                    <div class="marker-info">
+                        <div class="marker-name">${markerData.name}</div>
+                        <div class="marker-details">
+                            <span class="marker-type-badge">${markerData.type}</span>
+                            <span class="marker-floor-badge">Floor: ${markerData.floorName || markerData.floor}</span>
+                            <span>${new Date(markerData.created).toLocaleDateString()}</span>
+                        </div>
+                    </div>
+                    <div class="marker-actions-buttons">
+                        <button class="marker-action-btn" onclick="panToMarker('${markerData.id}')" title="Go to marker">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="marker-action-btn delete" onclick="deleteCustomMarker('${markerData.id}')" title="Delete marker">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            listContainer.innerHTML = html;
+        }
+
+        function updateMarkerCount() {
+            const countSpan = document.getElementById('marker-count');
+            if (countSpan) {
+                countSpan.textContent = customMarkers.length;
+            }
+        }
+
+        function deleteCustomMarker(markerId) {
+            const markerIndex = customMarkers.findIndex(m => m.id === markerId);
+            if (markerIndex === -1) return;
+
+            const markerData = customMarkers[markerIndex];
+            
+            // Remove from map
+            if (markerData.marker && window.interactive_map && window.interactive_map.getMap()) {
+                const map = window.interactive_map.getMap();
+                map.removeLayer(markerData.marker);
+            }
+
+            // Remove from array
+            customMarkers.splice(markerIndex, 1);
+            
+            // Update storage and UI
+            saveCustomMarkers();
+            updateMarkersList();
+            updateMarkerCount();
+            updateDataStats();
+            
+            showNotification(`Marker "${markerData.name}" deleted`, 'success');
+        }
+
+        function deleteAllCustomMarkers() {
+            if (customMarkers.length === 0) return;
+            
+            if (confirm(`Are you sure you want to delete all ${customMarkers.length} custom markers? This cannot be undone.`)) {
+                // Remove all markers from map
+                if (window.interactive_map && window.interactive_map.getMap()) {
+                    const map = window.interactive_map.getMap();
+                    customMarkers.forEach(markerData => {
+                        if (markerData.marker) {
+                            map.removeLayer(markerData.marker);
+                        }
+                    });
+                }
+
+                // Clear array and storage
+                customMarkers = [];
+                saveCustomMarkers();
+                updateMarkersList();
+                updateMarkerCount();
+                
+                showNotification('All custom markers deleted', 'success');
+            }
+        }
+
+        function panToMarker(markerId) {
+            const markerData = customMarkers.find(m => m.id === markerId);
+            if (!markerData || !window.interactive_map) return;
+
+            const map = window.interactive_map.getMap();
+            if (map) {
+                map.setView([markerData.lat, markerData.lng], 3);
+                if (markerData.marker) {
+                    markerData.marker.openPopup();
+                }
+            }
+        }
+
+        function saveCustomMarkers() {
+            try {
+                const markersToSave = customMarkers.map(m => ({
+                    id: m.id,
+                    name: m.name,
+                    description: m.description,
+                    type: m.type,
+                    color: m.color,
+                    lat: m.lat,
+                    lng: m.lng,
+                    floor: m.floor,
+                    created: m.created
+                }));
+                localStorage.setItem('arena_breakout_custom_markers', JSON.stringify(markersToSave));
+            } catch (error) {
+                console.error('Failed to save custom markers:', error);
+            }
+        }
+
+        function loadCustomMarkers() {
+            console.log('Loading custom markers from localStorage...');
+            
+            try {
+                const saved = localStorage.getItem('arena_breakout_custom_markers');
+                if (saved) {
+                    const markersData = JSON.parse(saved);
+                    console.log('Found', markersData.length, 'saved markers');
+                    
+                    markersData.forEach(markerData => {
+                        // Check if marker already exists to prevent duplicates
+                        const existingMarker = customMarkers.find(m => m.id === markerData.id);
+                        if (!existingMarker) {
+                            const marker = addMarkerToMap(markerData);
+                            if (marker) {
+                                customMarkers.push({...markerData, marker: marker});
+                            }
+                        } else {
+                            console.log('Marker', markerData.id, 'already exists, skipping...');
+                        }
+                    });
+                    updateMarkersList();
+                    updateMarkerCount();
+                    console.log('Loaded', customMarkers.length, 'custom markers');
+                } else {
+                    console.log('No saved markers found');
+                }
+            } catch (error) {
+                console.error('Failed to load custom markers:', error);
+            }
+        }
+
+        // ===============================
+        // FLOOR SELECTION IMPLEMENTATION
+        // ===============================
+        
+        function initializeFloorSelection() {
+            // Listen for floor changes from the main floor control
+            if (window.interactive_map && window.interactive_map.getMap()) {
+                const map = window.interactive_map.getMap();
+                
+                // Listen for floor change events from main floor control
+                map.on('floorchange', function(e) {
+                    if (e.floor !== undefined) {
+                        updateSidebarFloorSelection(e.floor, e.floorData);
+                    }
+                });
+            }
+            
+            // Initialize with current floor if floor control exists
+            if (window.floorControl) {
+                currentFloor = window.floorControl.currentFloor;
+                populateAvailableFloors();
+            }
+            
+            // Create the UI
+            const sidebarFloorSelector = document.getElementById('sidebar-floor-selector');
+            if (sidebarFloorSelector) {
+                createFloorSelectorUI();
+            }
+        }
+
+        function populateAvailableFloors() {
+            if (!window.floorControl || !window.floorControl.floorData) {
+                // Default floors if no floor control found
+                availableFloors = [
+                    { id: 0, name: 'Ground Floor', active: true },
+                    { id: -1, name: 'Basement', active: false }
+                ];
+                return;
+            }
+
+            // Get floors from the main floor control
+            const floorData = window.floorControl.floorData;
+            availableFloors = Object.keys(floorData).map(floorId => {
+                const floor = parseInt(floorId);
+                const data = floorData[floor];
+                return {
+                    id: floor,
+                    name: data.name || `Floor ${floor}`,
+                    active: floor === window.floorControl.currentFloor
+                };
+            }).sort((a, b) => b.id - a.id); // Sort descending (top floors first)
+        }
+
+        function createFloorSelectorUI() {
+            const container = document.getElementById('sidebar-floor-selector');
+            if (!container) return;
+
+            // Ensure we have floor data
+            populateAvailableFloors();
+
+            // Create floor selector HTML
+            const html = `
+                <div class="floor-selector-grid">
+                    ${availableFloors.map(floor => `
+                        <button class="floor-select-btn ${floor.active ? 'active' : ''}" 
+                                data-floor="${floor.id}"
+                                onclick="selectFloor(${floor.id})">
+                            <i class="fas fa-building"></i>
+                            <span>${floor.name}</span>
+                        </button>
+                    `).join('')}
+                </div>
+                <div class="floor-info-display">
+                    <h4>Current Floor: <span id="current-floor-display">${availableFloors.find(f => f.active)?.name || 'Ground Floor'}</span></h4>
+                    <p class="floor-description">Click on a floor button above to switch between different map levels.</p>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function updateSidebarFloorSelection(floorId, floorData) {
+            // Update current floor
+            currentFloor = floorId;
+            
+            // Update available floors active state
+            availableFloors.forEach(floor => {
+                floor.active = (floor.id === floorId);
+            });
+
+            // Update UI buttons
+            const floorButtons = document.querySelectorAll('.floor-select-btn');
+            floorButtons.forEach(btn => {
+                if (parseInt(btn.dataset.floor) === floorId) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            // Update displays
+            const floorDisplay = document.getElementById('current-floor-display');
+            const floorIndicator = document.getElementById('current-floor-indicator');
+            const floorName = floorData?.name || availableFloors.find(f => f.id === floorId)?.name || `Floor ${floorId}`;
+            
+            if (floorDisplay) {
+                floorDisplay.textContent = floorName;
+            }
+            if (floorIndicator) {
+                floorIndicator.textContent = floorName;
+            }
+
+            // Update custom markers visibility for new floor
+            updateCustomMarkersVisibility(floorId);
+        }
+
+        function selectFloor(floorId) {
+            // Ensure floorId is a number (matching the main floor control system)
+            floorId = typeof floorId === 'string' ? parseInt(floorId) : floorId;
+            
+            // Use the main floor control system to switch floors
+            if (window.floorControl && window.floorControl.switchFloor) {
+                window.floorControl.switchFloor(floorId);
+                // The updateSidebarFloorSelection will be called automatically via the floorchange event
+            } else {
+                // Fallback if main floor control isn't available
+                updateSidebarFloorSelection(floorId, { name: `Floor ${floorId}` });
+                showNotification(`Switched to Floor ${floorId}`, 'info');
+            }
+        }
+
+        function updateCustomMarkersVisibility(activeFloor) {
+            if (!window.interactive_map || !window.interactive_map.getMap()) return;
+
+            const map = window.interactive_map.getMap();
+            
+            customMarkers.forEach(markerData => {
+                if (markerData.marker) {
+                    if (markerData.floor === activeFloor) {
+                        // Show marker on current floor
+                        if (!map.hasLayer(markerData.marker)) {
+                            markerData.marker.addTo(map);
+                        }
+                    } else {
+                        // Hide marker on other floors
+                        if (map.hasLayer(markerData.marker)) {
+                            map.removeLayer(markerData.marker);
+                        }
+                    }
+                }
+            });
+        }
+
+        // ===============================
+        // DRAWING TOOLS IMPLEMENTATION
+        // ===============================
+        
+        function initializeDrawingTools() {
+            const drawButtons = document.querySelectorAll('.tool-btn');
+            const clearBtn = document.getElementById('clear-drawings');
+            const toggleBtn = document.getElementById('toggle-drawing-mode');
+            const colorInput = document.getElementById('draw-color');
+            const opacityInput = document.getElementById('draw-opacity');
+            const weightInput = document.getElementById('draw-weight');
+
+            // Add event listeners
+            drawButtons.forEach(btn => {
+                btn.addEventListener('click', () => activateDrawingTool(btn.dataset.tool));
+            });
+
+            if (clearBtn) {
+                clearBtn.addEventListener('click', clearAllDrawings);
+            }
+
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', toggleDrawingMode);
+            }
+
+            // Style controls
+            if (opacityInput) {
+                opacityInput.addEventListener('input', updateOpacityDisplay);
+            }
+            if (weightInput) {
+                weightInput.addEventListener('input', updateWeightDisplay);
+            }
+
+            // Initialize drawing plugin if available
+            initializeLeafletDraw();
+        }
+
+        function initializeLeafletDraw() {
+            if (!window.interactive_map || !window.L || !L.PM) {
+                console.log('Leaflet Draw not available');
+                return;
+            }
+
+            const map = window.interactive_map.getMap();
+            if (!map) return;
+
+            // Configure drawing options
+            map.pm.addControls({
+                position: 'topright',
+                drawCircle: false,
+                drawMarker: false,
+                drawCircleMarker: false,
+                cutPolygon: false,
+                removalMode: false,
+                rotateMode: false
+            });
+
+            // Hide default controls (we'll use our custom ones)
+            map.pm.removeControls();
+        }
+
+        // ===============================
+        // SETTINGS TAB IMPLEMENTATION
+        // ===============================
+        
+        function initializeSettingsTab() {
+            console.log('Initializing settings tab...');
+            
+            const exportBtn = document.getElementById('export-all-data');
+            const importBtn = document.getElementById('import-data');
+            const importFile = document.getElementById('import-file');
+            const hardDeleteBtn = document.getElementById('hard-delete');
+            const hardResetBtn = document.getElementById('hard-reset');
+            
+            // Export functionality
+            if (exportBtn) {
+                exportBtn.addEventListener('click', exportAllData);
+            }
+            
+            // Import functionality
+            if (importBtn) {
+                importBtn.addEventListener('click', () => {
+                    if (importFile) {
+                        importFile.click();
+                    }
+                });
+            }
+            
+            if (importFile) {
+                importFile.addEventListener('change', handleFileImport);
+            }
+            
+            // Danger zone functionality
+            if (hardDeleteBtn) {
+                hardDeleteBtn.addEventListener('click', hardDeleteAllData);
+            }
+            
+            if (hardResetBtn) {
+                hardResetBtn.addEventListener('click', hardResetMap);
+            }
+            
+            // Update stats
+            updateDataStats();
+        }
+
+        function exportAllData() {
+            try {
+                const data = {
+                    version: '2.0.0',
+                    exportDate: new Date().toISOString(),
+                    customMarkers: JSON.parse(localStorage.getItem('arena_breakout_custom_markers') || '[]'),
+                    settings: {
+                        selectedMap: sessionStorage.getItem('selectedMap'),
+                        selectedDifficulty: sessionStorage.getItem('selectedDifficulty')
+                    }
+                };
+                
+                const dataStr = JSON.stringify(data, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(dataBlob);
+                link.download = `arena_breakout_map_data_${new Date().toISOString().split('T')[0]}.json`;
+                
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                showNotification('Data exported successfully!', 'success');
+                
+            } catch (error) {
+                console.error('Export error:', error);
+                showNotification('Failed to export data', 'error');
+            }
+        }
+
+        function handleFileImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    if (!data.version || !data.customMarkers) {
+                        throw new Error('Invalid data format');
+                    }
+                    
+                    if (confirm('This will replace all your current custom markers. Continue?')) {
+                        // Clear existing markers
+                        clearAllMarkersFromMap();
+                        customMarkers = [];
+                        
+                        // Import custom markers
+                        localStorage.setItem('arena_breakout_custom_markers', JSON.stringify(data.customMarkers));
+                        
+                        // Import settings if available
+                        if (data.settings) {
+                            if (data.settings.selectedMap) {
+                                sessionStorage.setItem('selectedMap', data.settings.selectedMap);
+                            }
+                            if (data.settings.selectedDifficulty) {
+                                sessionStorage.setItem('selectedDifficulty', data.settings.selectedDifficulty);
+                            }
+                        }
+                        
+                        // Reload markers
+                        loadCustomMarkers();
+                        updateMarkersList();
+                        updateMarkerCount();
+                        updateDataStats();
+                        
+                        showNotification(`Imported ${data.customMarkers.length} markers successfully!`, 'success');
+                    }
+                    
+                } catch (error) {
+                    console.error('Import error:', error);
+                    showNotification('Failed to import data: Invalid file format', 'error');
+                }
+            };
+            
+            reader.readAsText(file);
+            
+            // Reset file input
+            event.target.value = '';
+        }
+
+        function hardDeleteAllData() {
+            if (confirm('⚠️ This will permanently delete ALL your custom markers and saved data. This cannot be undone! Continue?')) {
+                if (confirm('Are you absolutely sure? This will delete everything!')) {
+                    try {
+                        // Clear localStorage
+                        localStorage.removeItem('arena_breakout_custom_markers');
+                        
+                        // Clear custom markers from map
+                        clearAllMarkersFromMap();
+                        customMarkers = [];
+                        
+                        // Update UI
+                        updateMarkersList();
+                        updateMarkerCount();
+                        updateDataStats();
+                        
+                        showNotification('All custom data deleted', 'success');
+                        
+                    } catch (error) {
+                        console.error('Hard delete error:', error);
+                        showNotification('Failed to delete data', 'error');
+                    }
+                }
+            }
+        }
+
+        function hardResetMap() {
+            if (confirm('This will reset the map to its initial position and zoom. Continue?')) {
+                try {
+                    if (window.interactive_map && window.interactive_map.getMap()) {
+                        const map = window.interactive_map.getMap();
+                        
+                        // Reset to default bounds
+                        const mapBounds = [[0, 240], [2158, 4318]];
+                        map.fitBounds(mapBounds, {
+                            padding: [50, 50],
+                            maxZoom: -1
+                        });
+                        
+                        showNotification('Map view reset to default', 'success');
+                    }
+                } catch (error) {
+                    console.error('Hard reset error:', error);
+                    showNotification('Failed to reset map', 'error');
+                }
+            }
+        }
+
+        function updateDataStats() {
+            // Update marker count
+            const markersCount = document.getElementById('stats-markers');
+            if (markersCount) {
+                markersCount.textContent = customMarkers.length;
+            }
+            
+            // Calculate storage usage
+            const storageUsed = document.getElementById('stats-storage');
+            if (storageUsed) {
+                try {
+                    const markersData = localStorage.getItem('arena_breakout_custom_markers') || '[]';
+                    const sizeInBytes = new Blob([markersData]).size;
+                    const sizeInKB = (sizeInBytes / 1024).toFixed(1);
+                    storageUsed.textContent = `${sizeInKB} KB`;
+                } catch (error) {
+                    storageUsed.textContent = '0 KB';
+                }
+            }
+        }
+
+        function activateDrawingTool(tool) {
+            if (!window.interactive_map || !window.L || !L.PM) {
+                showNotification('Drawing tools not available', 'error');
+                return;
+            }
+
+            const map = window.interactive_map.getMap();
+            if (!map) return;
+
+            // Deactivate current drawing mode
+            map.pm.disableGlobalDragMode();
+            map.pm.disableGlobalEditMode();
+            map.pm.disableGlobalRemovalMode();
+
+            // Get style options
+            const color = document.getElementById('draw-color')?.value || '#ff6b35';
+            const opacity = parseFloat(document.getElementById('draw-opacity')?.value || '0.7');
+            const weight = parseInt(document.getElementById('draw-weight')?.value || '3');
+
+            const style = {
+                color: color,
+                fillColor: color,
+                fillOpacity: opacity * 0.3,
+                opacity: opacity,
+                weight: weight
+            };
+
+            // Update button states
+            document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`[data-tool="${tool}"]`)?.classList.add('active');
+
+            // Activate drawing mode
+            switch (tool) {
+                case 'line':
+                    map.pm.enableDraw('Line', { templineStyle: style, hintlineStyle: style });
+                    break;
+                case 'polygon':
+                    map.pm.enableDraw('Polygon', { templineStyle: style, hintlineStyle: style });
+                    break;
+                case 'circle':
+                    map.pm.enableDraw('Circle', style);
+                    break;
+                case 'rectangle':
+                    map.pm.enableDraw('Rectangle', style);
+                    break;
+            }
+
+            // Add creation listener
+            map.off('pm:create');
+            map.on('pm:create', function(e) {
+                const layer = e.layer;
+                layer.setStyle(style);
+                drawingLayers.push(layer);
+                showNotification(`${tool} drawn successfully`, 'success');
+            });
+
+            showNotification(`${tool} drawing mode activated. Click on the map to start drawing.`, 'info');
+        }
+
+        function clearAllDrawings() {
+            if (drawingLayers.length === 0) {
+                showNotification('No drawings to clear', 'info');
+                return;
+            }
+
+            if (confirm(`Clear all ${drawingLayers.length} drawings?`)) {
+                const map = window.interactive_map.getMap();
+                if (map) {
+                    drawingLayers.forEach(layer => {
+                        map.removeLayer(layer);
+                    });
+                }
+                drawingLayers = [];
+                showNotification('All drawings cleared', 'success');
+            }
+        }
+
+        function toggleDrawingMode() {
+            if (!window.interactive_map || !window.L || !L.PM) return;
+
+            const map = window.interactive_map.getMap();
+            const toggleBtn = document.getElementById('toggle-drawing-mode');
+            
+            if (map && map.pm.globalDrawModeEnabled()) {
+                map.pm.disableGlobalDragMode();
+                map.pm.disableGlobalEditMode();
+                map.pm.disableGlobalRemovalMode();
+                document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
+                if (toggleBtn) {
+                    toggleBtn.innerHTML = '<i class="fas fa-eye"></i> Enable Drawing';
+                }
+                showNotification('Drawing mode disabled', 'info');
+            } else {
+                if (toggleBtn) {
+                    toggleBtn.innerHTML = '<i class="fas fa-eye-slash"></i> Disable Drawing';
+                }
+                showNotification('Select a drawing tool to start drawing', 'info');
+            }
+        }
+
+        function updateOpacityDisplay() {
+            const opacityInput = document.getElementById('draw-opacity');
+            const opacityValue = document.getElementById('opacity-value');
+            if (opacityInput && opacityValue) {
+                opacityValue.textContent = Math.round(opacityInput.value * 100) + '%';
+            }
+        }
+
+        function updateWeightDisplay() {
+            const weightInput = document.getElementById('draw-weight');
+            const weightValue = document.getElementById('weight-value');
+            if (weightInput && weightValue) {
+                weightValue.textContent = weightInput.value + 'px';
+            }
+        }
+
+        // ===============================
+        // NOTIFICATION SYSTEM
+        // ===============================
+        
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+
+            // Add to page
+            document.body.appendChild(notification);
+
+            // Show with animation
+            setTimeout(() => notification.classList.add('show'), 100);
+
+            // Remove after delay
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // ===============================
+        // GLOBAL FUNCTIONS FOR HTML
+        // ===============================
+        
+        window.deleteCustomMarker = deleteCustomMarker;
+        window.panToMarker = panToMarker;
+        window.selectFloor = selectFloor;
+
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, scheduling sidebar features initialization...');
+            // Wait for map to initialize
+            setTimeout(() => {
+                if (!sidebarFeaturesInitialized) {
+                    initializeSidebarFeatures();
+                }
+            }, 1000);
+        });
+
+        // Also initialize when interactive map is loaded (but only if not already initialized)
+        if (window.interactive_map && !sidebarFeaturesInitialized) {
+            console.log('Interactive map already available, initializing sidebar features...');
+            initializeSidebarFeatures();
+        }
+
+        // Listen for floor control initialization (but only if not already initialized)
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                if (window.floorControl && document.getElementById('sidebar-floor-selector') && !sidebarFeaturesInitialized) {
+                    console.log('Floor control loaded, initializing sidebar features...');
+                    // Re-initialize floor selection with proper data
+                    initializeSidebarFeatures();
+                }
+            }, 2000);
+        });
+    </script>
+
+    <!-- Notification Styles -->
+    <style>
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            background: var(--bg-panel);
+            border: 2px solid;
+            border-radius: 8px;
+            padding: 12px 16px;
+            transform: translateX(400px);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-orange);
+            max-width: 300px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification-success {
+            border-color: #28a745;
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(40, 167, 69, 0.05));
+        }
+
+        .notification-error {
+            border-color: #dc3545;
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(220, 53, 69, 0.05));
+        }
+
+        .notification-info {
+            border-color: var(--primary-color);
+            background: linear-gradient(135deg, rgba(255, 140, 0, 0.1), rgba(255, 140, 0, 0.05));
+        }
+
+        .notification-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .notification-success .notification-content i {
+            color: #28a745;
+        }
+
+        .notification-error .notification-content i {
+            color: #dc3545;
+        }
+
+        .notification-info .notification-content i {
+            color: var(--primary-color);
+        }
+
+        /* Custom marker badges */
+        .marker-type-badge {
+            background: var(--gradient-primary);
+            color: var(--text-primary);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .marker-floor-badge {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .current-floor-indicator {
+            margin-top: 8px;
+            padding: 8px 12px;
+            background: linear-gradient(135deg, rgba(23, 162, 184, 0.1), rgba(19, 132, 150, 0.05));
+            border: 1px solid rgba(23, 162, 184, 0.3);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .current-floor-indicator i {
+            color: #17a2b8;
+        }
+
+        .current-floor-indicator strong {
+            color: #17a2b8;
+            font-weight: 700;
+        }
+
+        /* Settings tab styles */
+        .data-info {
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 16px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .data-stats {
+            background: var(--bg-darker);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px;
+            margin-top: 16px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 0;
+        }
+
+        .stat-row:not(:last-child) {
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        .stat-value {
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        /* Floor selector styles */
+        .floor-selector-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .floor-select-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            padding: 12px 8px;
+            background: var(--bg-darker);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .floor-select-btn:hover {
+            background: var(--bg-light);
+            border-color: var(--primary-color);
+            color: var(--text-primary);
+        }
+
+        .floor-select-btn.active {
+            background: var(--gradient-primary);
+            border-color: var(--primary-color);
+            color: var(--text-primary);
+        }
+
+        .floor-select-btn i {
+            font-size: 16px;
+        }
+
+        .floor-info-display {
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 16px;
+        }
+
+        .floor-info-display h4 {
+            margin: 0 0 8px 0;
+            color: var(--primary-color);
+            font-size: 14px;
+        }
+
+        .floor-info-display span {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .floor-description {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 12px;
+            line-height: 1.4;
+        }
+    </style>
 </body>
 
 </html>
