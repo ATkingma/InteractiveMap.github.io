@@ -755,7 +755,7 @@
                 position: fixed;
                 top: 80px;
                 right: 20px;
-                background: ${type === 'error' ? '#ff4444' : type === 'success' ? '#44ff44' : '#ff8c00'};
+                background: ${type === 'error' ? '#ff4444' : type === 'success' ? '#ff8c00' : '#ff8c00'};
                 color: white;
                 padding: 12px 20px;
                 border-radius: 6px;
@@ -764,7 +764,7 @@
                 font-weight: bold;
                 max-width: 300px;
                 word-wrap: break-word;
-                border: 2px solid ${type === 'error' ? '#ff6666' : type === 'success' ? '#66ff66' : '#ffb347'};
+                border: 2px solid ${type === 'error' ? '#ff6666' : type === 'success' ? '#ffb347' : '#ffb347'};
             `;
             
             document.body.appendChild(notification);
@@ -1162,7 +1162,7 @@
                             setTimeout(() => {
                                 if (window.markerSystem && typeof window.markerSystem.updateMarkers === 'function') {
                                     console.log('Safety update - forcing final marker refresh...');
-                                    window.markerSystem.updateMarkers();
+                                    window11.markerSystem.updateMarkers();
                                 }
                             }, 500);
                             
