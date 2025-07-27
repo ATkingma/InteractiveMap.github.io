@@ -36,6 +36,333 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 
     <link rel="stylesheet" href="../src/css/leaflet-style.css" />
+    
+    <!-- Custom Marker Styles -->
+    <style>
+        /* Custom marker wrapper - ensure no interference */
+        .custom-marker-wrapper {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        
+        /* Custom marker icon - force perfect circle with proper border handling */
+        .custom-marker-icon {
+            width: 20px !important;
+            height: 20px !important;
+            border: 3px solid white !important;
+            border-radius: 50% !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4) !important;
+            position: relative !important;
+            display: block !important;
+            transform-origin: center center !important;
+            transition: transform 0.2s ease !important;
+            /* Force perfect circle - prevent any distortion */
+            aspect-ratio: 1 / 1 !important;
+            min-width: 20px !important;
+            min-height: 20px !important;
+            max-width: 20px !important;
+            max-height: 20px !important;
+            /* Prevent stretching and ensure consistent sizing */
+            flex-shrink: 0 !important;
+            flex-grow: 0 !important;
+            box-sizing: border-box !important;
+            overflow: hidden !important;
+            /* Force circular border calculation */
+            background-clip: padding-box !important;
+            /* Ensure the border radius is always calculated from the actual dimensions */
+            border-radius: 50% !important;
+        }
+        
+        /* Dynamic color background - maintain perfect circle */
+        .custom-marker-icon::before {
+            content: '' !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background-color: var(--marker-color, #ff6b35) !important;
+            border-radius: 50% !important;
+            z-index: 1 !important;
+            box-sizing: border-box !important;
+            /* Ensure inner circle is also perfectly round */
+            aspect-ratio: 1 / 1 !important;
+        }
+        
+        /* Hover effect - only scale uniformly, don't distort */
+        .custom-marker-wrapper:hover .custom-marker-icon {
+            transform: scale(1.15) !important;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.6) !important;
+        }
+        
+        /* Override any Leaflet transforms that might cause distortion */
+        .leaflet-marker-icon.custom-marker-wrapper {
+            transform-origin: center center !important;
+            /* Ensure Leaflet doesn't apply scaling that distorts the circles */
+            image-rendering: crisp-edges !important;
+        }
+        
+        /* Prevent zoom-based distortion - lock dimensions during zoom */
+        .leaflet-zoom-animated .custom-marker-wrapper {
+            transition: none !important;
+            transform-origin: center center !important;
+        }
+        
+        .leaflet-zoom-animated .custom-marker-wrapper .custom-marker-icon {
+            width: 20px !important;
+            height: 20px !important;
+            border-radius: 50% !important;
+            /* Lock the border calculation during zoom */
+            border-width: 3px !important;
+            transform: none !important;
+        }
+        
+        .leaflet-zoom-animated .custom-marker-wrapper .custom-marker-icon::before {
+            border-radius: 50% !important;
+            width: 100% !important;
+            height: 100% !important;
+        }
+        
+        /* Force consistent sizing at all zoom levels */
+        .leaflet-zoom-animated .custom-marker-icon {
+            width: 20px !important;
+            height: 20px !important;
+            border-radius: 50% !important;
+            min-width: 20px !important;
+            min-height: 20px !important;
+            max-width: 20px !important;
+            max-height: 20px !important;
+        }
+        
+        /* Responsive adjustments that maintain aspect ratio */
+        @media screen and (max-width: 768px) {
+            .custom-marker-icon {
+                width: 18px !important;
+                height: 18px !important;
+                min-width: 18px !important;
+                min-height: 18px !important;
+                max-width: 18px !important;
+                max-height: 18px !important;
+                border-width: 2px !important;
+                border-radius: 50% !important;
+            }
+            
+            .custom-marker-icon::before {
+                border-radius: 50% !important;
+            }
+        }
+        
+        /* Ensure perfect circles on high DPI displays */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            .custom-marker-icon {
+                transform: translateZ(0) !important;
+                backface-visibility: hidden !important;
+                border-radius: 50% !important;
+            }
+            
+            .custom-marker-icon::before {
+                border-radius: 50% !important;
+            }
+        }
+        
+        /* Additional safeguards to prevent distortion */
+        .custom-marker-icon,
+        .custom-marker-icon::before {
+            /* Force hardware acceleration for smoother rendering */
+            will-change: transform !important;
+            /* Ensure crisp rendering */
+            image-rendering: -webkit-optimize-contrast !important;
+            image-rendering: crisp-edges !important;
+        }
+        
+        /* Prevent any parent containers from affecting the marker shape */
+        .leaflet-marker-pane .custom-marker-wrapper {
+            transform-style: preserve-3d !important;
+        }
+        
+        /* Bulletproof marker wrapper for maximum protection */
+        .custom-marker-wrapper-bulletproof {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            transform-origin: center center !important;
+            image-rendering: crisp-edges !important;
+        }
+        
+        /* Bulletproof protection against all possible interference */
+        .custom-marker-wrapper-bulletproof .custom-marker-icon {
+            width: 20px !important;
+            height: 20px !important;
+            border-radius: 50% !important;
+            aspect-ratio: 1 / 1 !important;
+            transform-origin: center center !important;
+        }
+        
+        /* Zoom-specific bulletproof protection */
+        .leaflet-zoom-animated .custom-marker-wrapper-bulletproof {
+            transition: none !important;
+            transform-origin: center center !important;
+        }
+        
+        .leaflet-zoom-animated .custom-marker-wrapper-bulletproof .custom-marker-icon {
+            width: 20px !important;
+            height: 20px !important;
+            border-radius: 50% !important;
+            transform: none !important;
+        }
+        
+        /* Override any possible external CSS interference */
+        .leaflet-marker-icon.custom-marker-wrapper-bulletproof {
+            transform-origin: center center !important;
+            image-rendering: crisp-edges !important;
+        }
+        
+        /* Force hardware acceleration for bulletproof markers */
+        .custom-marker-wrapper-bulletproof .custom-marker-icon,
+        .custom-marker-wrapper-bulletproof .custom-marker-icon > div {
+            will-change: transform !important;
+            backface-visibility: hidden !important;
+            transform: translateZ(0) !important;
+        }
+        
+        /* Bulletproof hover effect */
+        .custom-marker-wrapper-bulletproof:hover .custom-marker-icon {
+            transform: scale(1.15) translateZ(0) !important;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.6) !important;
+        }
+        
+        /* Ensure bullets stay circular on hover */
+        .custom-marker-wrapper-bulletproof:hover .custom-marker-icon,
+        .custom-marker-wrapper-bulletproof:hover .custom-marker-icon > div {
+            border-radius: 50% !important;
+            width: 20px !important;
+            height: 20px !important;
+        }
+        
+        /* Ultra-bulletproof marker styles with maximum zoom protection */
+        .custom-marker-wrapper-ultra-bulletproof {
+            transform-origin: center center !important;
+            will-change: auto !important;
+            transition: none !important;
+        }
+        
+        .zoom-proof-marker {
+            width: 20px !important;
+            height: 20px !important;
+            border-radius: 50% !important;
+            aspect-ratio: 1 / 1 !important;
+            transform: none !important;
+            transform-origin: center center !important;
+            will-change: auto !important;
+            transition: none !important;
+            image-rendering: crisp-edges !important;
+            backface-visibility: hidden !important;
+            transform-style: flat !important;
+        }
+        
+        .zoom-proof-marker * {
+            transform: none !important;
+            will-change: auto !important;
+            transition: none !important;
+            border-radius: 50% !important;
+        }
+        
+        /* BULLETPROOF PROTECTION FOR EXISTING MARKER SYSTEM */
+        .custom-marker.marker-type-spawn .marker-circle,
+        .custom-marker.marker-type-loot .marker-circle,
+        .custom-marker.marker-type-medical .marker-circle,
+        .custom-marker.marker-type-weapons .marker-circle,
+        .custom-marker.marker-type-extraction .marker-circle,
+        .custom-marker.marker-type-danger .marker-circle {
+            width: 18px !important;
+            height: 18px !important;
+            border-radius: 50% !important;
+            aspect-ratio: 1 / 1 !important;
+            transform: none !important;
+            transform-origin: center center !important;
+            will-change: auto !important;
+            transition: none !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            box-sizing: border-box !important;
+        }
+        
+        .custom-marker.marker-type-spawn .marker-inner,
+        .custom-marker.marker-type-loot .marker-inner,
+        .custom-marker.marker-type-medical .marker-inner,
+        .custom-marker.marker-type-weapons .marker-inner,
+        .custom-marker.marker-type-extraction .marker-inner,
+        .custom-marker.marker-type-danger .marker-inner {
+            width: 8px !important;
+            height: 8px !important;
+            border-radius: 50% !important;
+            aspect-ratio: 1 / 1 !important;
+            transform: none !important;
+            will-change: auto !important;
+            transition: none !important;
+            display: block !important;
+            box-sizing: border-box !important;
+        }
+        
+        /* Override ANY zoom-related transforms on existing markers */
+        .leaflet-zoom-animated.custom-marker .marker-circle,
+        .leaflet-zoom-anim .custom-marker .marker-circle {
+            width: 18px !important;
+            height: 18px !important;
+            border-radius: 50% !important;
+            transform: none !important;
+            aspect-ratio: 1 / 1 !important;
+        }
+        
+        .leaflet-zoom-animated.custom-marker .marker-inner,
+        .leaflet-zoom-anim .custom-marker .marker-inner {
+            width: 8px !important;
+            height: 8px !important;
+            border-radius: 50% !important;
+            transform: none !important;
+        }
+        
+        /* Force circle shape during all zoom operations */
+        .leaflet-zoom-anim .zoom-proof-marker,
+        .leaflet-zoom-animated .zoom-proof-marker,
+        .leaflet-zoom-hide .zoom-proof-marker {
+            width: 20px !important;
+            height: 20px !important;
+            border-radius: 50% !important;
+            transform: none !important;
+            aspect-ratio: 1 / 1 !important;
+        }
+        
+        /* Override any Leaflet zoom transforms for ultra-bulletproof markers */
+        .leaflet-marker-icon.custom-marker-wrapper-ultra-bulletproof {
+            transform-origin: center center !important;
+        }
+        
+        .leaflet-marker-icon.custom-marker-wrapper-ultra-bulletproof .zoom-proof-marker {
+            width: 20px !important;
+            height: 20px !important;
+            border-radius: 50% !important;
+            transform: none !important;
+        }
+        
+        /* Additional zoom event protection */
+        .leaflet-zoom-anim .custom-marker-wrapper-ultra-bulletproof .zoom-proof-marker,
+        .leaflet-zoom-animated .custom-marker-wrapper-ultra-bulletproof .zoom-proof-marker {
+            width: 20px !important;
+            height: 20px !important;
+            border-radius: 50% !important;
+            transform: none !important;
+            aspect-ratio: 1 / 1 !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -140,12 +467,6 @@
                         </div>
                         <div class="floor-selector-container" id="sidebar-floor-selector">
                             <!-- Dynamically populated from JSON data -->
-                        </div>
-                        <div class="floor-preview">
-                            <div id="current-floor-info">
-                                <strong>Loading...</strong>
-                                <p>Floor information will appear here</p>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -1480,10 +1801,159 @@
             console.log('Initializing sidebar features...');
             sidebarFeaturesInitialized = true;
             
+            // Initialize bulletproof protection for existing markers FIRST
+            initializeExistingMarkerProtection();
+            
             initializeCustomMarkers();
             initializeFloorSelection();
             initializeDrawingTools();
             initializeSettingsTab();
+        }
+
+        // ===============================
+        // BULLETPROOF EXISTING MARKERS
+        // ===============================
+        
+        // Apply bulletproof protection to existing markers on the map
+        function protectExistingMarkers() {
+            if (!window.interactive_map || !window.interactive_map.getMap()) {
+                return;
+            }
+            
+            const map = window.interactive_map.getMap();
+            
+            // Find all existing markers with the old marker system
+            const existingMarkers = document.querySelectorAll('.custom-marker .marker-circle');
+            
+            existingMarkers.forEach(markerCircle => {
+                const markerInner = markerCircle.querySelector('.marker-inner');
+                const markerContainer = markerCircle.closest('.leaflet-marker-icon');
+                
+                // ULTRA AGGRESSIVE protection to prevent flicker
+                const protectCircle = () => {
+                    // Force the parent container to behave
+                    if (markerContainer) {
+                        const currentTransform = markerContainer.style.transform;
+                        if (currentTransform && (currentTransform.includes('scale') || currentTransform.includes('matrix'))) {
+                            // Remove scale transforms but keep position
+                            const translateMatch = currentTransform.match(/translate[3d]*\([^)]+\)/);
+                            const newTransform = translateMatch ? translateMatch[0] : '';
+                            markerContainer.style.setProperty('transform', newTransform, 'important');
+                        }
+                        markerContainer.style.setProperty('transform-origin', 'center center', 'important');
+                    }
+                    
+                    // Force marker circle to stay circular
+                    markerCircle.style.setProperty('width', '18px', 'important');
+                    markerCircle.style.setProperty('height', '18px', 'important');
+                    markerCircle.style.setProperty('border-radius', '50%', 'important');
+                    markerCircle.style.setProperty('aspect-ratio', '1 / 1', 'important');
+                    markerCircle.style.setProperty('transform', 'none', 'important');
+                    markerCircle.style.setProperty('transform-origin', 'center center', 'important');
+                    markerCircle.style.setProperty('will-change', 'auto', 'important');
+                    markerCircle.style.setProperty('transition', 'none', 'important');
+                    markerCircle.style.setProperty('display', 'flex', 'important');
+                    markerCircle.style.setProperty('align-items', 'center', 'important');
+                    markerCircle.style.setProperty('justify-content', 'center', 'important');
+                    markerCircle.style.setProperty('box-sizing', 'border-box', 'important');
+                    markerCircle.style.setProperty('flex-shrink', '0', 'important');
+                    markerCircle.style.setProperty('flex-grow', '0', 'important');
+                    
+                    if (markerInner) {
+                        markerInner.style.setProperty('width', '8px', 'important');
+                        markerInner.style.setProperty('height', '8px', 'important');
+                        markerInner.style.setProperty('border-radius', '50%', 'important');
+                        markerInner.style.setProperty('aspect-ratio', '1 / 1', 'important');
+                        markerInner.style.setProperty('transform', 'none', 'important');
+                        markerInner.style.setProperty('will-change', 'auto', 'important');
+                        markerInner.style.setProperty('transition', 'none', 'important');
+                        markerInner.style.setProperty('display', 'block', 'important');
+                        markerInner.style.setProperty('box-sizing', 'border-box', 'important');
+                        markerInner.style.setProperty('flex-shrink', '0', 'important');
+                        markerInner.style.setProperty('flex-grow', '0', 'important');
+                    }
+                };
+                
+                // Apply protection IMMEDIATELY multiple times to prevent flicker
+                protectCircle();
+                setTimeout(protectCircle, 1);
+                setTimeout(protectCircle, 5);
+                setTimeout(protectCircle, 10);
+                setTimeout(protectCircle, 20);
+                setTimeout(protectCircle, 50);
+                setTimeout(protectCircle, 100);
+                
+                // Monitor for changes with immediate response
+                if (!markerCircle._protectionObserver) {
+                    const observer = new MutationObserver(() => {
+                        protectCircle();
+                        // Immediate re-protection
+                        setTimeout(protectCircle, 1);
+                    });
+                    observer.observe(markerCircle, {
+                        attributes: true,
+                        attributeFilter: ['style', 'class'],
+                        subtree: true
+                    });
+                    
+                    // Also observe the container
+                    if (markerContainer && !markerContainer._protectionObserver) {
+                        observer.observe(markerContainer, {
+                            attributes: true,
+                            attributeFilter: ['style', 'class', 'transform']
+                        });
+                        markerContainer._protectionObserver = observer;
+                    }
+                    
+                    markerCircle._protectionObserver = observer;
+                }
+                
+                // Very frequent protection to prevent any flicker
+                if (!markerCircle._protectionInterval) {
+                    markerCircle._protectionInterval = setInterval(protectCircle, 50);
+                }
+            });
+        }
+        
+        // Run protection on all existing markers
+        function initializeExistingMarkerProtection() {
+            // Apply protection IMMEDIATELY when this function is called
+            protectExistingMarkers();
+            
+            // Apply protection multiple times with very short delays to catch early markers
+            setTimeout(protectExistingMarkers, 1);
+            setTimeout(protectExistingMarkers, 10);
+            setTimeout(protectExistingMarkers, 50);
+            setTimeout(protectExistingMarkers, 100);
+            setTimeout(protectExistingMarkers, 200);
+            setTimeout(protectExistingMarkers, 500);
+            setTimeout(protectExistingMarkers, 1000);
+            setTimeout(protectExistingMarkers, 2000);
+            
+            // Set up continuous monitoring for new markers that appear
+            const continuousProtection = setInterval(protectExistingMarkers, 200);
+            
+            // Store the interval so we can clear it later if needed
+            window.markerProtectionInterval = continuousProtection;
+            
+            if (window.interactive_map && window.interactive_map.getMap()) {
+                const map = window.interactive_map.getMap();
+                map.on('zoomstart zoomend zoom movestart moveend viewreset', protectExistingMarkers);
+                
+                // CRITICAL: Apply protection immediately when map zoom changes
+                map.on('zoomstart', () => {
+                    protectExistingMarkers();
+                    setTimeout(protectExistingMarkers, 1);
+                    setTimeout(protectExistingMarkers, 10);
+                });
+                
+                map.on('zoomend', () => {
+                    protectExistingMarkers();
+                    setTimeout(protectExistingMarkers, 1);
+                    setTimeout(protectExistingMarkers, 10);
+                    setTimeout(protectExistingMarkers, 50);
+                });
+            }
         }
 
         // ===============================
@@ -1645,18 +2115,173 @@
 
             const map = window.interactive_map.getMap();
             
-            // Create custom marker icon
+            // Create ultra-robust marker with maximum zoom protection
+            const markerHtml = `
+                <div class="custom-marker-icon zoom-proof-marker" style="
+                    width: 20px !important;
+                    height: 20px !important;
+                    border: 3px solid white !important;
+                    border-radius: 50% !important;
+                    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4) !important;
+                    position: relative !important;
+                    display: block !important;
+                    transform-origin: center center !important;
+                    transition: none !important;
+                    aspect-ratio: 1 / 1 !important;
+                    min-width: 20px !important;
+                    min-height: 20px !important;
+                    max-width: 20px !important;
+                    max-height: 20px !important;
+                    flex-shrink: 0 !important;
+                    flex-grow: 0 !important;
+                    box-sizing: border-box !important;
+                    overflow: hidden !important;
+                    background-clip: padding-box !important;
+                    will-change: auto !important;
+                    transform: none !important;
+                    transform-style: flat !important;
+                    backface-visibility: hidden !important;
+                    --marker-color: ${markerData.color};
+                " data-marker-id="${markerData.id}">
+                    <div class="marker-inner-circle" style="
+                        content: '' !important;
+                        position: absolute !important;
+                        top: 0 !important;
+                        left: 0 !important;
+                        right: 0 !important;
+                        bottom: 0 !important;
+                        width: 100% !important;
+                        height: 100% !important;
+                        background-color: ${markerData.color} !important;
+                        border-radius: 50% !important;
+                        z-index: 1 !important;
+                        box-sizing: border-box !important;
+                        aspect-ratio: 1 / 1 !important;
+                        transform: none !important;
+                        will-change: auto !important;
+                    "></div>
+                </div>
+            `;
+            
+            // Create custom marker icon with ultra-bulletproof settings
             const markerIcon = L.divIcon({
-                html: `<div class="custom-marker-icon" style="background-color: ${markerData.color}; border: 3px solid white; border-radius: 50%; width: 20px; height: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.4);"></div>`,
-                className: 'custom-marker',
-                iconSize: [20, 20],
-                iconAnchor: [10, 10]
+                html: markerHtml,
+                className: 'custom-marker-wrapper-ultra-bulletproof',
+                iconSize: [26, 26], // Slightly larger to account for border
+                iconAnchor: [13, 13], // Center anchor
+                popupAnchor: [0, -13] // Popup appears above marker
             });
 
             // Create marker
             const marker = L.marker([markerData.lat, markerData.lng], {
-                icon: markerIcon
+                icon: markerIcon,
+                riseOnHover: true // Brings marker to front on hover
             }).addTo(map);
+            
+            // NUCLEAR OPTION: Complete zoom transform override
+            const aggressiveProtectMarkerShape = () => {
+                const markerElement = marker.getElement();
+                if (markerElement) {
+                    // FORCE the marker container to ignore ALL transforms
+                    const currentTransform = markerElement.style.transform;
+                    if (currentTransform && (currentTransform.includes('scale') || currentTransform.includes('matrix'))) {
+                        // Extract only translate values, remove scale/matrix transforms
+                        const translateMatch = currentTransform.match(/translate[3d]*\([^)]+\)/);
+                        const newTransform = translateMatch ? translateMatch[0] : '';
+                        markerElement.style.setProperty('transform', newTransform, 'important');
+                    }
+                    
+                    markerElement.style.setProperty('transform-origin', 'center center', 'important');
+                    markerElement.style.setProperty('image-rendering', 'crisp-edges', 'important');
+                    markerElement.style.setProperty('will-change', 'auto', 'important');
+                    
+                    const iconElement = markerElement.querySelector('.custom-marker-icon');
+                    const innerElement = markerElement.querySelector('.marker-inner-circle');
+                    
+                    if (iconElement) {
+                        // NUCLEAR: Lock dimensions with computed style override
+                        iconElement.style.setProperty('width', '20px', 'important');
+                        iconElement.style.setProperty('height', '20px', 'important');
+                        iconElement.style.setProperty('min-width', '20px', 'important');
+                        iconElement.style.setProperty('min-height', '20px', 'important');
+                        iconElement.style.setProperty('max-width', '20px', 'important');
+                        iconElement.style.setProperty('max-height', '20px', 'important');
+                        iconElement.style.setProperty('border-radius', '50%', 'important');
+                        iconElement.style.setProperty('aspect-ratio', '1 / 1', 'important');
+                        iconElement.style.setProperty('transform', 'none', 'important');
+                        iconElement.style.setProperty('transform-style', 'flat', 'important');
+                        iconElement.style.setProperty('will-change', 'auto', 'important');
+                        iconElement.style.setProperty('transition', 'none', 'important');
+                        iconElement.style.setProperty('flex-shrink', '0', 'important');
+                        iconElement.style.setProperty('flex-grow', '0', 'important');
+                        iconElement.style.setProperty('display', 'block', 'important');
+                        iconElement.style.setProperty('box-sizing', 'border-box', 'important');
+                    }
+                    
+                    if (innerElement) {
+                        // NUCLEAR: Lock inner circle with computed style override
+                        innerElement.style.setProperty('width', '100%', 'important');
+                        innerElement.style.setProperty('height', '100%', 'important');
+                        innerElement.style.setProperty('border-radius', '50%', 'important');
+                        innerElement.style.setProperty('transform', 'none', 'important');
+                        innerElement.style.setProperty('transform-style', 'flat', 'important');
+                        innerElement.style.setProperty('will-change', 'auto', 'important');
+                        innerElement.style.setProperty('aspect-ratio', '1 / 1', 'important');
+                        innerElement.style.setProperty('display', 'block', 'important');
+                        innerElement.style.setProperty('box-sizing', 'border-box', 'important');
+                    }
+                }
+            };
+            
+            // Apply protection immediately and VERY frequently
+            setTimeout(aggressiveProtectMarkerShape, 1);
+            setTimeout(aggressiveProtectMarkerShape, 10);
+            setTimeout(aggressiveProtectMarkerShape, 50);
+            setTimeout(aggressiveProtectMarkerShape, 100);
+            setTimeout(aggressiveProtectMarkerShape, 200);
+            setTimeout(aggressiveProtectMarkerShape, 500);
+            
+            // Monitor for ANY style changes and zoom events with high frequency
+            const aggressiveObserver = new MutationObserver(() => {
+                aggressiveProtectMarkerShape();
+                // Additional protection after a brief delay
+                setTimeout(aggressiveProtectMarkerShape, 1);
+            });
+            
+            setTimeout(() => {
+                const markerElement = marker.getElement();
+                if (markerElement) {
+                    aggressiveObserver.observe(markerElement, { 
+                        attributes: true, 
+                        subtree: true,
+                        attributeFilter: ['style', 'class', 'transform'],
+                        childList: true
+                    });
+                    
+                    // ALSO observe the parent leaflet container
+                    const parentContainer = markerElement.closest('.leaflet-marker-pane');
+                    if (parentContainer) {
+                        aggressiveObserver.observe(parentContainer, {
+                            attributes: true,
+                            subtree: true,
+                            attributeFilter: ['style', 'class', 'transform']
+                        });
+                    }
+                }
+            }, 50);
+            
+            // Listen for ALL zoom and transform events
+            map.on('zoomstart zoomend zoom movestart moveend viewreset', aggressiveProtectMarkerShape);
+            
+            // ULTRA AGGRESSIVE: Use setInterval for continuous protection
+            const protectionInterval = setInterval(aggressiveProtectMarkerShape, 50);
+            
+            // Store cleanup function for later use
+            marker._cleanupProtection = () => {
+                aggressiveObserver.disconnect();
+                clearInterval(protectionInterval);
+                map.off('zoomstart zoomend zoom movestart moveend viewreset', aggressiveProtectMarkerShape);
+            };
 
             // Add popup
             const popupContent = `
@@ -2414,6 +3039,10 @@
         // Initialize when DOM is ready
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM loaded, scheduling sidebar features initialization...');
+            
+            // START PROTECTION IMMEDIATELY
+            initializeExistingMarkerProtection();
+            
             // Wait for map to initialize
             setTimeout(() => {
                 if (!sidebarFeaturesInitialized) {
@@ -2425,11 +3054,16 @@
         // Also initialize when interactive map is loaded (but only if not already initialized)
         if (window.interactive_map && !sidebarFeaturesInitialized) {
             console.log('Interactive map already available, initializing sidebar features...');
+            // START PROTECTION IMMEDIATELY
+            initializeExistingMarkerProtection();
             initializeSidebarFeatures();
         }
 
         // Listen for floor control initialization (but only if not already initialized)
         window.addEventListener('load', function() {
+            // START PROTECTION IMMEDIATELY ON LOAD
+            initializeExistingMarkerProtection();
+            
             setTimeout(() => {
                 if (window.floorControl && document.getElementById('sidebar-floor-selector') && !sidebarFeaturesInitialized) {
                     console.log('Floor control loaded, initializing sidebar features...');
@@ -2438,6 +3072,17 @@
                 }
             }, 2000);
         });
+        
+        // EMERGENCY EARLY PROTECTION - Start immediately when script loads
+        if (document.readyState === 'loading') {
+            // Document still loading
+            document.addEventListener('DOMContentLoaded', () => {
+                setTimeout(initializeExistingMarkerProtection, 1);
+            });
+        } else {
+            // Document already loaded
+            setTimeout(initializeExistingMarkerProtection, 1);
+        }
     </script>
 
     <!-- Notification Styles -->
