@@ -412,10 +412,6 @@
                     <i class="fas fa-refresh"></i>
                     <span>Reset</span>
                 </button>
-                <button class="nav-btn sidebar-toggle-btn" onclick="toggleSidebar()" title="Toggle Sidebar">
-                    <i class="fas fa-bars"></i>
-                    <span>Menu</span>
-                </button>
             </div>
         </div>
     </nav>
@@ -1531,6 +1527,20 @@
                             // Force complete marker reload (without applyDifficultySettings to avoid interference)
                             await reloadMarkersForDifficulty(selectedDifficulty);
                             
+                            // Refresh floor selector with new difficulty data (immediate and delayed)
+                            if (window.forceRefreshFloorSelector) {
+                                console.log('Force refreshing floor selector for new difficulty...');
+                                window.forceRefreshFloorSelector();
+                            }
+                            
+                            // Also do a delayed refresh to catch any late-loading data
+                            setTimeout(() => {
+                                if (window.refreshFloorSelector) {
+                                    console.log('Delayed floor selector refresh...');
+                                    window.refreshFloorSelector();
+                                }
+                            }, 1000);
+                            
                             // Additional safety check - force another update
                             setTimeout(() => {
                                 if (window.markerSystem && typeof window.markerSystem.updateMarkers === 'function') {
@@ -1760,6 +1770,14 @@
                     console.log('🔄 Attempting to reload difficulties for:', currentMap);
                     await loadDifficultiesForMap(currentMap);
                 }
+                
+                // Force refresh floor selector after everything is initialized
+                console.log('🏢 Attempting to refresh floor selector after initialization...');
+                setTimeout(() => {
+                    if (window.forceRefreshFloorSelector) {
+                        window.forceRefreshFloorSelector();
+                    }
+                }, 2000);
                 
                 console.log('✅ Initialization complete');
                 
@@ -2577,83 +2595,171 @@
         // ===============================
         
         function initializeFloorSelection() {
+            console.log('=== Initializing Floor Selection ===');
+            
             // Listen for floor changes from the main floor control
             if (window.interactive_map && window.interactive_map.getMap()) {
                 const map = window.interactive_map.getMap();
                 
                 // Listen for floor change events from main floor control
                 map.on('floorchange', function(e) {
+                    console.log('Floor change event received:', e.floor, e.floorData);
                     if (e.floor !== undefined) {
                         updateSidebarFloorSelection(e.floor, e.floorData);
                     }
                 });
             }
             
-            // Initialize with current floor if floor control exists
-            if (window.floorControl) {
-                currentFloor = window.floorControl.currentFloor;
-                populateAvailableFloors();
-            }
+            // Wait for FloorControl to be ready and then initialize
+            const waitForFloorControl = () => {
+                if (window.floorControl && window.floorControl.availableFloors && window.floorControl.floorData) {
+                    console.log('FloorControl is ready! Initializing sidebar floor selector...');
+                    console.log('Available floors from FloorControl:', window.floorControl.availableFloors);
+                    console.log('Floor data from FloorControl:', Object.keys(window.floorControl.floorData));
+                    
+                    currentFloor = window.floorControl.currentFloor;
+                    populateAvailableFloors();
+                    
+                    // Create the UI
+                    const sidebarFloorSelector = document.getElementById('sidebar-floor-selector');
+                    if (sidebarFloorSelector) {
+                        createFloorSelectorUI();
+                        console.log('Floor selection initialized with', availableFloors.length, 'floors');
+                    } else {
+                        console.error('sidebar-floor-selector element not found!');
+                    }
+                } else {
+                    console.log('FloorControl not ready yet, waiting...');
+                    setTimeout(waitForFloorControl, 500);
+                }
+            };
             
-            // Create the UI
-            const sidebarFloorSelector = document.getElementById('sidebar-floor-selector');
-            if (sidebarFloorSelector) {
-                createFloorSelectorUI();
-            }
+            // Start waiting for FloorControl
+            waitForFloorControl();
         }
 
         function populateAvailableFloors() {
-            if (!window.floorControl || !window.floorControl.floorData) {
-                // Default floors if no floor control found
-                availableFloors = [
-                    { id: 0, name: 'Ground Floor', active: true },
-                    { id: -1, name: 'Basement', active: false }
-                ];
+            console.log('=== Populating Available Floors ===');
+            
+            // Priority 1: Get floors directly from FloorControl (most reliable for consistency)
+            if (window.floorControl && window.floorControl.availableFloors && window.floorControl.floorData) {
+                console.log('Getting floors from FloorControl - Primary source');
+                const floorControlFloors = window.floorControl.availableFloors;
+                const floorData = window.floorControl.floorData;
+                
+                availableFloors = floorControlFloors.map(floorId => {
+                    const data = floorData[floorId];
+                    return {
+                        id: floorId,
+                        name: data?.name || `Floor ${floorId}`,
+                        active: floorId === (window.floorControl.currentFloor || currentFloor),
+                        mapImage: data?.mapImage
+                    };
+                }).sort((a, b) => b.id - a.id); // Sort descending (top floors first)
+                
+                console.log('✅ Populated floors from FloorControl:', availableFloors.length, 'floors:', availableFloors);
                 return;
             }
+            
+            // Priority 2: Try to get floors from mapDataManager 
+            if (window.mapDataManager && window.mapDataManager.mapData) {
+                try {
+                    const currentDifficulty = sessionStorage.getItem('selectedDifficulty') || 'normal';
+                    const difficulty = window.mapDataManager.mapData.getDifficulty(currentDifficulty);
+                    
+                    if (difficulty && difficulty.levels) {
+                        console.log('Getting floors from map data as fallback - found', difficulty.levels.length, 'levels');
+                        availableFloors = difficulty.levels.map(level => ({
+                            id: level.floor,
+                            name: level.name,
+                            active: level.floor === currentFloor,
+                            mapImage: level.mapImage
+                        })).sort((a, b) => b.id - a.id); // Sort descending (top floors first)
+                        
+                        console.log('✅ Populated floors from map data:', availableFloors);
+                        return;
+                    }
+                } catch (error) {
+                    console.warn('Error getting floors from map data:', error);
+                }
+            }
 
-            // Get floors from the main floor control
-            const floorData = window.floorControl.floorData;
-            availableFloors = Object.keys(floorData).map(floorId => {
-                const floor = parseInt(floorId);
-                const data = floorData[floor];
-                return {
-                    id: floor,
-                    name: data.name || `Floor ${floor}`,
-                    active: floor === window.floorControl.currentFloor
-                };
-            }).sort((a, b) => b.id - a.id); // Sort descending (top floors first)
+            // Priority 3: Default floors if no data sources available
+            console.log('Using default floors as final fallback');
+            availableFloors = [
+                { id: 0, name: 'Ground Floor', active: true, mapImage: 'map.png' },
+                { id: -1, name: 'Basement', active: false, mapImage: 'armory-ground.png' }
+            ];
+            
+            console.log('Final availableFloors:', availableFloors);
         }
 
         function createFloorSelectorUI() {
             const container = document.getElementById('sidebar-floor-selector');
-            if (!container) return;
+            if (!container) {
+                console.error('sidebar-floor-selector container not found');
+                return;
+            }
 
             // Ensure we have floor data
             populateAvailableFloors();
 
+            if (availableFloors.length === 0) {
+                container.innerHTML = '<p class="no-floors">No floor data available</p>';
+                return;
+            }
+
             // Create floor selector HTML
             const html = `
+                <div class="floor-info-header">
+                    <h4><i class="fas fa-building"></i> Available Floors</h4>
+                    <p class="floor-description">Click on a floor to switch between different map levels.</p>
+                </div>
                 <div class="floor-selector-grid">
-                    ${availableFloors.map(floor => `
-                        <button class="floor-select-btn ${floor.active ? 'active' : ''}" 
-                                data-floor="${floor.id}"
-                                onclick="selectFloor(${floor.id})">
-                            <i class="fas fa-building"></i>
-                            <span>${floor.name}</span>
-                        </button>
-                    `).join('')}
+                    ${availableFloors.map(floor => {
+                        let floorLabel;
+                        if (floor.id === 0) {
+                            floorLabel = 'G'; // Ground floor
+                        } else if (floor.id > 0) {
+                            floorLabel = floor.id.toString(); // Floor 1, 2, 3, etc.
+                        } else {
+                            floorLabel = `B${Math.abs(floor.id)}`; // B1, B2, B3 for basements
+                        }
+                        
+                        return `
+                            <button class="floor-select-btn ${floor.active ? 'active' : ''}" 
+                                    data-floor="${floor.id}"
+                                    onclick="selectFloor(${floor.id})"
+                                    title="Switch to ${floor.name}">
+                                <div class="floor-btn-icon">
+                                    <i class="fas fa-building"></i>
+                                    <span class="floor-label">${floorLabel}</span>
+                                </div>
+                                <div class="floor-btn-text">
+                                    <span class="floor-name">${floor.name}</span>
+                                </div>
+                            </button>
+                        `;
+                    }).join('')}
                 </div>
                 <div class="floor-info-display">
-                    <h4>Current Floor: <span id="current-floor-display">${availableFloors.find(f => f.active)?.name || 'Ground Floor'}</span></h4>
-                    <p class="floor-description">Click on a floor button above to switch between different map levels.</p>
+                    <div class="current-floor-info">
+                        <h4>Current Floor: <span id="current-floor-display">${availableFloors.find(f => f.active)?.name || 'Ground Floor'}</span></h4>
+                        <div class="floor-stats">
+                            <span class="floor-count"><i class="fas fa-layer-group"></i> ${availableFloors.length} floors available</span>
+                        </div>
+                    </div>
                 </div>
             `;
 
             container.innerHTML = html;
+            
+            console.log('Floor selector UI created with', availableFloors.length, 'floors');
         }
 
         function updateSidebarFloorSelection(floorId, floorData) {
+            console.log('Updating sidebar floor selection to:', floorId, floorData);
+            
             // Update current floor
             currentFloor = floorId;
             
@@ -2663,45 +2769,143 @@
             });
 
             // Update UI buttons
-            const floorButtons = document.querySelectorAll('.floor-select-btn');
+            const floorButtons = document.querySelectorAll('#sidebar-floor-selector .floor-select-btn');
             floorButtons.forEach(btn => {
-                if (parseInt(btn.dataset.floor) === floorId) {
+                const btnFloor = parseInt(btn.dataset.floor);
+                if (btnFloor === floorId) {
                     btn.classList.add('active');
                 } else {
                     btn.classList.remove('active');
                 }
             });
 
-            // Update displays
+            // Update current floor display
             const floorDisplay = document.getElementById('current-floor-display');
-            const floorIndicator = document.getElementById('current-floor-indicator');
-            const floorName = floorData?.name || availableFloors.find(f => f.id === floorId)?.name || `Floor ${floorId}`;
-            
             if (floorDisplay) {
+                // Try to get the floor name from our available floors data first
+                const floorInfo = availableFloors.find(f => f.id === floorId);
+                let floorName;
+                
+                if (floorInfo) {
+                    floorName = floorInfo.name;
+                } else if (floorData && floorData.name) {
+                    floorName = floorData.name;
+                } else {
+                    // Generate a meaningful name based on floor number
+                    if (floorId === 0) {
+                        floorName = 'Ground Floor';
+                    } else if (floorId > 0) {
+                        floorName = `Floor ${floorId}`;
+                    } else {
+                        floorName = `Basement ${Math.abs(floorId)}`;
+                    }
+                }
+                
                 floorDisplay.textContent = floorName;
             }
+
+            // Update the bottom-right floor indicator if it exists
+            const floorIndicator = document.getElementById('current-floor-indicator');
             if (floorIndicator) {
+                const floorInfo = availableFloors.find(f => f.id === floorId);
+                const floorName = floorInfo?.name || floorData?.name || `Floor ${floorId}`;
                 floorIndicator.textContent = floorName;
             }
 
             // Update custom markers visibility for new floor
             updateCustomMarkersVisibility(floorId);
+            
+            console.log('Sidebar floor selection updated successfully');
         }
 
         function selectFloor(floorId) {
             // Ensure floorId is a number (matching the main floor control system)
             floorId = typeof floorId === 'string' ? parseInt(floorId) : floorId;
             
-            // Use the main floor control system to switch floors
-            if (window.floorControl && window.floorControl.switchFloor) {
+            console.log('Sidebar floor selection:', floorId);
+            
+            // Update current floor tracking
+            currentFloor = floorId;
+            
+            // Use the main floor control system to switch floors if available
+            if (window.floorControl && typeof window.floorControl.switchFloor === 'function') {
+                console.log('Using main floor control to switch floor');
                 window.floorControl.switchFloor(floorId);
                 // The updateSidebarFloorSelection will be called automatically via the floorchange event
             } else {
-                // Fallback if main floor control isn't available
+                console.log('Main floor control not available, using fallback');
+                // Fallback: manually update the sidebar
                 updateSidebarFloorSelection(floorId, { name: `Floor ${floorId}` });
+                
+                // Try to notify other systems
+                if (window.markerSystem && typeof window.markerSystem.setFloor === 'function') {
+                    window.markerSystem.setFloor(floorId);
+                }
+                
                 showNotification(`Switched to Floor ${floorId}`, 'info');
             }
         }
+
+        // Function to refresh floor selector when map data changes
+        function refreshFloorSelector() {
+            console.log('=== Refreshing floor selector with new data ===');
+            
+            // Wait a bit for systems to be ready
+            setTimeout(() => {
+                if (document.getElementById('sidebar-floor-selector')) {
+                    console.log('Refreshing floor selector UI...');
+                    populateAvailableFloors();
+                    createFloorSelectorUI();
+                    
+                    // Update to current floor if available
+                    if (window.floorControl && window.floorControl.currentFloor !== undefined) {
+                        console.log('Updating to current floor:', window.floorControl.currentFloor);
+                        updateSidebarFloorSelection(window.floorControl.currentFloor, { 
+                            name: `Floor ${window.floorControl.currentFloor}` 
+                        });
+                    }
+                    
+                    console.log('✅ Floor selector refreshed successfully with', availableFloors.length, 'floors');
+                } else {
+                    console.warn('sidebar-floor-selector element not found');
+                }
+            }, 500);
+        }
+
+        // Function to force immediate refresh with retry logic
+        function forceRefreshFloorSelector() {
+            console.log('=== Force refreshing floor selector ===');
+            
+            let attempts = 0;
+            const maxAttempts = 10;
+            
+            const attemptRefresh = () => {
+                attempts++;
+                console.log(`Refresh attempt ${attempts}/${maxAttempts}`);
+                
+                if (window.floorControl && window.floorControl.availableFloors && window.floorControl.floorData) {
+                    console.log('FloorControl ready! Performing refresh...');
+                    populateAvailableFloors();
+                    
+                    const sidebarFloorSelector = document.getElementById('sidebar-floor-selector');
+                    if (sidebarFloorSelector) {
+                        createFloorSelectorUI();
+                        console.log('✅ Force refresh completed with', availableFloors.length, 'floors');
+                    }
+                } else if (attempts < maxAttempts) {
+                    console.log('FloorControl not ready, retrying in 300ms...');
+                    setTimeout(attemptRefresh, 300);
+                } else {
+                    console.warn('❌ Max refresh attempts reached, FloorControl still not ready');
+                }
+            };
+            
+            attemptRefresh();
+        }
+
+        // Make refreshFloorSelector globally available
+        window.refreshFloorSelector = refreshFloorSelector;
+        window.forceRefreshFloorSelector = forceRefreshFloorSelector;
 
         function updateCustomMarkersVisibility(activeFloor) {
             if (!window.interactive_map || !window.interactive_map.getMap()) return;
@@ -3335,68 +3539,167 @@
         }
 
         /* Floor selector styles */
+        .floor-info-header {
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .floor-info-header h4 {
+            margin: 0 0 8px 0;
+            color: var(--primary-color);
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .floor-info-header .floor-description {
+            margin: 0;
+            color: #888888;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
         .floor-selector-grid {
+              scrollbar-color: #ffffff #555555;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 12px;
             margin-bottom: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 4px;
         }
 
         .floor-select-btn {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 6px;
-            padding: 12px 8px;
-            background: var(--bg-darker);
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
-            color: var(--text-secondary);
+            gap: 8px;
+            padding: 16px 12px;
+            background: #262626;
+            border: 2px solid #555555;
+            border-radius: 12px;
+            color: #cccccc;
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 12px;
             font-weight: 600;
+            position: relative;
+            overflow: hidden;
+            min-height: 80px;
         }
 
         .floor-select-btn:hover {
-            background: var(--bg-light);
-            border-color: var(--primary-color);
-            color: var(--text-primary);
+            background: #404040;
+            border-color: #ff8c00;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 139, 71, 0.25);
         }
 
         .floor-select-btn.active {
-            background: var(--gradient-primary);
-            border-color: var(--primary-color);
-            color: var(--text-primary);
+            background: linear-gradient(135deg, #ff8c00, #ff6b35);
+            border-color: #ff8c00;
+            color: white;
+            box-shadow: 0 6px 20px rgba(255, 139, 71, 0.4);
+            transform: translateY(-1px);
         }
 
-        .floor-select-btn i {
+        .floor-btn-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .floor-btn-icon i {
+            font-size: 20px;
+        }
+
+        .floor-label {
             font-size: 16px;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 10px;
+            border-radius: 14px;
+            min-width: 32px;
+            text-align: center;
+            line-height: 1;
         }
 
-        .floor-info-display {
-            background: var(--bg-light);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 16px;
+        .floor-select-btn.active .floor-label {
+            background: rgba(255, 255, 255, 0.35);
+            font-weight: 800;
         }
 
-        .floor-info-display h4 {
-            margin: 0 0 8px 0;
-            color: var(--primary-color);
-            font-size: 14px;
+        .floor-btn-text {
+            text-align: center;
+            max-width: 100%;
+            margin-top: 2px;
         }
 
-        .floor-info-display span {
-            color: var(--text-primary);
+        .floor-name {
+            font-size: 10px;
+            line-height: 1.2;
+            opacity: 0.85;
+            font-weight: 500;
+        }
+
+        .floor-select-btn.active .floor-name {
+            opacity: 1;
             font-weight: 600;
         }
 
-        .floor-description {
-            margin: 0;
-            color: var(--text-muted);
-            font-size: 12px;
-            line-height: 1.4;
+        .floor-info-display {
+            background: #404040;
+            border: 1px solid #555555;
+            border-radius: 10px;
+            padding: 18px;
+            margin-top: 10px;
+        }
+
+        .current-floor-info h4 {
+            margin: 0 0 12px 0;
+            color: #ff8c00;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .current-floor-info h4 span {
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        .floor-stats {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #888888;
+            font-size: 13px;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #555555;
+        }
+
+        .floor-stats i {
+            color: #ff8c00;
+        }
+
+        .floor-count {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .no-floors {
+            text-align: center;
+            color: #888888;
+            font-style: italic;
+            padding: 20px;
         }
     </style>
 </body>
