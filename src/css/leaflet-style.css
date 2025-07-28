@@ -1097,6 +1097,21 @@ body {
     background: #001428;
 }
 
+@media (max-width: 1000px) and (max-height: 600px) {
+        .leaflet-top.leaflet-left {
+        top: 180px !important; /* Below navbar */
+        left: 0px !important; /* Account for collapsed sidebar */
+    }
+}
+
+@media (max-width: 1000px) and (max-height: 350px) {
+        .leaflet-top.leaflet-left {
+        top: 130px !important; /* Below navbar */
+        left: 0px !important; /* Account for collapsed sidebar */
+    }
+}
+
+
 /* Mobile-First Responsive Design */
 @media (max-width: 767px) {
     .leaflet-sidebar {
@@ -2000,8 +2015,26 @@ input[type="checkbox"] {
     right: 20.56px !important; /* 190 - (28.24 * 6) = 20.56 */
 }
 
+@media (max-width: 1000px) and (max-height: 600px), 
+    (max-width: 1024px) and (orientation: landscape) {
+    .floor-control-container:not(.leaflet-control) {
+     right: 5px !important;
+     bottom: 75px !important;
+    }
+    
+    /* Override all floor count classes on mobile landscape */
+    .floor-control-container:not(.leaflet-control).floors-7-12,
+    .floor-control-container:not(.leaflet-control).floors-13-18,
+    .floor-control-container:not(.leaflet-control).floors-19-24,
+    .floor-control-container:not(.leaflet-control).floors-25-30,
+    .floor-control-container:not(.leaflet-control).floors-31-36,
+    .floor-control-container:not(.leaflet-control).floors-37-plus {
+     right: 5px !important;
+     bottom: 25px !important;
+    }
+}
 /* Mobile responsive adjustments */
-@media (max-width: 768px) {
+@media (max-width: 808px) {
     .floor-control-container:not(.leaflet-control) {
         right: 5px !important;
         bottom: 25px !important;
@@ -2302,11 +2335,13 @@ input[type="checkbox"] {
     margin: 5px !important;
 }
 
+
+
 /* Responsive adjustments for floor controls */
 @media (max-width: 768px) {
     /* Mobile positioning for independent floor control */
     .floor-control-container:not(.leaflet-control) {
-        bottom: 10px !important;
+        bottom: 30px !important;
         right: 10px !important;
     }
     
@@ -2366,6 +2401,21 @@ input[type="checkbox"] {
     }
 }
 
+@media (max-width: 755px) {
+    /* Mobile positioning for independent floor control */
+    .floor-control-container:not(.leaflet-control) {
+        bottom: 80px !important;
+        right: 10px !important;
+    }
+}
+
+@media (max-width: 705px) {
+    /* Mobile positioning for independent floor control */
+    .floor-control-container:not(.leaflet-control) {
+        bottom: 80px !important;
+        right: 10px !important;
+    }
+}
 /* ===========================================
    ENHANCED CUSTOM MARKERS SYSTEM
    =========================================== */
