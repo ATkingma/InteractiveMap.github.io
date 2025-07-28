@@ -765,7 +765,20 @@ body {
 .sidebar-close-control.visible {
     opacity: 1;
     visibility: visible;
-    left: 460px; /* Move to right edge of expanded sidebar (450px + 10px) */
+    left: 460px;
+    bottom: -140px;
+}
+
+.sidebar-text{
+    margin-right: 90px;
+}
+
+.sidebar-text2{
+    margin-right: 150px;
+}
+
+.sidebar-text3{
+    margin-right: 65px;
 }
 
 .sidebar-close-btn {
@@ -1052,7 +1065,7 @@ body {
 /* Dynamic positioning based on sidebar state */
 .leaflet-top.leaflet-left {
     top: 80px !important; /* Below navbar */
-    left: 70px !important; /* Account for collapsed sidebar */
+    left: 160px !important; /* Account for collapsed sidebar */
     z-index: 1002 !important;
     transition: left 0.3s ease;
 }
@@ -1135,8 +1148,8 @@ body {
     
     /* Mobile zoom controls positioning */
     .leaflet-top.leaflet-left {
-        left: 60px !important; /* Account for mobile sidebar */
-        top: 70px !important;
+        top: 100px !important; /* Below navbar */
+        left: 0px !important; /* Account for collapsed sidebar */
     }
     
     .leaflet-sidebar:not(.collapsed) ~ #map .leaflet-top.leaflet-left {
@@ -1990,8 +2003,8 @@ input[type="checkbox"] {
 /* Mobile responsive adjustments */
 @media (max-width: 768px) {
     .floor-control-container:not(.leaflet-control) {
-        right: 10px !important;
-        bottom: 80px !important;
+        right: 5px !important;
+        bottom: 25px !important;
     }
     
     /* Override all floor count classes on mobile */
@@ -2001,8 +2014,8 @@ input[type="checkbox"] {
     .floor-control-container:not(.leaflet-control).floors-25-30,
     .floor-control-container:not(.leaflet-control).floors-31-36,
     .floor-control-container:not(.leaflet-control).floors-37-plus {
-        right: 10px !important;
-        bottom: 80px !important;
+        right: 5px !important;
+        bottom: 25px !important;
     }
 }
 
