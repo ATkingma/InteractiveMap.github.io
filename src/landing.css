@@ -1572,7 +1572,7 @@ body {
 @media (max-width: 768px) {
 
     .hero-stats{
-        flex-direction: column;
+        flex-direction: row;
         gap: 1rem;
     }
 

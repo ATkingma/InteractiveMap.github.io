@@ -2030,14 +2030,18 @@ input[type="checkbox"] {
     .floor-control-container:not(.leaflet-control).floors-31-36,
     .floor-control-container:not(.leaflet-control).floors-37-plus {
      right: 5px !important;
-     bottom: 25px !important;
+     bottom: 75px !important;
+    }
+
+    .floor-btn{
+            padding: 2px 6px!important;
     }
 }
 /* Mobile responsive adjustments */
 @media (max-width: 808px) {
     .floor-control-container:not(.leaflet-control) {
         right: 5px !important;
-        bottom: 25px !important;
+        bottom: 75px !important;
     }
     
     /* Override all floor count classes on mobile */
@@ -2048,7 +2052,7 @@ input[type="checkbox"] {
     .floor-control-container:not(.leaflet-control).floors-31-36,
     .floor-control-container:not(.leaflet-control).floors-37-plus {
         right: 5px !important;
-        bottom: 25px !important;
+        bottom: 75px !important;
     }
 }
 
