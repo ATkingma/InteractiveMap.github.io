@@ -711,10 +711,6 @@
     border-radius: 3px;
 }
 
-/* Animation for sidebar panels */
-.leaflet-sidebar-pane {
-    animation: slideIn 0.3s ease-out;
-}
 
 @keyframes slideIn {
     from {
