@@ -25,7 +25,7 @@ try {
 
     // Add the main game map as an image overlay
     interactive_map.addTileLayer('Arena Breakout Map', {
-        minNativeZoom: 0,
+        minNativeZoom: -4,
         maxNativeZoom: 4,
         attribution: 'Map from Arena Breakout'
     });
