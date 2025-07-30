@@ -576,7 +576,7 @@ body {
 .leaflet-sidebar {
     margin-top: 100px;
     position: fixed;
-    top: 60px; /* Account for navbar */
+    /* top: 60px;  */
     left: 0;
     width: 60px; /* Collapsed width for icons */
     height: calc(100vh - 120px); /* Account for navbar and bottom ad */
