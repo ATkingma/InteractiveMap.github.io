@@ -17,7 +17,7 @@ try {
 
     // Configure map to allow more zoom out and set background color
     const map = interactive_map.getMap();
-    map.options.minZoom = -2; // Allow zooming out much more
+    map.options.minZoom = -4; // Allow zooming out much more
     map.options.maxZoom = 8;
     
     // Set background color for areas outside the map
