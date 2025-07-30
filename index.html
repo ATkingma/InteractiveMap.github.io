@@ -1,15 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4821072925153492"
-     crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <meta http-equiv="refresh" content="0; url=./public/index.html">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Arena Breakout - Interactive Maps</title>
     <link rel="canonical" href="./public/index.html">
+    <link rel="stylesheet" href="./src/landing.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+    </style>
 </head>
 <body>
-    <p>If you are not redirected automatically, <a href="./public/index.html">click here</a>.</p>
+    <div class="hero-section">
+        <div class="hero-background">
+            <div class="hero-overlay"></div>
+        </div>
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-brand">
+                    <a href="index.html" class="brand-text">Arena Breakout Maps</a>
+                </div>
+                <div class="nav-links" id="navLinks">
+                    <a href="#maps" class="nav-link">Maps</a>
+                    <a href="#features" class="nav-link">Features</a>
+                    <a href="privacy-policy.html" class="nav-link">Privacy</a>
+                    <a href="gdpr.html" class="nav-link">GDPR</a>
+                    <!-- <a href="#ratspots" class="nav-link">ratspots</a> -->
+                    <button class="nav-cta" onclick="scrollToMaps()">Map</button>
+                </div>
+                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle mobile menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </nav>
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">
+                    Master Every 
+                    <span class="highlight">Arena</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Professional interactive maps for Arena Breakout with real-time markers, 
+                    tactical overlays, and community-driven intel.
+                </p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number" data-target="5">0</span>
+                        <span class="stat-label">Maps</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number" data-target="200" data-suffix="+">0</span>
+                        <span class="stat-label">Markers</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number" data-target="5000" data-suffix="k+">0</span>
+                        <span class="stat-label">Users</span>
+                    </div>
+                </div>
+                <div class="hero-actions">
+                    <a class="btn-primary" href="./public/index.html">
+                        <span>Go to Interactive Map</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M8 0L16 8L8 16L6.59 14.59L12.17 9H0V7H12.17L6.59 1.41L8 0Z" fill="currentColor"/>
+                        </svg>
+                    </a>
+                    <div style="margin-top:1.5rem;color:#ffb347;font-size:1.1rem;">
+                        Redirecting to Interactive Map...<br>
+                        <span style="color:#e0e0e0;font-size:1rem;">If you are not redirected automatically, click the button above.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
